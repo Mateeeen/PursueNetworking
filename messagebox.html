@@ -26,8 +26,66 @@
       font-family: "Roboto" sans-serif;
     }
 
-    
+    /* // Channel List expand/collapse styles STARt */
 
+    .channelListBox__collapser {
+      position: relative;
+      min-width: 20px;
+    }
+
+    .channelListBox__expandIconContainer {
+      background: #fff;
+      width: 18px;
+      height: 18px;
+      border-radius: 5rem;
+      text-align: center;
+      font-size: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #adadad;
+      color: #084dd1;
+      position: absolute;
+      right: 2px;
+      top: 50%;
+      cursor: pointer;
+      z-index: 333;
+    }
+
+    .collapsed {
+      width: 0px !important;
+      border: 0px !important;
+    }
+
+    .chatboxExpanded {
+      width: calc(100% - 25px) !important;
+    }
+
+    .rotate180 {
+      transform: rotate(180deg);
+    }
+
+    .messageRow {
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .messageRow .img-p {
+      width: 45px;
+    }
+
+    .messageRow .card-left-content-box {
+      width: 81.5%;
+    }
+
+    .meesageRowBody {
+      width: 100%;
+      justify-content: center !important;
+    }
+
+    /* // Channel List expand/collapse styles END */
+
+    
     .hover_tag {
 		background: #ffffff;
 		border: solid 1px #e6e6e6;
@@ -2283,12 +2341,16 @@
       overflow: hidden;
       position: relative;
       background: #fff;
+
+      transition: all 0.8s;
     }
 
     .rounded-full:first-child {
       /* width: calc(30% - 17px); */
       width: 127px;
       margin-right: 10px;
+      height: 100%;
+      transition: all 0.8s;
     }
 
     .w-70 {
@@ -2300,6 +2362,10 @@
       padding: 10px;
       text-align: center;
       cursor: pointer;
+      overflow: hidden;
+      width: 100%;
+      border-top-right-radius: 20px;
+      border-top-left-radius: 20px;
     }
 
     .top-profile-box:hover,
@@ -2714,12 +2780,13 @@
     }
 
     .chat-thread-box {
-      width: calc(86% + -15px);
+      width: calc(100% - 74px);
+      min-width: calc(86% - 34px);
       min-height: 15px;
       background-color: #f3f3f3;
       font-size: 8px;
       padding: 2px 5px;
-      transform: translate(45px, -8px);
+      transform: translate(57px, -8px);
       font-family: "Roboto" sans-serif;
       border-radius: 2px;
       cursor: pointer;
@@ -3925,42 +3992,51 @@
 
         <h1 id="noGroupHeading" style="display: none">No groups to show</h1>
       </div>
+      <!-- // Main Message Box && Channels -->
       <div class="profileMainBox" style="display: none">
         <div class="row h-100">
-          <div class="rounded-full position-relative">
-            <div class="top-profile-box" id="settingsModal">
-              <img src="" alt="" class="" id="image_group" />
-              <h6 id="nameofgroups" style="
-                    color: #084dd1;
-                    font-size: 12px;
-                    line-height: 14px;
-                    margin-top: 10px;
-                    font-weight: 700;
-                    display: -webkit-box;
-                                -webkit-line-clamp: 2;
-                                -webkit-box-orient: vertical;
-                                overflow: hidden;
-                                max-width: 328px;
-                                width: auto;
-                  height: auto;
-                  line-height: 12px;
-                  font-size: 11px;
-                  white-space: break-spaces;
-                  "></h6>
+          <div class="channelListBox__collapser" >
+            <div class="rounded-full position-relative" id="channelListBox">
+              <div class="top-profile-box" id="settingsModal">
+                <img src="" alt="" class="" id="image_group" />
+                <h6 id="nameofgroups" style="
+                      color: #084dd1;
+                      font-size: 12px;
+                      line-height: 14px;
+                      margin-top: 10px;
+                      font-weight: 700;
+                      display: -webkit-box;
+                                  -webkit-line-clamp: 2;
+                                  -webkit-box-orient: vertical;
+                                  overflow: hidden;
+                                  max-width: 328px;
+                                  width: auto;
+                    height: auto;
+                    line-height: 12px;
+                    font-size: 11px;
+                    white-space: break-spaces;
+                    "></h6>
+              </div>
+              <div class="nav-list-ui">
+                <nav>
+                  <ul id="listOfSubGroups" class="list-unstyled">
+                    <li class="general_div active">
+                      <a href="#">#General</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="plus-icon position-absolute">
+                <button id="open_sub_group"><i class="fas fa-plus"></i></button>
+              </div>
             </div>
-            <div class="nav-list-ui">
-              <nav>
-                <ul id="listOfSubGroups" class="list-unstyled">
-                  <li class="general_div active">
-                    <a href="#">#General</a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            <div class="plus-icon position-absolute">
-              <button id="open_sub_group"><i class="fas fa-plus"></i></button>
+
+             <!-- // Icon for expand/collapse -->
+             <div class="channelListBox__expandIconContainer" id="channelListBox__expandIconContainer">
+              <i class="fas fa-chevron-double-left"></i>
             </div>
           </div>
+          
           <div class="w-70 rounded-full">
             <div class="top-info-box">
               <div class="row">
