@@ -3,10 +3,37 @@ var profile_check = 0;
 var globalArr = [];
 var commentArray = [];
 let x = 0;
+let blobal_image = " ";
+let counts = 1;
+
+var bgpage = {
+  word: {
+    loader: null,
+  },
+  loginId: null,
+  msg: null,
+};
 
 // Test URL
 
-const globalURl = "https://linkedin.thefastech.com";
+const globalURl = "https://linkedin.thefastech.com/";
+localStorage.get
+login_checkings = localStorage.getItem("user_id");
+if (!login_checkings) {
+  window.location.href = "signin_page.html";
+}
+else{
+  if(localStorage.getItem("page_name")){
+    if(localStorage.getItem("page_name") == 'popup'){
+    }
+    else{
+     window.location.href = localStorage.getItem("page_name") + '.html'
+ 
+    }
+  }
+   
+   
+}
 
 // Test URL
 
@@ -20,13 +47,163 @@ const globalURl = "https://linkedin.thefastech.com";
 
 // const globalURl = "https://testlinkedin.thefastech.com";
 
+var interval = setInterval(() => {
+  chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+    bgpage = msg;
+   
+    if (bgpage.word?.name) {
+      localStorage.setItem("bgData", JSON.stringify(bgpage.word));
+    }
+
+    if (bgpage.word?.name && counts == 1) {
+      clearInterval(interval);
+      counts = counts + 1;
+      localStorage.setItem("bgData", JSON.stringify(bgpage.word));
+
+      if (
+        bgpage.word.img.includes("https://media-exp1.licdn.com") &&
+        localStorage.getItem("damagedImage")
+      ) {
+        document.getElementById("updateImage").style.display = "flex";
+      } else {
+        console.log("inside else check");
+        document.getElementById("updateImage").style.display = "none";
+      }
+
+      vari = localStorage.getItem("saved_item");
+      if (!vari && document.hasFocus()) {
+        window.location.reload();
+      }
+
+      removeLoader();
+      localStorage.removeItem("saved_item");
+
+      // if (bgpage.loginId) {
+      //   const url = `${globalURl}/login`;
+
+      //   var xhr = new XMLHttpRequest();
+      //   xhr.open("POST", url, true);
+      //   xhr.setRequestHeader("Content-Type", "application/json");
+      //   xhr.send(
+      //     JSON.stringify({
+      //       id: bgpage.loginId,
+      //     })
+      //   );
+
+      //   xhr.onreadystatechange = function () {
+      //     if (xhr.readyState == 4 && xhr.status == 200) {
+      //       let user = JSON.parse(xhr.responseText);
+
+      //       if (user) {
+      //         localStorage.removeItem("loginId");
+      //         localStorage.setItem("access_token", user.access_token);
+      //         localStorage.setItem("user_id", user.id);
+      //         localStorage.setItem("username", user.username);
+      //         localStorage.setItem("second_user_id", user.id);
+      //         localStorage.setItem("second_user_name", user.name);
+      //         localStorage.setItem("secondUserPic", user.image);
+
+      //         localStorage.setItem("profilePic", user.image);
+      //         window.location.reload();
+      //       }
+      //     }
+      //   };
+      // }
+    } else {
+      demo = localStorage.getItem("saved_item");
+      if (!demo && counts == 1) {
+        // addLoader();
+      } else {
+        console.log("no demo bhai");
+      }
+    }
+
+    sendResponse(1);
+  });
+}, 10);
+
 function setup() {
   noCanvas();
+  
+  user_id = localStorage.getItem("user_id");;
+  
+  url = `${globalURl}/recieve_messages_count/${user_id}`;
 
+  let xhr99 = new XMLHttpRequest();
+
+  xhr99.open("GET", url, true);
+  xhr99.setRequestHeader("Content-Type", "application/json");
+  xhr99.send();
+  xhr99.onreadystatechange = function () {
+    //Call a function when the state changes.
+    if (xhr99.readyState == 4 && xhr99.status == 200) {
+      let userDataha = JSON.parse(xhr99.responseText);
+      console.log(userDataha,'userData')
+        if(userDataha.count > 0){
+          texting = userDataha.count.toString();
+          chrome.action.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+          chrome.action.setBadgeText({text: texting});
+        }
+        else{
+          chrome.action.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+          chrome.action.setBadgeText({text: ''});
+        }
+      
+    }
+    }
+    
+    let params = {
+      active: true,
+      currentWindow: true,
+    };
+    chrome.tabs.query(params, gotTab);
+  
+    function gotTab(tabs) {
+      let msg = {
+        the_id: user_id,
+      };
+      chrome.tabs.sendMessage(tabs[0].id, msg);
+    }
+
+    url = `${globalURl}/login`;
+  
+          var xhr222 = new XMLHttpRequest();
+          xhr222.open("POST", url, true);
+          xhr222.setRequestHeader("Content-Type", "application/json");
+          xhr222.send(
+            JSON.stringify({
+              id: localStorage.getItem("access_token"),
+            })
+          );
+
+          xhr222.onreadystatechange = function () {
+            if (xhr222.readyState == 4 && xhr222.status == 200) {
+              let user = JSON.parse(xhr222.responseText);
+              console.log('going2')
+
+              if (user.id) {
+                console.log('going')
+              }
+              else{
+                console.log('coming')
+                localStorage.clear();
+                localStorage.setItem("bgData", JSON.stringify(bgData));
+                window.close();
+              }
+            }
+          }
+  
+
+// var options = {
+//       type: "basic",
+//       title: "Persue Networking",
+//       message: "Kolin Simon sent you a message",
+//       iconUrl: "logo.png"
+//     }
+//     chrome.notifications.create(options)
   localStorage.removeItem("group_id");
   localStorage.removeItem("receiver_id");
   localStorage.removeItem("prospect_id");
-  localStorage.removeItem("loginId");
   localStorage.removeItem("isProspectCollabClicked1");
   localStorage.removeItem("prospectCollabData1");
   localStorage.removeItem("prospect_id1");
@@ -35,13 +212,32 @@ function setup() {
 
   profile_check = 0;
 
-  var bgpage = chrome.extension.getBackgroundPage();
+  // var bgpage = chrome.extension.getBackgroundPage();
 
-  var loginId = bgpage.loginId;
+  let bgData = JSON.parse(localStorage.getItem("bgData"));
+  blobal_image = bgpage.word.img;
 
-  if (loginId) {
-    localStorage.setItem("loginId", loginId);
-    chrome.extension.getBackgroundPage().loginId = "";
+  let loginIdLocal = "";
+
+  let x = setInterval(() => {
+    if (localStorage.getItem("loginId")) {
+      loginIdLocal = localStorage.getItem("loginId");
+      clearInterval(x);
+    }
+  }, 100);
+
+  if (loginIdLocal) {
+    bgpage.loginId = loginIdLocal;
+  }
+
+  if (bgData) {
+    bgpage.word = bgData;
+  }
+
+  var loginId = "";
+
+  if (bgpage.loginId) {
+    loginId = bgpage.loginId;
   }
 
   if (localStorage.getItem("profilePic")) {
@@ -56,45 +252,7 @@ function setup() {
     document.getElementById("profilePic").src = "./Assets/img/user.png";
   }
 
-  loginId = localStorage.getItem("loginId");
-
-  if (loginId) {
-    setTimeout(() => {
-      const url = `${globalURl}/login`;
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", url, true);
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.send(
-        JSON.stringify({
-          id: loginId,
-        })
-      );
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          let user = JSON.parse(xhr.responseText);
-
-          if (user) {
-            loginId = "";
-            localStorage.removeItem("loginId");
-            localStorage.setItem("access_token", user.access_token);
-            localStorage.setItem("user_id", user.id);
-            localStorage.setItem("username", user.username);
-			      localStorage.setItem("second_user_id", user.id);
-            localStorage.setItem("second_user_name", user.name);
-            localStorage.setItem("secondUserPic", user.image);
-
-            localStorage.setItem("profilePic", user.image);
-            window.location.reload();
-          }
-        }
-      };
-    }, 100);
-  }
-
-
-isImage =  localStorage.getItem("profilePic");
+  isImage = localStorage.getItem("profilePic");
 
   // var http = new XMLHttpRequest();
 
@@ -108,39 +266,35 @@ isImage =  localStorage.getItem("profilePic");
   //   console.log('yeenyeen',);
   // }
 
-
-
-
- var e = setInterval(() => {
-    imageIS =  localStorage.getItem("profilePic");
-    if(imageIS){
-        var http = new XMLHttpRequest();
-        http.open('HEAD', imageIS, false);
-        http.send();
-                  console.log('yeen',http)
-                  if(http.status != 200){
-                    localStorage.clear()
-                      console.log("User Image Damaged");
-                      window.location.reload();
-                  }
-                  else
-                  {
-                    console.log("User Image Correct");
-                  }
-          }
-    clearInterval(e)
-  },4000)
-
-  
   // var e = setInterval(() => {
-  var title = bgpage.word.title;
-  var name = bgpage.word.name;
-  var description = bgpage.word.description;
-  var address = bgpage.word.address;
-  var company = bgpage.word.company;
-  var about = bgpage.word.about;
-  var img = bgpage.word.img;
-  var profile_link = bgpage.word.profile_link;
+  //   imageIS = localStorage.getItem("profilePic");
+  //   if (imageIS) {
+  //     var http = new XMLHttpRequest();
+  //     http.open("HEAD", imageIS, false);
+  //     http.send();
+  //     console.log("yeen", http);
+  //     if (http.status != 200) {
+  //       localStorage.clear();
+  //       console.log("User Image Damaged");
+  //       window.location.reload();
+  //     } else {
+  //       console.log("User Image Correct");
+  //     }
+  //   }
+  //   clearInterval(e);
+  // }, 4000);
+
+  // var e = setInterval(() => {
+
+  // var title = bgpage.word.title;
+  // var name = bgpage.word.name;
+  // var description = bgpage.word.description;
+  // var address = bgpage.word.address;
+  // var company = bgpage.word.company;
+  // var about = bgpage.word.about;
+  // var img = bgpage.word.img;
+  // var profile_link = bgpage.word.profile_link;
+
   //   clearInterval(e)
   // },6000)
   // var xhr = new XMLHttpRequest();
@@ -168,27 +322,22 @@ isImage =  localStorage.getItem("profilePic");
   // }
   // xhr.send();
 
-//   const imageUrl = img;
+  //   const imageUrl = img;
 
-// (async () => {
-//   const response = await fetch(imageUrl)
-//   const imageBlob = await response.blob()
-//   const reader = new FileReader();
-//   reader.readAsDataURL(imageBlob);
-//   reader.onloadend = () => {
-//     const base64data = reader.result;
-//     var encodedString = btoa(base64data);
-//     var decodedString = atob(encodedString);
-//     img = decodedString;
-//     console.log(decodedString,'decoded');
-//   }
-// })()
-// console.log(img,'imgg')
-
-
-        
-
-
+  // (async () => {
+  //   const response = await fetch(imageUrl)
+  //   const imageBlob = await response.blob()
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(imageBlob);
+  //   reader.onloadend = () => {
+  //     const base64data = reader.result;
+  //     var encodedString = btoa(base64data);
+  //     var decodedString = atob(encodedString);
+  //     img = decodedString;
+  //     console.log(decodedString,'decoded');
+  //   }
+  // })()
+  // console.log(img,'imgg')
 
   var prev = null;
   var access_token = localStorage.getItem("access_token");
@@ -196,7 +345,9 @@ isImage =  localStorage.getItem("profilePic");
   var user_id = localStorage.getItem("user_id");
 
   if (!localStorage.getItem("user_id")) {
-    document.querySelector(".new-header-left-imgs").innerHTML = "";
+    document.querySelectorAll(".new-header-left-imgs").forEach((chats) => {
+                chats.innerHTML = "";
+                  });    
     document.querySelector(".new_header_right_imgs").innerHTML = "";
     document.querySelector(".upperBackBtn").style.visibility = "hidden";
     document.querySelector(".upperMessageBtn").style.visibility = "hidden";
@@ -220,7 +371,7 @@ isImage =  localStorage.getItem("profilePic");
     xhr6.setRequestHeader("Content-Type", "application/json");
     xhr6.send(
       JSON.stringify({
-        profile_link: profile_link,
+        profile_link: bgpage.word?.profile_link,
         user_id: user_id1,
         secondary_id: secondary_id1,
       })
@@ -247,35 +398,45 @@ isImage =  localStorage.getItem("profilePic");
     xhr.send();
 
     xhr.onreadystatechange = function () {
+
       if (xhr.readyState == 4 && xhr.status == 200) {
+        setTimeout(() => {
         let userData = JSON.parse(xhr.responseText);
         let style = -60;
-        let count = 1;
-        let z = 1;
+        let count = 1001;
+        let z = 10001;
         let j = 4;
         let r = 4;
-        document.querySelector(".new-header-left-imgs").innerHTML = "";
-        document.querySelector(".new_header_right_imgs").innerHTML = "";
+        console.log("loader")
+        // document.querySelector(".new-header-left-imgs").innerHTML = "";
+         document
+              .querySelectorAll(".new-header-left-imgs")
+              .forEach((chats) => {
+                chats.innerHTML = "";
+              });
+              document
+              .querySelectorAll(".new-header-left-img")
+              .forEach((chats) => {
+                chats.innerHTML = "";
+              });
+        document.querySelector(".new_header_right_imgs").innerHTML = ``;
         document.querySelector(".new-header-left-img").innerHTML = ``;
         document.querySelector(".groupTopIcon").innerHTML = ``;
 
         if (userData.users) {
           userData.users.slice(0, 3).map((item, i, arr) => {
-            
             var row =
               item.image != null
-                ? `<span class="new-top-img" id="sharedm${count}">
-          <input type="hidden" id="value${z}" value="${
-                    item.linked_to_id
-                  }"></input>
+                ? `<span class="new-top-img open_the_dms" data-reciever-id=${item.linked_to_id}>
+          <input type="hidden" id="value${z}" value="${item.linked_to_id
+                }"></input>
           <div class="iconMsgPicContainer">
-          ${
-            item.total_notifications != 0
-              ? `<div class="countNum1">${item.total_notifications}</div>`
-              : ""
-          }
-            
-            <img class="new-header-item-img" src="${item.image}">
+          ${item.total_notifications != 0
+                  ? `<div class="countNum1">${item.total_notifications}</div>`
+                  : ""
+                }
+
+            <img class="new-header-item-img open_the_dms" data-reciever-id=${item.linked_to_id} src="${item.image}">
             <span class="tooltiptext">${item.username}</span>
             </div>
             </span>`
@@ -283,17 +444,15 @@ isImage =  localStorage.getItem("profilePic");
 
             var row_second =
               item.image != null
-                ? `<span class="new-top-img" id="sharedm${r}">
-            <input type="hidden" id="value${j}" value="${
-                    item.linked_to_id
-                  }"></input>
+                ? `<span class="new-top-img open_the_dms" data-reciever-id=${item.linked_to_id}>
+            <input type="hidden" id="value${j}" value="${item.linked_to_id
+                }"></input>
             <div class="iconMsgPicContainer">
-            ${
-              item.total_notifications != 0
-                ? `<div class="countNum1">${item.total_notifications}</div>`
-                : ""
-            }
-              <img class="new-header-item-img" src="${item.image}">
+            ${item.total_notifications != 0
+                  ? `<div class="countNum1">${item.total_notifications}</div>`
+                  : ""
+                }
+              <img class="new-header-item-img open_the_dms" data-reciever-id=${item.linked_to_id} src="${item.image}">
               <span class="tooltiptext">${item.username}</span>
               </div>
               </span>`
@@ -309,17 +468,37 @@ isImage =  localStorage.getItem("profilePic");
               .forEach((chats) => {
                 chats.innerHTML += row_second;
               });
+              
             style = style + 35;
             count = count + 1;
             z = z + 1;
             j = j + 1;
             r = r + 1;
           });
+          setTimeout(() => {
+            document
+            .querySelectorAll(".open_the_dms")
+            .forEach((chats) => {
+              chats?.addEventListener("click",() => {
+                console.log('clicked')
+                let receiver_id = chats.getAttribute("data-reciever-id");
+                    localStorage.setItem("reciever_id", receiver_id);
+                    dms = "dms"
+                    localStorage.setItem("buttonClick",dms)
+                    openDirectChat();
+            });
+          })
+          },1000)
+          
 
           if (userData.users.length > 3) {
-            document.querySelector(
-              ".new-header-left-imgs"
-            ).innerHTML += `<span class='showMembersAll'><i class="fas fa-eye"></i></span>`;
+            console.log("greater")
+            document.querySelectorAll(".new-header-left-imgs").forEach((chats) => {
+                chats.innerHTML += `<span class='showMembersAll'><i class="fas fa-eye"></i></span>`;
+                  }); 
+            // document.querySelector(
+            //   ".new-header-left-imgs"
+            // ).innerHTML += `<span class='showMembersAll'><i class="fas fa-eye"></i></span>`;
 
             document.querySelector(
               ".new-header-left-img"
@@ -352,16 +531,15 @@ isImage =  localStorage.getItem("profilePic");
                   //Call a function when the state changes.
                   if (xhr.readyState == 4 && xhr.status == 200) {
                     let userData = JSON.parse(xhr.responseText);
-
-                    if (userData.length > 0) {
-                      userData.map((item, i, arr) => {
+                    if (userData.data.length > 0) {
+                      userData.data.map((item, i, arr) => {
                         var row = `
                       <div class="prospectContent memberDiv" data-member_id=${item.linked_to_id}>
-                                  
+
                         <img src=${item.image} alt=""/>
-          
+
                         <h1>${item.mutual}</h1>
-    
+
                       </div>
                     `;
 
@@ -371,9 +549,9 @@ isImage =  localStorage.getItem("profilePic");
                     } else {
                       document.querySelector(".membersContainer").innerHTML = `
                     <div class="prospectContent">
-                                    
-                      <h1>No Chat Memebers</h1>
-  
+
+                      <h1>No Chat Members</h1>
+
                     </div>
                   `;
                     }
@@ -388,6 +566,8 @@ isImage =  localStorage.getItem("profilePic");
                   ele.addEventListener("click", (e) => {
                     let receiver_id = ele.getAttribute("data-member_id");
                     localStorage.setItem("reciever_id", receiver_id);
+                    dms = "dms"
+                    localStorage.setItem("buttonClick",dms)
                     openDirectChat();
                   });
                 });
@@ -404,9 +584,14 @@ isImage =  localStorage.getItem("profilePic");
                 ).style.opacity = 0;
               });
           }
+          else{
+            console.log("Less")
+          }
         }
         if (userData.groups != 200) {
+          document.querySelector(".loadergroupIcons").style.display = "none"
           if (userData.groups) {
+
             if (userData.groups.length > 3) {
               document
                 .querySelectorAll(".new_header_right_imgs")
@@ -450,17 +635,18 @@ isImage =  localStorage.getItem("profilePic");
                               ".groupDynamicContainer"
                             ).innerHTML += `
                               <div style="position: relative;width: calc(30% - 20px); margin: auto 15px;">
-                              <div class="groupBox groupChats" data-group_id=${
-                                item.group_id
+                              <div class="groupBox groupChats" data-group_id=${item.group_id
                               }>
-                                ${item.image ? `<img src="${item.image}" class="userIconDemo" data-receiverid="32">` : `<img src="./Assets/img/group-bg.png" class="userIconDemo" data-receiverid="32">`}
-                                   
-                                
-                                ${
-                                  item.notifications != 0
-                                    ? `<div class="notificationBox">${item.notifications}</div>`
-                                    : ""
-                                }
+                                ${item.image
+                                ? `<img src="${item.image}" class="userIconDemo" data-receiverid="32">`
+                                : `<img src="./Assets/img/group-bg.png" class="userIconDemo" data-receiverid="32">`
+                              }
+
+
+                                ${item.notifications != 0
+                                ? `<div class="notificationBox">${item.notifications}</div>`
+                                : ""
+                              }
                                 </div>
                                 <div class="groupName" style="display: -webkit-box;
                                 -webkit-line-clamp: 2;
@@ -473,8 +659,7 @@ isImage =  localStorage.getItem("profilePic");
                   font-size: 11px;
                   white-space: break-spaces;
                                 "
-                                >${
-                                  item.name}</div>
+                                >${item.name}</div>
                               </div>
                             `;
                           });
@@ -512,15 +697,18 @@ isImage =  localStorage.getItem("profilePic");
                 .forEach((chats1) => {
                   chats1.innerHTML += `
                 <div class="smallgroupBox" data-group_id=${item.group_id}>
-                <span class="tooltiptext">${item.group_name.length > 8 ? `${item.group_name.slice(0,8)}...` : `${item.group_name}`}</span>
-                  ${
-                    item.notifications != 0
+                <span class="tooltiptext">${item.group_name.length > 8
+                      ? `${item.group_name.slice(0, 8)}...`
+                      : `${item.group_name}`
+                    }</span>
+                  ${item.notifications != 0
                       ? `<div class="countNum">${item.notifications}</div>`
                       : ""
-                  }
-                  
-                       <img src="${item.group_image}" class="smalluserIconDemo" data-receiverid="32">
-                    
+                    }
+
+                       <img src="${item.group_image
+                    }" class="smalluserIconDemo" data-receiverid="32">
+
                 </div>
               `;
                 });
@@ -533,7 +721,10 @@ isImage =  localStorage.getItem("profilePic");
 
           // var row = item.group_id != null ?`<span class="new-top-img group_top_icon" data-group_id=${item.group_id}><img class="new-header-item-img" src="./Assets/img/actress.jpg"></span>`: "";
           // document.querySelector(".new_header_right_imgs").innerHTML += row;
+        }else{
+          document.querySelector(".loadergroupIcons").style.display = "none"
         }
+      },2000)
       }
 
       document.querySelector(".upperBackBtn").style.visibility = "visible";
@@ -557,6 +748,12 @@ isImage =  localStorage.getItem("profilePic");
         "Welcome, " + trimmed_username;
     }
   } else {
+    setTimeout(() => {
+      login_checkings = localStorage.getItem("user_id");
+      if (!login_checkings) {
+        window.location.href = "signin_page.html";
+      }
+    }, 500);
     document.getElementById("loginBtn").style.display = "block";
     document.getElementById("savedUserMessage").style.display = "none";
   }
@@ -564,7 +761,7 @@ isImage =  localStorage.getItem("profilePic");
   if (bgpage.word.loader == "loader") {
     addLoader();
     var j = setTimeout(function () {
-      var bgpage = chrome.extension.getBackgroundPage();
+      // var bgpage = chrome.extension.getBackgroundPage();
       var profile_link = bgpage.word.profile_link;
 
       var user_id = localStorage.getItem("user_id");
@@ -574,6 +771,307 @@ isImage =  localStorage.getItem("profilePic");
         user_id = second_user_id;
       }
 
+      if (user_id) {
+        const url = `${globalURl}/alreadyStored`;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(
+          JSON.stringify({
+            id: bgpage.word?.profile_link,
+            user_id: user_id,
+          })
+        );
+
+        xhr.onreadystatechange = function () {
+          //Call a function when the state changes.
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            res = JSON.parse(xhr.responseText);
+            if (xhr.responseText != "400") {
+              profile_check = 500;
+              // document.getElementById('alreadyStored').innerText = 'Already Stored';
+              prev = res.data;
+              console.log("hey im here");
+
+              var user_id = localStorage.getItem("user_id");
+              var secondary_id = localStorage.getItem("second_user_id");
+              if (!secondary_id) {
+                var secondary_id = null;
+              }
+              if (secondary_id == user_id) {
+                secondary_id = null;
+              }
+              var profile_link = bgpage.word.profile_link;
+              const url = `${globalURl}/getCommentsCount`;
+
+              var xhr4 = new XMLHttpRequest();
+              xhr4.open("POST", url, true);
+              xhr4.setRequestHeader("Content-Type", "application/json");
+              xhr4.send(
+                JSON.stringify({
+                  profile_link: profile_link,
+                  user_id: user_id,
+                  secondary_id: secondary_id,
+                })
+              );
+              xhr4.onreadystatechange = function () {
+                if (xhr4.readyState == 4 && xhr4.status == 200) {
+                  res = JSON.parse(xhr4.responseText);
+                  var count = res.count;
+                  if (count == 0) {
+                    document.getElementById("comment_count").style.display =
+                      "none";
+                  } else {
+                    document.getElementById("comment_count").style.display =
+                      "block";
+                    document.getElementById("comment_count").innerHTML = count;
+                  }
+                }
+              };
+
+              console.log("here i am");
+
+              try {
+                prev.image = bgpage.word.img;
+                imageprofileInterval = setTimeout(() => {
+                  eventSave();
+                  clearInterval(imageprofileInterval);
+                }, 6000);
+              } catch (err) {
+                prev.image = bgpage.word.img;
+                imageprofileInterval = setTimeout(() => {
+                  eventSave();
+                  clearInterval(imageprofileInterval);
+                }, 6000);
+              }
+              name = localStorage.getItem("second_user_name");
+              if (name != "null" && name != "") {
+                document.getElementById(
+                  "savedUserMessage"
+                ).innerText = `You're in ${name}'s Database`;
+              } else {
+                document.getElementById("savedUserMessage").innerText =
+                  "Records from Database";
+              }
+              var deleteIcon = document.getElementById("star__delete__icon");
+              deleteIcon.src = "Assets/img/star-yellow.png";
+
+              document.getElementById("star__delete__icon").style.display =
+                "block";
+              document.getElementById("yeen").style.display = "none";
+
+              document.getElementById("topTitleName").innerText = prev.name;
+              document.getElementById("fname").value = prev.name;
+              document.getElementById("description").value = prev.description;
+              document.getElementById("company").value = prev.company;
+              document.getElementById("about").value = prev.about;
+
+              document.getElementById("notes").innerHTML = prev.messages;
+              document.getElementById("client_messages").innerHTML = prev.notes;
+              if (prev.attachment) {
+                document.querySelector(
+                  ".attachmentPhotoContainer"
+                ).style.display = "block";
+                document.querySelector(".attachmentPhoto").style.display =
+                  "block";
+                document.querySelector(".attachmentPhoto").src =
+                  prev.attachment;
+                document.querySelector(".attachmentPhotoo").src =
+                  prev.attachment;
+              } else {
+                document.querySelector(
+                  ".attachmentPhotoContainer"
+                ).style.display = "none";
+                document.querySelector(".attachmentPhoto").style.display =
+                  "none";
+                document.querySelector(".attachmentPhoto").src = null;
+              }
+
+              document.getElementById("strategy_date").value =
+                prev.strategy_date;
+
+              if (document.getElementById(prev.status)) {
+                document.getElementById(prev.status).selected = true;
+                var status_tag = document.getElementById("status");
+                status_tag = status_tag[status_tag.selectedIndex].style.color;
+                document.getElementById("status_color").style.backgroundColor =
+                  status_tag;
+              }
+
+              document.getElementById("profile_link").innerText =
+                prev.profile_link;
+
+              if (prev.discovery_call) {
+                var dbDateDiscovery = prev.discovery_call;
+                var dateDiscovery = new Date(dbDateDiscovery);
+                var formattedDateDiscovery = dateDiscovery
+                  .toISOString()
+                  .slice(0, 10);
+                document.getElementById("discovery_call").value =
+                  formattedDateDiscovery;
+              }
+
+              var dbDateUpdated = prev.updated_at;
+
+              var dateUpdated = new Date(dbDateUpdated);
+
+              var formattedDateUpdated = dateUpdated.toISOString().slice(0, 10);
+
+              document.getElementById("updated_at").value =
+                formattedDateUpdated;
+
+              if (prev.endorsement == "Yes") {
+                document.getElementById("endorsement_yes").checked = true;
+              } else if (prev.endorsement == "No") {
+                document.getElementById("endorsement_no").checked = true;
+              }
+
+              if (prev.priority == "A") {
+                document.getElementById("priority_a").checked = true;
+              } else if (prev.priority == "B") {
+                document.getElementById("priority_b").checked = true;
+              } else if (prev.priority == "C") {
+                document.getElementById("priority_c").checked = true;
+              } else if (prev.priority == "D") {
+                document.getElementById("priority_d").checked = true;
+              }
+
+              document.getElementById("total_messages").value =
+                prev.total_messages;
+              document.getElementById("follow_up").value = prev.follow_up;
+              document.getElementById("conversion").value = prev.conversion;
+              document.getElementById("weekly_date").value = prev.weekly_date;
+              localStorage.setItem("prospect_id", prev.id);
+
+              var today = new Date(prev.weekly_date);
+              var today = today.toISOString().substring(0, 10);
+              document.getElementById("weekly_date").value = today;
+              document.getElementById("weekly_date").max = today;
+              var weekly_source = today;
+              var options = {
+                month: "short",
+              };
+              var options_year = {
+                year: "2-digit",
+              };
+              var today = new Date(weekly_source);
+
+              //init date
+              var date = new Date(weekly_source);
+
+              document.getElementById("week_number").innerHTML =
+                getWeekOfMonth(date);
+              document.getElementById("week_number").innerHTML =
+                "Week - Month" +
+                ' <i class="far fa-calendar-alt clender_icons"></i>';
+
+              document.getElementById("weekly_source").value =
+                today.toLocaleDateString("en-US", options) +
+                " Week " +
+                getWeekOfMonth(date) +
+                " -" +
+                today.toLocaleDateString("en-US", options_year);
+            } else {
+              document.getElementById("star__delete__icon").style.display =
+                "block";
+              document.getElementById("yeen").style.display = "none";
+
+              var user_id = localStorage.getItem("user_id");
+              var secondary_id = localStorage.getItem("second_user_id");
+              if (!secondary_id) {
+                var secondary_id = null;
+              }
+              if (secondary_id == user_id) {
+                secondary_id = null;
+              }
+              var profile_link = bgpage.word.profile_link;
+              const url = `${globalURl}/getCommentsCount`;
+
+              var xhr4 = new XMLHttpRequest();
+              xhr4.open("POST", url, true);
+              xhr4.setRequestHeader("Content-Type", "application/json");
+              xhr4.send(
+                JSON.stringify({
+                  profile_link: profile_link,
+                  user_id: user_id,
+                  secondary_id: secondary_id,
+                })
+              );
+              xhr4.onreadystatechange = function () {
+                if (xhr4.readyState == 4 && xhr4.status == 200) {
+                  res = JSON.parse(xhr4.responseText);
+                  var count = res.count;
+                  if (count == 0) {
+                    document.getElementById("comment_count").style.display =
+                      "none";
+                  } else {
+                    document.getElementById("comment_count").style.display =
+                      "block";
+                    document.getElementById("comment_count").innerHTML = count;
+                  }
+                }
+              };
+
+              var starIcon = document.getElementById("star__delete__icon");
+              starIcon.src = "Assets/img/star-black.png";
+              name = localStorage.getItem("second_user_name");
+              if (name != "null" && name != "") {
+                document.getElementById(
+                  "savedUserMessage"
+                ).innerText = `You're in ${name}'s Database`;
+              } else {
+                document.getElementById("savedUserMessage").innerText =
+                  "Records from Database";
+              } // document.getElementById("yeen").innerHTML = `<i class="fa fa-spinner fa-spin"></i>`;
+            }
+          }
+        };
+
+        removeLoader();
+        clearInterval(j);
+        var today = new Date();
+        var today = today.toISOString().substring(0, 10);
+        document.getElementById("weekly_date").value = today;
+        document.getElementById("weekly_date").max = today;
+        var weekly_source = today;
+        var options = {
+          month: "short",
+        };
+        var options_year = {
+          year: "2-digit",
+        };
+        var today = new Date(weekly_source);
+
+        // init date
+        var date = new Date(weekly_source);
+
+        // document.getElementById("week_number").innerHTML =(getWeekOfMonth(date));
+        document.getElementById("week_number").innerHTML =
+          "Week - Month" + ' <i class="far fa-calendar-alt clender_icons"></i>';
+
+        document.getElementById("weekly_source").value =
+          today.toLocaleDateString("en-US", options) +
+          " Week " +
+          getWeekOfMonth(date) +
+          " -" +
+          today.toLocaleDateString("en-US", options_year);
+      }
+    }, 7000);
+  } else {
+    localStorage.removeItem("clipperpageCheck", true);
+
+    document.getElementById("star__delete__icon").style.display = "none";
+    document.getElementById("yeen").style.display = "block";
+    var user_id = localStorage.getItem("user_id");
+
+    var second_user_id = localStorage.getItem("second_user_id");
+
+    if (second_user_id != null) {
+      user_id = second_user_id;
+    }
+
+    if (user_id) {
       const url = `${globalURl}/alreadyStored`;
 
       var xhr = new XMLHttpRequest();
@@ -581,7 +1079,7 @@ isImage =  localStorage.getItem("profilePic");
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(
         JSON.stringify({
-          id: profile_link,
+          id: bgpage.word?.profile_link,
           user_id: user_id,
         })
       );
@@ -590,11 +1088,21 @@ isImage =  localStorage.getItem("profilePic");
         //Call a function when the state changes.
         if (xhr.readyState == 4 && xhr.status == 200) {
           res = JSON.parse(xhr.responseText);
+
           if (xhr.responseText != "400") {
             profile_check = 500;
-            // document.getElementById('alreadyStored').innerText = 'Already Stored';
+
             prev = res.data;
-            console.log("hey im here")
+
+            name = localStorage.getItem("second_user_name");
+            if (name != "null" && name != "") {
+              document.getElementById(
+                "savedUserMessage"
+              ).innerText = `You're in ${name}'s Database`;
+            } else {
+              document.getElementById("savedUserMessage").innerText =
+                "Records from Database";
+            }
 
             var user_id = localStorage.getItem("user_id");
             var secondary_id = localStorage.getItem("second_user_id");
@@ -607,19 +1115,19 @@ isImage =  localStorage.getItem("profilePic");
             var profile_link = bgpage.word.profile_link;
             const url = `${globalURl}/getCommentsCount`;
 
-            var xhr4 = new XMLHttpRequest();
-            xhr4.open("POST", url, true);
-            xhr4.setRequestHeader("Content-Type", "application/json");
-            xhr4.send(
+            var xhr5 = new XMLHttpRequest();
+            xhr5.open("POST", url, true);
+            xhr5.setRequestHeader("Content-Type", "application/json");
+            xhr5.send(
               JSON.stringify({
                 profile_link: profile_link,
                 user_id: user_id,
                 secondary_id: secondary_id,
               })
             );
-            xhr4.onreadystatechange = function () {
-              if (xhr4.readyState == 4 && xhr4.status == 200) {
-                res = JSON.parse(xhr4.responseText);
+            xhr5.onreadystatechange = function () {
+              if (xhr5.readyState == 4 && xhr5.status == 200) {
+                res = JSON.parse(xhr5.responseText);
                 var count = res.count;
                 if (count == 0) {
                   document.getElementById("comment_count").style.display =
@@ -631,52 +1139,57 @@ isImage =  localStorage.getItem("profilePic");
                 }
               }
             };
-            
-          console.log("here i am")
 
-          try {
-            
-            prev.image = bgpage.word.img;
-            imageprofileInterval = setTimeout(() => {
-              eventSave();
-              clearInterval(imageprofileInterval);
-            }, 6000);
-
-          
-
-          }
-          catch(err) {
-            prev.image = bgpage.word.img;
-            imageprofileInterval = setTimeout(() => {
-              
-              eventSave();
-              clearInterval(imageprofileInterval);
-            }, 6000);
-
-          }
-            name = localStorage.getItem("second_user_name")
-            if(name != "null" && name != ""){
-              document.getElementById("savedUserMessage").innerText =
-              `You're in ${name}'s Database`;
-            }
-            else{
-            document.getElementById("savedUserMessage").innerText =
-              "Records from Database";
-            }
-            var deleteIcon = document.getElementById("star__delete__icon");
-            deleteIcon.src = "Assets/img/star-yellow.png";
+            localStorage.setItem("prospect_id", prev.id);
 
             document.getElementById("star__delete__icon").style.display =
               "block";
             document.getElementById("yeen").style.display = "none";
+            var deleteIcon = document.getElementById("star__delete__icon");
+            deleteIcon.src = "Assets/img/star-yellow.png";
 
+            console.log("here i am");
+
+            try {
+              console.log("http", http);
+
+              prev.image = bgpage.word.img;
+              imageprofileInterval = setTimeout(() => {
+                eventSave();
+                clearInterval(imageprofileInterval);
+              }, 4000);
+            } catch (err) {
+              prev.image = bgpage.word.img;
+              imageprofileInterval = setTimeout(() => {
+                eventSave();
+                clearInterval(imageprofileInterval);
+              }, 6000);
+            }
+
+            document.getElementById("image").src = prev.image;
             document.getElementById("topTitleName").innerText = prev.name;
             document.getElementById("fname").value = prev.name;
             document.getElementById("description").value = prev.description;
             document.getElementById("company").value = prev.company;
             document.getElementById("about").value = prev.about;
-            // document.getElementById("notes").value = prev.notes;
-            document.getElementById("notes").innerHTML = prev.notes;
+
+            document.getElementById("notes").innerHTML = prev.messages;
+            document.getElementById("client_messages").innerHTML = prev.notes;
+            if (prev.attachment) {
+              document.querySelector(
+                ".attachmentPhotoContainer"
+              ).style.display = "block";
+              document.querySelector(".attachmentPhoto").style.display =
+                "block";
+              document.querySelector(".attachmentPhoto").src = prev.attachment;
+              document.querySelector(".attachmentPhotoo").src = prev.attachment;
+            } else {
+              document.querySelector(
+                ".attachmentPhotoContainer"
+              ).style.display = "none";
+              document.querySelector(".attachmentPhoto").style.display = "none";
+              document.querySelector(".attachmentPhoto").src = null;
+            }
 
             document.getElementById("strategy_date").value = prev.strategy_date;
 
@@ -686,6 +1199,8 @@ isImage =  localStorage.getItem("profilePic");
               status_tag = status_tag[status_tag.selectedIndex].style.color;
               document.getElementById("status_color").style.backgroundColor =
                 status_tag;
+              // alert(status_tag);
+              // document.getElementById('statusbg').style.backgroundColor = status_tag;
             }
 
             document.getElementById("profile_link").innerText =
@@ -729,8 +1244,12 @@ isImage =  localStorage.getItem("profilePic");
               prev.total_messages;
             document.getElementById("follow_up").value = prev.follow_up;
             document.getElementById("conversion").value = prev.conversion;
+            // alert(prev.weekly_date);
+            var today = new Date();
+            var today = today.toISOString().substring(0, 10);
+
             document.getElementById("weekly_date").value = prev.weekly_date;
-            localStorage.setItem("prospect_id", prev.id);
+            document.getElementById("weekly_date").max = today;
 
             var today = new Date(prev.weekly_date);
             var today = today.toISOString().substring(0, 10);
@@ -761,9 +1280,11 @@ isImage =  localStorage.getItem("profilePic");
               " -" +
               today.toLocaleDateString("en-US", options_year);
           } else {
-            document.getElementById("star__delete__icon").style.display =
-              "block";
-            document.getElementById("yeen").style.display = "none";
+            var today = new Date();
+            var today = today.toISOString().substring(0, 10);
+
+            document.getElementById("weekly_date").value = today;
+            document.getElementById("weekly_date").max = today;
 
             var user_id = localStorage.getItem("user_id");
             var secondary_id = localStorage.getItem("second_user_id");
@@ -776,19 +1297,19 @@ isImage =  localStorage.getItem("profilePic");
             var profile_link = bgpage.word.profile_link;
             const url = `${globalURl}/getCommentsCount`;
 
-            var xhr4 = new XMLHttpRequest();
-            xhr4.open("POST", url, true);
-            xhr4.setRequestHeader("Content-Type", "application/json");
-            xhr4.send(
+            var xhr5 = new XMLHttpRequest();
+            xhr5.open("POST", url, true);
+            xhr5.setRequestHeader("Content-Type", "application/json");
+            xhr5.send(
               JSON.stringify({
                 profile_link: profile_link,
                 user_id: user_id,
                 secondary_id: secondary_id,
               })
             );
-            xhr4.onreadystatechange = function () {
-              if (xhr4.readyState == 4 && xhr4.status == 200) {
-                res = JSON.parse(xhr4.responseText);
+            xhr5.onreadystatechange = function () {
+              if (xhr5.readyState == 4 && xhr5.status == 200) {
+                res = JSON.parse(xhr5.responseText);
                 var count = res.count;
                 if (count == 0) {
                   document.getElementById("comment_count").style.display =
@@ -801,363 +1322,55 @@ isImage =  localStorage.getItem("profilePic");
               }
             };
 
+            document.getElementById("star__delete__icon").style.display =
+              "block";
+            document.getElementById("yeen").style.display = "none";
             var starIcon = document.getElementById("star__delete__icon");
             starIcon.src = "Assets/img/star-black.png";
-            name = localStorage.getItem("second_user_name")
-            if(name != "null" && name != ""){
+            // document.getElementById("yeen").innerHTML = `<img class="new_img_main_icon" id="star__delete__icon" src="Assets/img/star-black.png"
+            // height="18px;" width="18px;">`;
+            name = localStorage.getItem("second_user_name");
+            if (name != "null" && name != "") {
+              document.getElementById(
+                "savedUserMessage"
+              ).innerText = `You're in ${name}'s Database`;
+            } else {
               document.getElementById("savedUserMessage").innerText =
-              `You're in ${name}'s Database`;
+                "Records from Database";
             }
-            else{
-            document.getElementById("savedUserMessage").innerText =
-              "Records from Database";
-            }            // document.getElementById("yeen").innerHTML = `<i class="fa fa-spinner fa-spin"></i>`;
           }
         }
       };
+      var today = new Date();
+      var today = today.toISOString().substring(0, 10);
+      // document.getElementById("discovery_call").value = today;
+      document.getElementById("weekly_date").value = today;
+      document.getElementById("weekly_date").max = today;
+      var weekly_source = today;
+      var options = {
+        month: "short",
+      };
+      var options_year = {
+        year: "2-digit",
+      };
+      var today = new Date(weekly_source);
+
+      // init date
+      var date = new Date(weekly_source);
+
+      // document.getElementById("week_number").innerHTML =(getWeekOfMonth(date));
+      document.getElementById("week_number").innerHTML =
+        "Week - Month" + ' <i class="far fa-calendar-alt clender_icons"></i>';
+
+      document.getElementById("weekly_source").value =
+        today.toLocaleDateString("en-US", options) +
+        " Week " +
+        getWeekOfMonth(date) +
+        " -" +
+        today.toLocaleDateString("en-US", options_year);
 
       removeLoader();
-      clearInterval(j);
-    }, 7000);
-
-    var today = new Date();
-    var today = today.toISOString().substring(0, 10);
-    document.getElementById("weekly_date").value = today;
-    document.getElementById("weekly_date").max = today;
-    var weekly_source = today;
-    var options = {
-      month: "short",
-    };
-    var options_year = {
-      year: "2-digit",
-    };
-    var today = new Date(weekly_source);
-
-    // init date
-    var date = new Date(weekly_source);
-
-    // document.getElementById("week_number").innerHTML =(getWeekOfMonth(date));
-    document.getElementById("week_number").innerHTML =
-      "Week - Month" + ' <i class="far fa-calendar-alt clender_icons"></i>';
-
-    document.getElementById("weekly_source").value =
-      today.toLocaleDateString("en-US", options) +
-      " Week " +
-      getWeekOfMonth(date) +
-      " -" +
-      today.toLocaleDateString("en-US", options_year);
-  }
-  // else {
-  // if (bgpage.word.loader == "home") {
-  // var pipe = localStorage.getItem("pipeLineClick");
-  // if (pipe) {
-  // getAll();
-  // localStorage.removeItem("pipeLineClick");
-  // } else {
-  // localStorage.setItem("clipperpageCheck", true);
-  // window.location.href = "home.html";
-  // }
-  // }
-  else {
-    localStorage.removeItem("clipperpageCheck", true);
-
-    document.getElementById("star__delete__icon").style.display = "none";
-    document.getElementById("yeen").style.display = "block";
-    var user_id = localStorage.getItem("user_id");
-
-    var second_user_id = localStorage.getItem("second_user_id");
-
-    if (second_user_id != null) {
-      user_id = second_user_id;
     }
-
-    const url = `${globalURl}/alreadyStored`;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(
-      JSON.stringify({
-        id: profile_link,
-        user_id: user_id,
-      })
-    );
-
-    xhr.onreadystatechange = function () {
-      //Call a function when the state changes.
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        res = JSON.parse(xhr.responseText);
-
-        if (xhr.responseText != "400") {
-          profile_check = 500;
-
-          prev = res.data;
-
-          name = localStorage.getItem("second_user_name")
-            if(name != "null" && name != ""){
-              document.getElementById("savedUserMessage").innerText =
-              `You're in ${name}'s Database`;
-            }
-            else{
-            document.getElementById("savedUserMessage").innerText =
-              "Records from Database";
-            }
-
-          var user_id = localStorage.getItem("user_id");
-          var secondary_id = localStorage.getItem("second_user_id");
-          if (!secondary_id) {
-            var secondary_id = null;
-          }
-          if (secondary_id == user_id) {
-            secondary_id = null;
-          }
-          var profile_link = bgpage.word.profile_link;
-          const url = `${globalURl}/getCommentsCount`;
-
-          var xhr5 = new XMLHttpRequest();
-          xhr5.open("POST", url, true);
-          xhr5.setRequestHeader("Content-Type", "application/json");
-          xhr5.send(
-            JSON.stringify({
-              profile_link: profile_link,
-              user_id: user_id,
-              secondary_id: secondary_id,
-            })
-          );
-          xhr5.onreadystatechange = function () {
-            if (xhr5.readyState == 4 && xhr5.status == 200) {
-              res = JSON.parse(xhr5.responseText);
-              var count = res.count;
-              if (count == 0) {
-                document.getElementById("comment_count").style.display = "none";
-              } else {
-                document.getElementById("comment_count").style.display =
-                  "block";
-                document.getElementById("comment_count").innerHTML = count;
-              }
-            }
-          };
-
-          localStorage.setItem("prospect_id", prev.id);
-
-          document.getElementById("star__delete__icon").style.display = "block";
-          document.getElementById("yeen").style.display = "none";
-          var deleteIcon = document.getElementById("star__delete__icon");
-          deleteIcon.src = "Assets/img/star-yellow.png";
-
-          
-          console.log("here i am")
-
-          try {
-            
-            console.log('http',http);
-          
-            prev.image = bgpage.word.img;
-            imageprofileInterval = setTimeout(() => {
-              eventSave();
-              clearInterval(imageprofileInterval);
-            }, 4000);
-
-          
-
-          }
-          catch(err) {
-            prev.image = bgpage.word.img;
-            imageprofileInterval = setTimeout(() => {
-              
-              eventSave();
-              clearInterval(imageprofileInterval);
-            }, 6000);
-
-          }
-          
-      
-
-          document.getElementById("image").src = prev.image;
-          document.getElementById("topTitleName").innerText = prev.name;
-          document.getElementById("fname").value = prev.name;
-          document.getElementById("description").value = prev.description;
-          document.getElementById("company").value = prev.company;
-          document.getElementById("about").value = prev.about;
-          // document.getElementById("notes").value = prev.notes;
-          document.getElementById("notes").innerHTML = prev.notes;
-
-          document.getElementById("strategy_date").value = prev.strategy_date;
-
-          if (document.getElementById(prev.status)) {
-            document.getElementById(prev.status).selected = true;
-            var status_tag = document.getElementById("status");
-            status_tag = status_tag[status_tag.selectedIndex].style.color;
-            document.getElementById("status_color").style.backgroundColor =
-              status_tag;
-            // alert(status_tag);
-            // document.getElementById('statusbg').style.backgroundColor = status_tag;
-          }
-
-          document.getElementById("profile_link").innerText = prev.profile_link;
-
-          if (prev.discovery_call) {
-            var dbDateDiscovery = prev.discovery_call;
-            var dateDiscovery = new Date(dbDateDiscovery);
-            var formattedDateDiscovery = dateDiscovery
-              .toISOString()
-              .slice(0, 10);
-            document.getElementById("discovery_call").value =
-              formattedDateDiscovery;
-          }
-
-          var dbDateUpdated = prev.updated_at;
-
-          var dateUpdated = new Date(dbDateUpdated);
-
-          var formattedDateUpdated = dateUpdated.toISOString().slice(0, 10);
-
-          document.getElementById("updated_at").value = formattedDateUpdated;
-
-          if (prev.endorsement == "Yes") {
-            document.getElementById("endorsement_yes").checked = true;
-          } else if (prev.endorsement == "No") {
-            document.getElementById("endorsement_no").checked = true;
-          }
-
-          if (prev.priority == "A") {
-            document.getElementById("priority_a").checked = true;
-          } else if (prev.priority == "B") {
-            document.getElementById("priority_b").checked = true;
-          } else if (prev.priority == "C") {
-            document.getElementById("priority_c").checked = true;
-          } else if (prev.priority == "D") {
-            document.getElementById("priority_d").checked = true;
-          }
-
-          document.getElementById("total_messages").value = prev.total_messages;
-          document.getElementById("follow_up").value = prev.follow_up;
-          document.getElementById("conversion").value = prev.conversion;
-          // alert(prev.weekly_date);
-          var today = new Date();
-          var today = today.toISOString().substring(0, 10);
-
-          document.getElementById("weekly_date").value = prev.weekly_date;
-          document.getElementById("weekly_date").max = today;
-
-          var today = new Date(prev.weekly_date);
-          var today = today.toISOString().substring(0, 10);
-          document.getElementById("weekly_date").value = today;
-          document.getElementById("weekly_date").max = today;
-          var weekly_source = today;
-          var options = {
-            month: "short",
-          };
-          var options_year = {
-            year: "2-digit",
-          };
-          var today = new Date(weekly_source);
-
-          //init date
-          var date = new Date(weekly_source);
-
-          document.getElementById("week_number").innerHTML =
-            getWeekOfMonth(date);
-          document.getElementById("week_number").innerHTML =
-            "Week - Month" +
-            ' <i class="far fa-calendar-alt clender_icons"></i>';
-
-          document.getElementById("weekly_source").value =
-            today.toLocaleDateString("en-US", options) +
-            " Week " +
-            getWeekOfMonth(date) +
-            " -" +
-            today.toLocaleDateString("en-US", options_year);
-        } else {
-          var today = new Date();
-          var today = today.toISOString().substring(0, 10);
-
-          document.getElementById("weekly_date").value = today;
-          document.getElementById("weekly_date").max = today;
-
-          var user_id = localStorage.getItem("user_id");
-          var secondary_id = localStorage.getItem("second_user_id");
-          if (!secondary_id) {
-            var secondary_id = null;
-          }
-          if (secondary_id == user_id) {
-            secondary_id = null;
-          }
-          var profile_link = bgpage.word.profile_link;
-          const url = `${globalURl}/getCommentsCount`;
-
-          var xhr5 = new XMLHttpRequest();
-          xhr5.open("POST", url, true);
-          xhr5.setRequestHeader("Content-Type", "application/json");
-          xhr5.send(
-            JSON.stringify({
-              profile_link: profile_link,
-              user_id: user_id,
-              secondary_id: secondary_id,
-            })
-          );
-          xhr5.onreadystatechange = function () {
-            if (xhr5.readyState == 4 && xhr5.status == 200) {
-              res = JSON.parse(xhr5.responseText);
-              var count = res.count;
-              if (count == 0) {
-                document.getElementById("comment_count").style.display = "none";
-              } else {
-                document.getElementById("comment_count").style.display =
-                  "block";
-                document.getElementById("comment_count").innerHTML = count;
-              }
-            }
-          };
-
-          document.getElementById("star__delete__icon").style.display = "block";
-          document.getElementById("yeen").style.display = "none";
-          var starIcon = document.getElementById("star__delete__icon");
-          starIcon.src = "Assets/img/star-black.png";
-          // document.getElementById("yeen").innerHTML = `<img class="new_img_main_icon" id="star__delete__icon" src="Assets/img/star-black.png"
-          // height="18px;" width="18px;">`;
-          name = localStorage.getItem("second_user_name")
-            if(name != "null" && name != ""){
-              document.getElementById("savedUserMessage").innerText =
-              `You're in ${name}'s Database`;
-            }
-            else{
-            document.getElementById("savedUserMessage").innerText =
-              "Records from Database";
-            }
-        }
-      }
-    };
-
-    var today = new Date();
-    var today = today.toISOString().substring(0, 10);
-    // document.getElementById("discovery_call").value = today;
-    document.getElementById("weekly_date").value = today;
-    document.getElementById("weekly_date").max = today;
-    var weekly_source = today;
-    var options = {
-      month: "short",
-    };
-    var options_year = {
-      year: "2-digit",
-    };
-    var today = new Date(weekly_source);
-
-    // init date
-    var date = new Date(weekly_source);
-
-    // document.getElementById("week_number").innerHTML =(getWeekOfMonth(date));
-    document.getElementById("week_number").innerHTML =
-      "Week - Month" + ' <i class="far fa-calendar-alt clender_icons"></i>';
-
-    document.getElementById("weekly_source").value =
-      today.toLocaleDateString("en-US", options) +
-      " Week " +
-      getWeekOfMonth(date) +
-      " -" +
-      today.toLocaleDateString("en-US", options_year);
-
-    removeLoader();
   }
 }
 
@@ -1166,6 +1379,7 @@ isImage =  localStorage.getItem("profilePic");
   var modalProspectId = localStorage.getItem("modalProspectId");
   var modalProspectLink = localStorage.getItem("modalProspectLink");
   var prospectData = JSON.parse(localStorage.getItem("prospectData"));
+  console.log('prospect_data',prospectData)
 
   if (
     isImageClicked != null &&
@@ -1177,21 +1391,35 @@ isImage =  localStorage.getItem("profilePic");
     localStorage.removeItem("modalProspectLink");
     localStorage.removeItem("prospectData");
 
-    chrome.extension.getBackgroundPage().word = prospectData;
+    bgpage.word = prospectData;
 
     profile_check = 500;
 
-    
-
-
     let imageInterval = setInterval(() => {
       if (document.getElementById("image")) {
-        document
-          .getElementById("image")
-          .setAttribute("src", prospectData.image);
+          addLoader();
         setTimeout(() => {
+          chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+            bgpage = msg;
+           
+            if (bgpage.word?.name) {
+              // removeLoader()
+              window.location.reload();            
+            }
+          }
+          )
+          setTimeout(() => {
+            removeLoader()
+            var myToast = Toastify({
+              text: "Slow internet connection",
+              duration: 2000,
+            });
+            myToast.showToast();
+          },6000)
+
+          
           clearInterval(imageInterval);
-        }, 1000);
+        }, 6000);
       }
     }, 500);
   }
@@ -1207,7 +1435,7 @@ isImage =  localStorage.getItem("profilePic");
     localStorage.removeItem("isProspectCollabClicked");
     localStorage.removeItem("prospectCollabData");
 
-    chrome.extension.getBackgroundPage().word = prospectCollabData;
+    bgpage.word = prospectCollabData;
 
     profile_check = 500;
 
@@ -1230,7 +1458,7 @@ isImage =  localStorage.getItem("profilePic");
   if (prospectCollabData != null) {
     localStorage.removeItem("homeProspectData");
 
-    chrome.extension.getBackgroundPage().word = prospectCollabData;
+    bgpage.word = prospectCollabData;
 
     profile_check = 500;
 
@@ -1248,34 +1476,26 @@ isImage =  localStorage.getItem("profilePic");
 })();
 
 setInterval(() => {
-  // alert();
   if (profile_check < 100) {
-    let bgpage = chrome.extension.getBackgroundPage();
-    let title = bgpage.word.title;
-    let name = bgpage.word.name;
-    let description = bgpage.word.description;
-    let address = bgpage.word.address;
-    let company = bgpage.word.company;
-    let about = bgpage.word.about;
-    let img = bgpage.word.img;
-    let profile_link = bgpage.word.profile_link;
-    let pipelineCheck = localStorage.getItem("pipeLineClick");
+    let bgData = JSON.parse(localStorage.getItem("bgData"));
 
-    if (!name) {
-      addLoader();
+    if (bgData) {
+      document.getElementById("results").style.display = "block";
 
-      // setTimeout(() => {
-      //   removeLoader();
-      //   alert('hh');
-      //   clearInterval(i)
+      bgpage.word = bgData;
 
-      // }, 10000)
-    } else {
-      removeLoader();
+      let name = bgpage.word.name;
+      let description = bgpage.word.description;
+      let address = bgpage.word.address;
+      let company = bgpage.word.company;
+      let about = bgpage.word.about;
+      let img = bgpage.word.img;
+      let profile_link = bgpage.word.profile_link;
+      let pipelineCheck = localStorage.getItem("pipeLineClick");
 
       if (pipelineCheck) {
         getAll();
-        localStorage.removeItem("pipeLineClick");
+        // localStorage.removeItem("pipeLineClick");
       }
 
       if (!localStorage.getItem("user_id")) {
@@ -1285,35 +1505,31 @@ setInterval(() => {
         document.querySelector(".upperBackBtn").style.visibility = "visible";
         document.querySelector(".upperMessageBtn").style.display = "visible";
       }
+      document.getElementById("topTitleName").innerText = name;
+      document.getElementById("fname").value = name;
+      document.getElementById("description").value = description;
+      document.getElementById("address").value = address;
+      document.getElementById("company").value = company;
+      document.getElementById("about").value = about;
+      var copy_link = profile_link;
+
+      document.getElementById("profile_link").innerText = copy_link;
+      let image = document.getElementById("image");
+      image.src = img;
+
+      var status_tag = document.getElementById("status");
+      status_tag = status_tag[status_tag.selectedIndex].style.color;
+      document.getElementById("status_color").style.backgroundColor =
+        status_tag;
     }
-
-    // document.getElementById('name').innerText = name;
-    document.getElementById("topTitleName").innerText = name;
-    document.getElementById("fname").value = name;
-    document.getElementById("description").value = description;
-    document.getElementById("address").value = address;
-    document.getElementById("company").value = company;
-    document.getElementById("about").value = about;
-    var copy_link = profile_link;
-
-    document.getElementById("profile_link").innerText = copy_link;
-    let image = document.getElementById("image");
-    image.src = img;
-
-    var status_tag = document.getElementById("status");
-    status_tag = status_tag[status_tag.selectedIndex].style.color;
-    document.getElementById("status_color").style.backgroundColor = status_tag;
   }
-
-  profile_check++;
-  // window.location.href = "login.html";
 }, 200);
 
 (function () {
   var pipe = localStorage.getItem("pipeLineClick");
   setTimeout(() => {
     if (pipe) {
-      localStorage.removeItem("pipeLineClick");
+      // localStorage.removeItem("pipeLineClick");
       document.querySelector(
         ".new-header-left-img"
       ).innerHTML = `<div class="loaderIcons"></div>
@@ -1325,7 +1541,6 @@ setInterval(() => {
       document.getElementById("results").style.display = "none";
       document.getElementById("list_table_view").style.display = "block";
       getAll();
-      var bgpage = chrome.extension.getBackgroundPage();
 
       prev = bgpage.word;
 
@@ -1368,26 +1583,22 @@ setInterval(() => {
       document.getElementById("description").value = prev.description;
       document.getElementById("company").value = prev.company;
       document.getElementById("about").value = prev.about;
-      
-      var http = new XMLHttpRequest();
 
-      var http = new XMLHttpRequest();
+      // var http = new XMLHttpRequest();
 
-      http.open('HEAD', prev.image, false);
-      http.send();
-      console.log('http',http)
-      w = document.getElementById("image")
-      if(http.status != 200 || w.src.includes("user.png")){
-        console.log(http,'here')
-        prev.image = bgpage.word.img;
-        imageprofilesecondInterval = setTimeout(() => {
-          eventSave();
-          clearInterval(imageprofilesecondInterval);
-        }, 6000);
+      // var http = new XMLHttpRequest();
 
-      }else{
-        console.log('yeenyeenyeen',bgpage.word.img);
-      }
+      // http.open("HEAD", prev.image, false);
+      // http.send();
+      // w = document.getElementById("image");
+      // if (http.status != 200 || w.src.includes("user.png")) {
+      //   prev.image = bgpage.word.img;
+      //   imageprofilesecondInterval = setTimeout(() => {
+      //     eventSave();
+      //     clearInterval(imageprofilesecondInterval);
+      //   }, 6000);
+      // } else {
+      // }
       document.getElementById("image").src = prev.img;
 
       document.getElementById("profile_link").innerText = prev.profile_link;
@@ -1398,7 +1609,7 @@ setInterval(() => {
 
       localStorage.setItem("prospect_id", prev.id);
     }
-  }, 1);
+  }, 500);
 })();
 
 //////////////////// Event Listeners /////////////////////////////
@@ -1477,6 +1688,106 @@ if (document.getElementById("category_submit")) {
     .addEventListener("click", categorySubmit);
 }
 
+if (document.getElementById("shring_in")) {
+  document
+    .getElementById("shring_in")
+    .addEventListener("change", sharing_in);
+}
+function sharing_in(){
+
+  value_getter =  document.getElementById("shring_in").value;
+  if(value_getter == "0"){
+    document.querySelector(".groupBoxContainer1").style.marginTop = "0px"
+
+    openProspectModal()
+  }else{
+    document.querySelector(".groupBoxContainer1").innerHTML = ``
+    document.querySelector(".groupBoxContainer1").style.marginTop = "10px"
+
+    var user_id = localStorage.getItem("user_id");
+
+                const url = `${globalURl}/chats/${user_id}`;
+
+                let xhr = new XMLHttpRequest();
+
+                xhr.open("GET", url, true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send();
+                xhr.onreadystatechange = function () {
+                  //Call a function when the state changes.
+                  if (xhr.readyState == 4 && xhr.status == 200) {
+                    let userData = JSON.parse(xhr.responseText);
+
+                    if (userData.data.length > 0) {
+                      userData.data.map((item, i, arr) => {
+                        var row = `
+                      <div class="prospectContent memberDiv shareToFriends" data-member_id=${item.linked_to_id}>
+
+                        <img src=${item.image} alt=""/>
+
+                        <h1 style="margin-bottom:33px !important">${item.mutual}</h1>
+
+                      </div>
+                    `;
+
+                        document.querySelector(".groupBoxContainer1").innerHTML +=
+                          row;
+                      });
+                      document.querySelector(".groupBoxContainer1").innerHTML += `<div class="prospectContent memberDiv shareToFriends" data-member_id=${user_id}>
+
+                      <img src=${userData.user_image} alt=""/>
+
+                      <h1 style="margin-bottom:33px !important">${userData.user_name}</h1>
+
+                    </div>`
+
+                    } else {
+                      document.querySelector(".groupBoxContainer1").innerHTML += `<div class="prospectContent memberDiv shareToFriends" data-member_id=${user_id}>
+
+                      <img src=${userData.user_image} alt=""/>
+
+                      <h1 style="margin-bottom:33px !important">${userData.user_name}</h1>
+
+                    </div>`
+                      
+                    }
+                    document.querySelectorAll(".shareToFriends").forEach((ele) => {
+                      ele.addEventListener("click", ()=>{
+                        let receiver_id = ele.getAttribute("data-member_id");
+                        var user_id = localStorage.getItem("user_id");
+                        var prospect_id = localStorage.getItem("prospect_id");
+                        var text = "Some text";
+                        if (receiver_id.length > 0 && prospect_id) {
+                          const url = `${globalURl}/send_message_shared`;
+
+                          let xhr = new XMLHttpRequest();
+
+                          xhr.open("POST", url, true);
+                          xhr.setRequestHeader("Content-Type", "application/json");
+                          xhr.send(
+                            JSON.stringify({
+                              user_id,
+                              receiver_id,
+                              prospect_id,
+                              shring: "yes",
+                              text: "",
+                              replied_id: "",
+                            })
+                          );
+                        }
+                      });
+                    });
+
+
+
+                  }
+                };
+
+    
+  }
+
+}
+
 /// Filters
 if (document.getElementById("status_filter")) {
   document
@@ -1509,7 +1820,6 @@ if (document.getElementById("view_type")) {
     .addEventListener("change", weekFilterChange);
 }
 if (document.getElementById("search_box")) {
-  console.log("searched")
   document
     .getElementById("search_box")
     .addEventListener("change", searchProspects);
@@ -1518,6 +1828,11 @@ if (document.getElementById("search_box")) {
 
 if (document.getElementById("weekly_date")) {
   document.getElementById("weekly_date").addEventListener("change", weekChange);
+}
+if (document.getElementById("client_messages")) {
+  document
+    .getElementById("client_messages")
+    .addEventListener("input", eventSave);
 }
 if (document.getElementById("notes")) {
   document.getElementById("notes").addEventListener("input", eventSave);
@@ -1606,6 +1921,16 @@ if (document.getElementById("share_submit")) {
 
   document.getElementById("username").addEventListener("keyup", (e) => {
     if (e.keyCode == 13) {
+      shareSubmit();
+    }
+  });
+}
+if (document.getElementById("input-list-multi-dbs")) {
+  document.getElementById("input-list-multi-dbs").addEventListener("keyup", (event) => {
+    console.log("check")
+    if (event.key === "Enter") {
+      document.querySelector(".searchBoxContainer").style.display = "none"
+      event.preventDefault();
       shareSubmit();
     }
   });
@@ -1699,26 +2024,26 @@ function starDeleteProspect() {
       if (xhr.readyState == 4 && xhr.status == 200) {
         if (xhr.responseText != "400") {
           deleteProspect();
-          getname = localStorage.getItem("second_user_name")
-            if(getname != "null" && getname != ""){
-              document.getElementById("savedUserMessage").innerText =
-              `You're in ${getname}'s Database`;
-            }
-            else{
+          getname = localStorage.getItem("second_user_name");
+          if (getname != "null" && getname != "") {
+            document.getElementById(
+              "savedUserMessage"
+            ).innerText = `You're in ${getname}'s Database`;
+          } else {
             document.getElementById("savedUserMessage").innerText =
               "Records from Database";
-            }
+          }
         } else {
           getRequest();
-          getname = localStorage.getItem("second_user_name")
-            if(getname != "null" && getname != ""){
-              document.getElementById("savedUserMessage").innerText =
-              `You're in ${getname}'s Database`;
-            }
-            else{
+          getname = localStorage.getItem("second_user_name");
+          if (getname != "null" && getname != "") {
+            document.getElementById(
+              "savedUserMessage"
+            ).innerText = `You're in ${getname}'s Database`;
+          } else {
             document.getElementById("savedUserMessage").innerText =
               "Records from Database";
-            }
+          }
         }
       }
     };
@@ -1733,19 +2058,26 @@ function starDeleteProspect() {
 }
 
 function iconShareGroupChat(e) {
+  dms = "group"
+  localStorage.setItem("buttonClick",dms)
   var group_id = e.currentTarget.getAttribute("data-group_id");
   localStorage.setItem("group_id", group_id);
 
   localStorage.setItem("group_id", group_id);
   localStorage.setItem("shared", true);
+  pagename = 'messagebox'
+  localStorage.setItem('page_name',pagename)
+  localStorage.removeItem("prospect_id")
   window.location.href = "messagebox.html";
 }
 
 function imgPageChange() {
   var access_token = localStorage.getItem("access_token");
   var username = localStorage.getItem("username");
-
+  console.log("logo")
   if (access_token && username) {
+    pagename = 'home'
+    localStorage.setItem('page_name',pagename)
     document.location.href = "home.html";
   }
 }
@@ -1753,6 +2085,8 @@ function imgPageChange() {
 function shareBackPage() {
   var back = localStorage.getItem("backpage");
   if (back) {
+    pagename = 'messagebox'
+  localStorage.setItem('page_name',pagename)
     document.location.href = "messagebox.html";
   } else {
     document.location.href = "popup.html";
@@ -1778,7 +2112,7 @@ function profileCopyFn() {
 
 function imageClicked() {
   var profile_link = document.getElementById("profile_link").innerText;
-
+  user_id = localStorage.getItem("user_id")
   let params = {
     active: true,
     currentWindow: true,
@@ -1892,6 +2226,21 @@ function addComment() {
       }
       var profile_link = document.getElementById("profile_link").innerText;
       var comment = document.getElementById("comment_box").value;
+
+      if (comment.includes("http")) {
+        myArray = comment.split(" ");
+        j = 0;
+        for (j = 0; j <= myArray.length - 1; j++) {
+          if (myArray[j].includes("http")) {
+            myArray[
+              j
+            ] = `<a class="link_clicking" style="cursor:pointer;color:#b0c4de" href=${myArray[j]}>${myArray[j]}</a>`;
+          }
+        }
+        comment = myArray.join(" ");
+      } else {
+      }
+
       document.getElementById("comment_box").value = "";
 
       if (comment.length != 0) {
@@ -1960,6 +2309,20 @@ function addComment() {
       let comment_id = localStorage.getItem("comment_id");
       let updatedComment = document.getElementById("comment_box").value;
 
+      if (updatedComment.includes("http")) {
+        myArray = updatedComment.split(" ");
+        j = 0;
+        for (j = 0; j <= myArray.length - 1; j++) {
+          if (myArray[j].includes("http")) {
+            myArray[
+              j
+            ] = `<a class="link_clicking" style="cursor:pointer;color:#b0c4de" href=${myArray[j]}>${myArray[j]}</a>`;
+          }
+        }
+        updatedComment = myArray.join(" ");
+      } else {
+      }
+
       if (updatedComment != "") {
         const url = `${globalURl}/edit_comment`;
 
@@ -1994,6 +2357,7 @@ function addComment() {
 
     myToast.showToast();
   }
+  link_click();
 }
 
 function viewComments() {
@@ -2010,8 +2374,6 @@ function viewComments() {
     document.getElementById("comment_box").disabled = false;
 
     setTimeout(() => {
-      
-
       if (secondary_id == user_id) {
         secondary_id = null;
       }
@@ -2043,9 +2405,8 @@ function viewComments() {
                 let getMonth = new Date().getMonth() + 1;
                 let getYear = new Date().getFullYear();
 
-                let currentDate = `${getYear}-${
-                  getMonth < 10 ? "0" + getMonth : "" + getMonth
-                }-${getDate < 10 ? "0" + getDate : "" + getDate}`;
+                let currentDate = `${getYear}-${getMonth < 10 ? "0" + getMonth : "" + getMonth
+                  }-${getDate < 10 ? "0" + getDate : "" + getDate}`;
 
                 let dbDate = obj.created_at.slice(0, 10);
 
@@ -2064,11 +2425,9 @@ function viewComments() {
 
                   let dbTime = obj.created_at.slice(11, 19);
 
-                  let currentTime = `${
-                    getHours < 10 ? "0" + getHours : "" + getHours
-                  }:${getMinutes < 10 ? "0" + getMinutes : "" + getMinutes}:${
-                    getSeconds < 10 ? "0" + getSeconds : "" + getSeconds
-                  }`;
+                  let currentTime = `${getHours < 10 ? "0" + getHours : "" + getHours
+                    }:${getMinutes < 10 ? "0" + getMinutes : "" + getMinutes}:${getSeconds < 10 ? "0" + getSeconds : "" + getSeconds
+                    }`;
 
                   var valuestart = dbTime;
                   var valuestop = currentTime;
@@ -2120,18 +2479,21 @@ function viewComments() {
                         </div>
                       </div>
                       <div class="messageDiv">
-                      <p class="msgPara" data-comment_id=${obj.id}>${obj.comment}</p>
-                    </div> 
+                      <p class="msgPara" data-comment_id=${obj.id}>${obj.comment}</p>  ${obj.update_status == 1 ? `<p style="font-size: 13px !important; color:#0073FF;font-weight:bold "> (Edited)</p>`: ``}
+                    </div>
                   </div>
                 </div>`;
 
                 document.getElementById("comments_data").innerHTML += row;
+                link_click()
               });
 
               setTimeout(() => {
                 document.querySelectorAll(".threeDotsMenu").forEach((ele) => {
                   ele.addEventListener("click", openThreeDotMenu);
                 });
+
+
               }, 100);
             }
           }
@@ -2158,7 +2520,7 @@ function viewComments() {
 
 function openThreeDotMenu(e) {
   let currentMenuBox = e.currentTarget.parentElement.parentElement;
-
+link_click()
   setTimeout(() => {
     if (currentMenuBox.querySelector(".menuBox").style.display == "none") {
       document.querySelectorAll(".menuBox").forEach((ele) => {
@@ -2213,6 +2575,7 @@ function editComment(e) {
   document
     .getElementById("update_comment")
     .addEventListener("click", addComment);
+    link_click();
 }
 
 function deleteComment(e) {
@@ -2242,6 +2605,7 @@ function deleteComment(e) {
       }
     }
   };
+  link_click();
 }
 
 function enterPressRegister(event) {
@@ -2275,6 +2639,22 @@ function getAllDatabases() {
   var user_id = localStorage.getItem("user_id");
   var profilePic = localStorage.getItem("profilePic");
 
+    var secondUserPic = localStorage.getItem("secondUserPic");
+      var secondUserPic = localStorage.getItem("secondUserPic");
+var second_user_name = localStorage.getItem("second_user_name")
+  document.getElementById("database_in").src = secondUserPic
+  if(second_user_name != "null"){
+    document.getElementById("add_desc").innerHTML = `<p style="margin-bottom: 0px;
+    margin-right: 10px;">You're in ${second_user_name}'s Database </p><svg class="single_database"  style="width: 14px;color:blue;cursor:pointer" id=${user_id} data-image=${profilePic} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"/></svg>`  
+  }
+  else{
+    document.getElementById("add_desc").innerHTML = `<p style="margin-bottom: 0px;
+  margin-right: 10px;">Records from database </p>`
+  }
+  
+  
+
+
   if (access_token && user_id) {
     if (document.getElementById("multi_database")) {
       const url1 = `${globalURl}/linkingids?user_id=` + username;
@@ -2287,33 +2667,64 @@ function getAllDatabases() {
         //Call a function when the state changes.
         if (xhr1.readyState == 4 && xhr1.status == 200) {
           if (xhr1.responseText != "400") {
+
             var respon = xhr1.responseText;
             respon = JSON.parse(respon);
-            var row =
-              '<div style="width: 100%;display: flex; justify-content: center; margin-top: 20px;"><img src="logo.png" id="dbLogo" style="height: 50px; width: 50px"></div><div class="text-center" style="margin:5% !important"><h3>Databases</h3></div>';
-            row +=
-              `<div class="mt-2 text-center single_database" id="` +
-              user_id +
-              `" data-image=${profilePic} style="padding-bottom:2%; margin-top:5% !important; cursor:pointer"><p class="pl-2" style="margin-bottom:0"><strong>  - ` +
-              username +
-              `</strong> </p></div>`;
-            document.getElementById("multi_database").innerHTML = row;
+            document.getElementById("pills-tab-2").innerText = `Access Your Friend's Databases (${respon.links.length})`
+            // var row =
+            //   '<div style="width: 100%;display: flex; justify-content: center; margin-top: 20px;"><img src="logo.png" id="dbLogo" style="height: 50px; width: 50px"></div><div class="text-center" style="margin:5% !important"><h3>Databases</h3></div>';
+            // row +=
+            //   `<div class="mt-2 text-center single_database" id="` +
+            //   user_id +
+            //   `" data-image=${profilePic} style="padding-bottom:2%; margin-top:5% !important; cursor:pointer"><p class="pl-2" style="margin-bottom:0"><strong>  - ` +
+            //   username +
+            //   `</strong> </p></div>`;
+            // document.getElementById("multi_database").innerHTML = row;
 
-            var finalArr = respon.map(function (obj, key) {
-              row =
-                `<div class="mt-2 text-center single_database" id="` +
-                obj.link_id + 
-                `" data-name=${obj.naming} data-image=${
+            var finalArr = respon.links.map(function (obj, key) {
+              row = `<div class="user-list single_database" style="cursor:pointer" id="` +
+                obj.link_id +
+                `"  data-name=${obj.naming} data-image=${
                   obj.image != null ? obj.image : "./Assets/img/user.png"
-                } style="padding-bottom:2%; margin-top:5% !important; cursor:pointer"><p class="pl-2" style="margin-bottom:0"><strong>  - ` +
-                obj.user_id +
-                `</strong> </p></div>`;
+                }>
+                  <div class="img-name">
+                    <img src="${obj.image}" alt="">
+                    <h5 class="name">${obj.names_original}</h5>
+                  </div>
+                  <div class="access-box granted">Access Granted</div>
+                  
+                </div>`
+              
+                
               // all1 += row;
-              document.getElementById("multi_database").innerHTML += row;
+              document.getElementById("user-listings2").innerHTML += row;
             });
+            var finalArr = respon.pending.map(function (obj, key) {
+              row = `<div class="user-list " style="cursor:pointer" id="` +
+                obj.link_id +
+                `"  data-name=${obj.naming} data-image=${
+                  obj.image != null ? obj.image : "./Assets/img/user.png"
+                }>
+                  <div class="img-name">
+                    <img src="${obj.image}" alt="">
+                    <h5 class="name">${obj.names_original}</h5>
+                  </div>
+                  <div class="access-box granted" style="background-color:#FFBF00">Pending</div>
+                  
+                </div>`
+              
+                
+              // all1 += row;
+              document.getElementById("user-listings2").innerHTML += row;
+            });
+            if(respon.links.length > 0){
+              tempo = respon.links.concat(respon.pending);
+              localStorage.setItem("friends",JSON.stringify(tempo))
+            }
+
 
             var single_database =
-              document.getElementsByClassName("single_database");
+              document.querySelectorAll(".single_database");
             for (var i = 0; i < single_database.length; i++) {
               single_database[i].addEventListener(
                 "click",
@@ -2327,8 +2738,100 @@ function getAllDatabases() {
 
             document.getElementById("results").style.display = "none";
             document.getElementById("list_table_view").style.display = "none";
+          }
+        }
+      };
+      document.getElementById("user-listings1").innerHTML = ``;
 
-            
+      const url7 = `${globalURl}/linkingids_none?user_id=` + username;
+      var xhr7 = new XMLHttpRequest();
+      xhr7.open("GET", url7, true);
+      xhr7.setRequestHeader("Content-Type", "application/json");
+      xhr7.send();
+
+      xhr7.onreadystatechange = function () {
+        //Call a function when the state changes.
+        if (xhr7.readyState == 4 && xhr7.status == 200) {
+          if (xhr7.responseText != "400") {
+
+            var respon = xhr7.responseText;
+            respon = JSON.parse(respon);
+            document.getElementById("pills-tab-1").innerText = `Your Database has been shared with (${respon.length})`
+            // var row =
+            //   '<div style="width: 100%;display: flex; justify-content: center; margin-top: 20px;"><img src="logo.png" id="dbLogo" style="height: 50px; width: 50px"></div><div class="text-center" style="margin:5% !important"><h3>Databases</h3></div>';
+            // row +=
+            //   `<div class="mt-2 text-center single_database" id="` +
+            //   user_id +
+            //   `" data-image=${profilePic} style="padding-bottom:2%; margin-top:5% !important; cursor:pointer"><p class="pl-2" style="margin-bottom:0"><strong>  - ` +
+            //   username +
+            //   `</strong> </p></div>`;
+            // document.getElementById("multi_database").innerHTML = row;
+
+            var finalArr = respon.map(function (obj, key) {
+              row = `<div class="user-list "  id="` +
+                obj.link_id +
+                `"  data-name=${obj.naming} data-image=${
+                  obj.image != null ? obj.image : "./Assets/img/user.png"
+                }>
+                  <div class="img-name">
+                    <img src="${obj.image}" alt="">
+                    <h5 class="name">${obj.names_original}</h5>
+                  </div>
+                  ${obj.status == 0? `<div data-id=${obj.id} style="cursor:pointer" class="access-box granted changing_access">Access Granted</div> ` : `<div data-id=${obj.id} style="cursor:pointer;background-color:rgb(128, 128, 128) !important" class="access-box granted changing_access">Access Denied</div> `}
+                  
+                  
+                </div>`
+              
+                
+              // all1 += row;
+              document.getElementById("user-listings1").innerHTML += row;
+            });
+            if(respon.length > 0){
+              localStorage.setItem("yours",JSON.stringify(respon))
+            }
+            document.querySelectorAll(".changing_access").forEach((ele) => {
+              ele.addEventListener("click", (e) => {
+                get_inside = e.currentTarget.innerHTML
+                message_id = e.currentTarget.getAttribute("data-id")
+
+
+                const url = `${globalURl}/changing_access/${message_id}`;
+
+                  let xhr = new XMLHttpRequest();
+
+                  xhr.open("GET", url, true);
+                  xhr.setRequestHeader("Content-Type", "application/json");
+                  xhr.send();
+
+                if(get_inside.includes("Granted")){
+
+                  e.currentTarget.innerHTML = `Access Denied`
+                  e.currentTarget.style.backgroundColor = `rgb(128, 128, 128)`
+                }
+                else{
+                  e.currentTarget.innerHTML = `Access Granted`
+                  e.currentTarget.style.backgroundColor = `#00B731`
+                }
+              })
+            })
+
+
+
+            // var single_database =
+            //   document.querySelectorAll(".single_database");
+            // for (var i = 0; i < single_database.length; i++) {
+            //   single_database[i].addEventListener(
+            //     "click",
+            //     getSingleDatabase,
+            //     false
+            //   );
+            // }
+            // // document.getElementsByClassName('single_database').addEventListener('click', getSingleDatabase);
+
+            // document.getElementById("multi_database").style.display = "block";
+
+            // document.getElementById("results").style.display = "none";
+            // document.getElementById("list_table_view").style.display = "none";
           }
         }
       };
@@ -2355,28 +2858,42 @@ function getSingleDatabase() {
     var name = this.getAttribute("data-name");
     document.getElementById("multi_database").style.display = "none";
     localStorage.setItem("second_user_id", user_id);
+    chrome.storage.local.set({ second_user_id: user_id }, function() {
+      console.log('Variable saved to Chrome Storage.'+user_id);
+    });
     localStorage.setItem("second_user_name", name);
 
     localStorage.setItem("secondUserPic", image);
     document.getElementById("profilePic").src = image;
+    pagename = 'home'
+    localStorage.setItem('page_name',pagename)
     document.location.href = "home.html";
   }, 1500);
 }
 
 function shareSubmit() {
-  var username = document.getElementById("username").value;
+  console.log("yeen enter")
+  var username = document.getElementById("input-list-multi-dbs").value;
   var message = document.getElementById("message1");
   var user_id = localStorage.getItem("username");
   var link_id = localStorage.getItem("user_id");
-
+  console.log(username,"user")
   var re = /\S+@\S+\.\S+/;
   // return re.test(email);
   if (!re.test(username)) {
-    message.innerText = "Email Format incorrect";
+    var myToast = Toastify({
+      text: "Incorrect Email Format",
+      duration: 2000,
+    });
+    document.querySelector(".searchBoxContainer").style.display = "none"
+    myToast.showToast();
   } else {
-    message.style.color = "green";
-    message.innerText = "Waiting for response";
-
+    
+var myToast = Toastify({
+      text: "Sending email...",
+      duration: 2000,
+    });
+    myToast.showToast();
     const url =
       `${globalURl}/share?email=` +
       username +
@@ -2393,14 +2910,46 @@ function shareSubmit() {
     xhr.onreadystatechange = function () {
       //Call a function when the state changes.
       if (xhr.readyState == 4 && xhr.status == 200) {
-        if (xhr.responseText != "400") {
-          message.innerText = "Confirmation Email Sent Successful";
-          setTimeout(function () {
-            document.location.href = "popup.html";
-          }, 3000);
+        if (xhr.responseText != "400" && xhr.responseText != "350" && xhr.responseText != "300") {
+          
+          var myToast = Toastify({
+            text: "Confirmation email sent successfully",
+            duration: 3000,
+          });
+          document.getElementById("input-list-multi-dbs").value = null
+          document.querySelector(".searchBoxContainer").style.display = "none"
+
+      
+          myToast.showToast();
         } else {
-          message.style.color = "red";
-          message.innerText = "No Such User Exists";
+          if(xhr.responseText == "350"){
+            
+            var myToast = Toastify({
+              text: "User has already shared its database",
+              duration: 3000,
+            });
+            document.querySelector(".searchBoxContainer").style.display = "none"
+            myToast.showToast();
+          }
+          if(xhr.responseText == "300"){
+            
+            var myToast = Toastify({
+              text: "User response pending",
+              duration: 3000,
+            });
+            document.querySelector(".searchBoxContainer").style.display = "none"
+            myToast.showToast();
+          }
+          if(xhr.responseText == "400"){
+            
+            var myToast = Toastify({
+              text: "No such user",
+              duration: 3000,
+            });
+            document.querySelector(".searchBoxContainer").style.display = "none"
+            myToast.showToast();
+          }
+          
         }
       }
     };
@@ -2412,7 +2961,7 @@ function share() {
   var user_id = localStorage.getItem("user_id");
 
   if (access_token && user_id) {
-    document.location.href = "share.html";
+    getAllDatabases()
   } else {
     var myToast = Toastify({
       text: "Login to access",
@@ -2489,6 +3038,7 @@ function showFilters() {
 }
 
 function weekFilterChange(e) {
+  pageNo = 10;
   ArrayMaker();
 }
 
@@ -2721,187 +3271,36 @@ function getLoginPage() {
 }
 
 function getAll() {
-  btn = document.getElementById("view_all_1")
-  btn.disabled = true
-  secondUserPic = localStorage.getItem("secondUserPic");
-  if(secondUserPic != "")
-  {
-    document.getElementById("profilePicc").src = secondUserPic
-  }
-  else
-  {
+  btn = document.getElementById("view_all_1");
+  btn.disabled = true;
+  let secondUserPic = localStorage.getItem("secondUserPic");
+  if (secondUserPic != "") {
+    document.getElementById("profilePicc").src = secondUserPic;
+  } else {
     profilePic = localStorage.getItem("profilePicc");
-    document.getElementById("profilePicc").src = profilePic
+    document.getElementById("profilePicc").src = profilePic;
   }
-  getname = localStorage.getItem("second_user_name")
-  if(getname != "null" && getname != "")
-  {
+  getname = localStorage.getItem("second_user_name");
+  if (getname != "null" && getname != "") {
+    document.getElementById(
+      "savedUserMessagee"
+    ).innerText = `You're in ${getname}'s Database`;
+  } else {
     document.getElementById("savedUserMessagee").innerText =
-    `You're in ${getname}'s Database`;
+      "Records from Database";
   }
-  else
-  {
-    document.getElementById("savedUserMessagee").innerText =
-    "Records from Database";
-  }
+
   profile_check = 500;
-  var user_id = localStorage.getItem("user_id");
-  var second_user_id = localStorage.getItem("second_user_id");
 
-  if (second_user_id == null) {
-    second_user_id = 0;
-  }
+  document.getElementById("api_return").style.display = "none";
+  document.getElementById("results").style.display = "none";
+  document.getElementById("list_table_view").style.display = "block";
+  document.getElementById("view_all_1").disabled = false;
 
-  const url = `${globalURl}/getAll/${user_id}/${second_user_id}`;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send();
+  document.getElementById("getAll").style.display = "contents";
+  document.getElementById("getAllButtons").style.display = "block";
 
-  xhr.onreadystatechange = function () {
-    //Call a function when the state changes.
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      arr = xhr.responseText;
-      arr = JSON.parse(arr);
-      // alert(arr);
-      document.getElementById("getAll").innerHTML = "";
-
-      var finalArray = arr.map(function (obj, key) {
-
-              
-        if(obj.image.includes("http") || obj.image.includes("chrome-extension") || obj.image == null){
-         console.log("test")
-         
-        const url = `${globalURl}/updating_prospect_image`;
-
-        let xhr = new XMLHttpRequest();
-    
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(
-          JSON.stringify({
-            id : obj.id,
-          })
-        );
-        obj.image ="./Assets/img/user.png"
-        }
-
-
-        
-
-
-
-
-        row =
-          `<div class="row m-0 tabs_two_main single_profile" id="` +
-          obj.id +
-          `">
-				  <div class="tabs_cols_two_main_1">
-					  <span class="left data_name">
-          ${obj.name != null ? obj.name : "No Name Added"} 
-          </span>
-				  </div>
-				  <div class="tabs_cols_two_main_1"
-				           >
-					  <img src="${
-              obj.image != null ? obj.image : "./Assets/img/user.png"
-            }" class="tabs_two_imgs">
-									  </span>
-					  <span class="right"><i class="far fa-comment-alt comment_icon"></i></span>
-				  </div>
-				  <div class="tabs_cols_two_main_1">
-
-					  <span class="left">
-              ${
-                obj.description != null
-                  ? obj.description
-                  : "No Description Added"
-              }
-            </span>
-
-				  </div>
-
-				  <div class="tabs_cols_two_main_1">
-					  <span class="left">
-              ${obj.company != null ? obj.company : "No Company Added"}
-            </span>
-
-				  </div>
-				  <div class="tabs_cols_two_main_1"
-				           >
-					  <span class="Address_msg">
-              ${obj.address != null ? obj.address : "No Location Added"}
-            </span>
-				  </div>
-				  	<div class="tabs_cols_two_main_1">
-					  	${
-                obj.status === null
-                  ? `<span style="color:#0e76a8 !important;" class="congrats_msg">LinkedIn Campaign</span>`
-                  : ""
-              }
-					  	${
-                obj.status === "LinkedIn Campaign"
-                  ? `<span style="color:#0e76a8 !important;" class="congrats_msg">${obj.status}</span>`
-                  : ""
-              }
-						${
-              obj.status === "Talking/Replied"
-                ? `<span style="color:#89CFF0 !important;" class="congrats_msg">${obj.status}</span>`
-                : ""
-            }
-						${
-              obj.status === "Serious Conversations"
-                ? `<span style="color:#FFA500 !important;" class="congrats_msg">${obj.status}</span>`
-                : ""
-            }
-						${
-              obj.status === "Discovery Call Scheduled"
-                ? `<span style="color:#FF0000 !important;" class="congrats_msg">${obj.status}</span>`
-                : ""
-            }
-						${
-              obj.status === "Discovery Call Completed"
-                ? `<span style="color:#FFCB05 !important;" class="congrats_msg">${obj.status}</span>`
-                : ""
-            }
-						${
-              obj.status === "Boom"
-                ? `<span style="color:#85bb65 !important;" class="congrats_msg">${obj.status}</span>`
-                : ""
-            }
-						${
-              obj.status === "Lost"
-                ? `<span style="color:#808080 !important;" class="congrats_msg">${obj.status}</span>`
-                : ""
-            }
-					</div>
-					<div class="tabs_cols_two_main_1"
-				           >
-					  <span class="left">
-            ${obj.follow_up != null ? obj.follow_up : "No Date Added"} 
-          </span>
-				  </div>
-			  </div>`;
-        document.getElementById("getAll").innerHTML += row;
-      });
-
-      // apiCategories('status_filter');
-      // apiWeekly("weekly_filter");
-      // ArrayMaker();
-      document.getElementById("api_return").style.display = "none";
-      document.getElementById("results").style.display = "none";
-      document.getElementById("list_table_view").style.display = "block";
-      document.getElementById("view_all_1").disabled = false
-
-      document.getElementById("getAll").style.display = "contents";
-      document.getElementById("getAllButtons").style.display = "block";
-
-      var single_profile = document.getElementsByClassName("single_profile");
-      for (var i = 0; i < single_profile.length; i++) {
-        single_profile[i].addEventListener("click", getSinglePage, false);
-      }
-    }
-  };
+  ArrayMaker();
 }
 
 function getAllById(user_id) {
@@ -2943,20 +3342,18 @@ function getAllById(user_id) {
 				  </div>
 				  <div class="tabs_cols_two_main_1">
 					  <span class="left">
-					    <img src="${
-                obj.image != null ? obj.image : "./Assets/img/user.png"
-              }" class="tabs_two_imgs">
+					    <img src="${obj.image != null ? obj.image : "./Assets/img/user.png"
+          }" class="tabs_two_imgs">
 						</span>
 					  <span class="right"><i class="far fa-comment-alt comment_icon"></i></span>
 				  </div>
 				  <div class="tabs_cols_two_main_1">
 
 					  <span class="left">
-              ${
-                obj.description != null
-                  ? obj.description
-                  : "No Description Added"
-              }
+              ${obj.description != null
+            ? obj.description
+            : "No Description Added"
+          }
             </span>
 
 				  </div>
@@ -2972,46 +3369,38 @@ function getAllById(user_id) {
               ${obj.address != null ? obj.address : "No Location Added"}
             </span>
 				  </div>
-				  <div class="tabs_cols_two_main_1">	 
-				  	${
-              obj.status === null
-                ? `<span style="color:#0e76a8 !important;" class="congrats_msg">LinkedIn Campaign</span>`
-                : ""
-            }
-				  	${
-              obj.status === "LinkedIn Campaign"
-                ? `<span style="color:#0e76a8 !important;" class="congrats_msg">${obj.status}</span>`
-                : ""
-            } 
-					${
-            obj.status === "Talking/Replied"
-              ? `<span style="color:#89CFF0 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
+				  <div class="tabs_cols_two_main_1">
+				  	${obj.status === null
+            ? `<span style="color:#0e76a8 !important;" class="congrats_msg">LinkedIn Campaign</span>`
+            : ""
           }
-					${
-            obj.status === "Serious Conversations"
-              ? `<span style="color:#FFA500 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
+				  	${obj.status === "LinkedIn Campaign"
+            ? `<span style="color:#0e76a8 !important;" class="congrats_msg">${obj.status}</span>`
+            : ""
           }
-					${
-            obj.status === "Discovery Call Scheduled"
-              ? `<span style="color:#FF0000 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
+					${obj.status === "Talking/Replied"
+            ? `<span style="color:#89CFF0 !important;" class="congrats_msg">${obj.status}</span>`
+            : ""
           }
-					${
-            obj.status === "Discovery Call Completed"
-              ? `<span style="color:#FFCB05 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
+					${obj.status === "Serious Conversations"
+            ? `<span style="color:#FFA500 !important;" class="congrats_msg">${obj.status}</span>`
+            : ""
           }
-					${
-            obj.status === "Boom"
-              ? `<span style="color:#85bb65 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
+					${obj.status === "Discovery Call Scheduled"
+            ? `<span style="color:#FF0000 !important;" class="congrats_msg">${obj.status}</span>`
+            : ""
           }
-					${
-            obj.status === "Lost"
-              ? `<span style="color:#808080 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
+					${obj.status === "Discovery Call Completed"
+            ? `<span style="color:#FFCB05 !important;" class="congrats_msg">${obj.status}</span>`
+            : ""
+          }
+					${obj.status === "Boom"
+            ? `<span style="color:#85bb65 !important;" class="congrats_msg">${obj.status}</span>`
+            : ""
+          }
+					${obj.status === "Lost"
+            ? `<span style="color:#808080 !important;" class="congrats_msg">${obj.status}</span>`
+            : ""
           }
 				  </div>
 				  <div class="tabs_cols_two_main_1"
@@ -3040,6 +3429,10 @@ function getAllById(user_id) {
 }
 
 function getSinglePage(e) {
+  localStorage.setItem("saved_item", true);
+  console.log("saved_item");
+  console.log("results")
+  document.getElementById("go_back").disabled = false;
   var clipper = localStorage.getItem("clipperpageCheck");
   if (clipper) {
     localStorage.removeItem("clipperpageCheck");
@@ -3070,6 +3463,7 @@ function getSinglePage(e) {
         function gotTab(tabs) {
           let msg = {
             txt: res.user.profile_link,
+            donot: "true",
           };
           chrome.tabs.sendMessage(tabs[0].id, msg);
         }
@@ -3080,15 +3474,15 @@ function getSinglePage(e) {
 
         localStorage.setItem("prospect_id", res.user.id);
 
-        getname = localStorage.getItem("second_user_name")
-            if(getname != "null" && getname != ""){
-              document.getElementById("savedUserMessage").innerText =
-              `You're in ${getname}'s Database`;
-            }
-            else{
-            document.getElementById("savedUserMessage").innerText =
-              "Records from Database";
-            }
+        getname = localStorage.getItem("second_user_name");
+        if (getname != "null" && getname != "") {
+          document.getElementById(
+            "savedUserMessage"
+          ).innerText = `You're in ${getname}'s Database`;
+        } else {
+          document.getElementById("savedUserMessage").innerText =
+            "Records from Database";
+        }
 
         document.getElementById("topTitleName").innerText = res.user.name;
         document.getElementById("fname").value = res.user.name;
@@ -3098,35 +3492,54 @@ function getSinglePage(e) {
         document.getElementById("about").value = res.user.about;
 
         document.getElementById("strategy_date").value = res.user.strategy_date;
+
         let image = document.getElementById("image");
 
+        counts = 1;
+        console.log('till herrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
+        // var request = new XMLHttpRequest();  
+        // request.open('GET', res.user.image, true);
+        // request.send();
+        // request.onreadystatechange = function(){
+        //     if (request.readyState == 4){
+        //         if (request.status == 404) {  
+        //             console.log("Oh no, it does not exist!");
+        //         }  
+        //         else{
+        //           console.log("Oh yes, it does not exist!");
+        //           localStorage.setItem("damagedImage", true);
+        //           document.getElementById("updateImage").style.display = "none";
+        //         }
+        //     }
+        // };
+        var request = new XMLHttpRequest();
+request.open("GET", res.user.image, true);
+request.send();
+request.onload = function() {
+statuss = request.status;
+if (request.status == 200 && statusText == OK) //if(statusText == OK)
+{
+  console.log("Oh yes, it does not exist!2");
+}
+else{
+  console.log("Oh no, it does not exist!2");
+  localStorage.setItem("damagedImage", true);
+
+}
+}
         
-        
-        variable = setTimeout(() => {
-          
-            console.log("l")
-            if(image.src.includes("http") || image.src.includes("Assets")  || image.src.includes("chrome-extension")   ){
-            window.location.reload();
-              eventSave();
-            }
-          
-  
-          
 
-
-
-
-          clearInterval(variable);
-
-
-
-        }, 5000)
-
-
-        
-
-
-
+        if (
+          !res.user.image ||
+          res.user.image.includes("/Assets/") ||
+          res.user.image.includes("data:image") 
+        ) {
+          localStorage.setItem("damagedImage", true);
+          document.getElementById("updateImage").style.display = "none";
+        } else {
+          localStorage.removeItem("damagedImage");
+          document.getElementById("updateImage").style.display = "none";
+        }
 
         image.src = res.user.image;
 
@@ -3134,7 +3547,21 @@ function getSinglePage(e) {
           res.user.profile_link;
 
         // document.getElementById("notes").value = res.user.notes;
-        document.getElementById("notes").innerHTML = res.user.notes;
+        document.getElementById("client_messages").innerHTML = res.user.notes;
+        document.getElementById("notes").innerHTML = res.user.messages;
+        if (res.user.attachment) {
+          document.querySelector(".attachmentPhotoContainer").style.display =
+            "block";
+          document.querySelector(".attachmentPhoto").style.display = "block";
+          document.querySelector(".attachmentPhoto").src = res.user.attachment;
+          document.querySelector(".attachmentPhotoo").src = res.user.attachment;
+        } else {
+          document.querySelector(".attachmentPhotoContainer").style.display =
+            "none";
+          document.querySelector(".attachmentPhoto").style.display = "none";
+          document.querySelector(".attachmentPhoto").src = null;
+        }
+
         if (document.getElementById(res.user.status)) {
           document.getElementById(res.user.status).selected = true;
           var status_tag = document.getElementById("status");
@@ -3246,19 +3673,24 @@ function getSinglePage(e) {
         document.getElementById("api_return").style.display = "none";
         document.getElementById("getAll").style.display = "none";
         document.getElementById("getAllButtons").style.display = "none";
-        document.getElementById("results").style.display = "block";
+        if(document.getElementById("multi_database").style.display == "block"){
+          document.getElementById("results").style.display = "none";
+        }
+        else{
+          document.getElementById("results").style.display = "block";
+        }
       } else {
         var starIcon = document.getElementById("star__delete__icon");
         starIcon.src = "Assets/img/star-black.png";
 
-        getname = localStorage.getItem("second_user_name")
-        if(getname != "null" && getname != ""){
+        getname = localStorage.getItem("second_user_name");
+        if (getname != "null" && getname != "") {
+          document.getElementById(
+            "savedUserMessage"
+          ).innerText = `You're in ${getname}'s Database`;
+        } else {
           document.getElementById("savedUserMessage").innerText =
-          `You're in ${getname}'s Database`;
-        }
-        else{
-        document.getElementById("savedUserMessage").innerText =
-          "Records from Database";
+            "Records from Database";
         }
         var user_id = localStorage.getItem("user_id");
         var secondary_id = localStorage.getItem("second_user_id");
@@ -3324,8 +3756,8 @@ function getWeekOfMonth(date) {
 }
 
 function getProfile() {
-  document.getElementById("get_all_message").style.display = "none"
-  document.getElementById("search_box").value = null
+  document.getElementById("get_all_message").style.display = "none";
+  document.getElementById("search_box").value = null;
   document.getElementById("yeen").style.display = "block";
   document.getElementById("star__delete__icon").style.display = "none";
   var clipper = localStorage.getItem("clipperpageCheck");
@@ -3335,7 +3767,6 @@ function getProfile() {
       window.location.href = "popup.html";
     }
   } else {
-    var bgpage = chrome.extension.getBackgroundPage();
     var profile_link = bgpage.word.profile_link;
     var user_id = localStorage.getItem("user_id");
 
@@ -3360,15 +3791,15 @@ function getProfile() {
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
         if (xhr.responseText != "400") {
-          getname = localStorage.getItem("second_user_name")
-            if(getname != "null" && getname != ""){
-              document.getElementById("savedUserMessage").innerText =
-              `You're in ${getname}'s Database`;
-            }
-            else{
+          getname = localStorage.getItem("second_user_name");
+          if (getname != "null" && getname != "") {
+            document.getElementById(
+              "savedUserMessage"
+            ).innerText = `You're in ${getname}'s Database`;
+          } else {
             document.getElementById("savedUserMessage").innerText =
               "Records from Database";
-            }
+          }
 
           var deleteIcon = document.getElementById("star__delete__icon");
           deleteIcon.src = "Assets/img/star-yellow.png";
@@ -3445,15 +3876,16 @@ function getProfile() {
             }
           };
 
-          getname = localStorage.getItem("second_user_name")
-          if(getname != "null" && getname != ""){
+          getname = localStorage.getItem("second_user_name");
+          if (getname != "null" && getname != "") {
+            document.getElementById(
+              "savedUserMessage"
+            ).innerText = `You're in ${getname}'s Database`;
+          } else {
             document.getElementById("savedUserMessage").innerText =
-            `You're in ${getname}'s Database`;
+              "Records from Database";
           }
-          else{
-          document.getElementById("savedUserMessage").innerText =
-            "Records from Database";
-          }          var deleteIcon = document.getElementById("star__delete__icon");
+          var deleteIcon = document.getElementById("star__delete__icon");
           deleteIcon.src = "Assets/img/star-black.png";
           document.getElementById("yeen").style.display = "none";
           document.getElementById("star__delete__icon").style.display = "block";
@@ -3487,7 +3919,6 @@ function getRequest() {
     document.getElementById("list_table_view").style.display = "none";
   }
 
-  // let bgpage = chrome.extension.getBackgroundPage();
   let id = 0;
   // let title = bgpage.word.title;
   let name = document.getElementById("fname").value;
@@ -3519,7 +3950,10 @@ function getRequest() {
     user_id = second_user_id;
   }
   // }
-  var notes = document.getElementById("notes")
+  var notes = document.getElementById("client_messages")
+    ? document.getElementById("client_messages").innerHTML
+    : "";
+  var messages = document.getElementById("notes")
     ? document.getElementById("notes").innerHTML
     : "";
   var follow_up = document.getElementById("follow_up").value;
@@ -3568,71 +4002,68 @@ function getRequest() {
     today.toLocaleDateString("en-US", options_year);
 
   var weekly_source = document.getElementById("weekly_source").value;
-  const imageUrl = img;
+  // const imageUrl = img;
 
- (async () => {
-  const response = await fetch(imageUrl)
-  const imageBlob = await response.blob()
-  const reader = new FileReader();
-  reader.readAsDataURL(imageBlob);
-  reader.onloadend = () => {
-    const base64data = reader.result;
-    var encodedString = btoa(base64data);
-    var decodedString = atob(encodedString);
-    img = decodedString;
-    console.log(decodedString,'decoded');
-  }
- })()
-//  console.log(img,'imgg')
- var i = setInterval(() => {
-  if(img != null){
-  const url = `${globalURl}/api-test`;
+  // (async () => {
+  //   const response = await fetch(imageUrl);
+  //   const imageBlob = await response.blob();
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(imageBlob);
+  //   reader.onloadend = () => {
+  //     const base64data = reader.result;
+  //     var encodedString = btoa(base64data);
+  //     var decodedString = atob(encodedString);
+  //     img = decodedString;
+  //   };
+  // })();
+  if (img != null) {
+    const url = `${globalURl}/api-test`;
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(
-    JSON.stringify({
-      id: id,
-      name: name,
-      description: description,
-      address: address,
-      company: company,
-      about: about,
-      img: img,
-      user_id: user_id,
-      notes: notes,
-      weekly_date: weekly_date,
-      status: status,
-      discovery_call: discovery_call,
-      updated_at: updated_at,
-      conversion: conversion,
-      total_messages: total_messages,
-      endorsement: endorsement,
-      priority: priority,
-      profile_link: profile_link,
-      weekly_source: weekly_source,
-      strategy_date: strategy_date,
-    })
-  );
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(
+      JSON.stringify({
+        id: id,
+        name: name,
+        description: description,
+        address: address,
+        company: company,
+        about: about,
+        img: img,
+        user_id: user_id,
+        notes: notes,
+        messages: messages,
+        weekly_date: weekly_date,
+        status: status,
+        discovery_call: discovery_call,
+        updated_at: updated_at,
+        conversion: conversion,
+        total_messages: total_messages,
+        endorsement: endorsement,
+        priority: priority,
+        profile_link: profile_link,
+        weekly_source: weekly_source,
+        strategy_date: strategy_date,
+      })
+    );
 
-  xhr.onreadystatechange = function () {
-    //Call a function when the state changes.
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      let res = JSON.parse(xhr.responseText);
+    xhr.onreadystatechange = function () {
+      //Call a function when the state changes.
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        let res = JSON.parse(xhr.responseText);
 
-      if (res.status == 200) {
-        localStorage.setItem("prospect_id", res.prospect_id);
-        var deleteIcon = document.getElementById("star__delete__icon");
-        deleteIcon.src = "Assets/img/star-yellow.png";
-        document.getElementById("yeen").style.display = "none";
-        document.getElementById("star__delete__icon").style.display = "block";
+        if (res.status == 200) {
+          localStorage.setItem("prospect_id", res.prospect_id);
+          var deleteIcon = document.getElementById("star__delete__icon");
+          deleteIcon.src = "Assets/img/star-yellow.png";
+          document.getElementById("yeen").style.display = "none";
+          document.getElementById("star__delete__icon").style.display = "block";
+        }
       }
-    }
-  };
-  clearInterval(i)
-}
-}, 1500)
+    };
+    clearInterval(i);
+  }
 }
 
 function apiCall(url, params = []) {
@@ -3678,7 +4109,6 @@ function apiCall(url, params = []) {
 }
 
 function alreadyStored() {
-  let bgpage = chrome.extension.getBackgroundPage();
   let id = bgpage.word.id;
   var user_id = localStorage.getItem("user_id");
 
@@ -3750,12 +4180,10 @@ function apiWeekly(tag) {
   //   if (xhr.readyState == 4 && xhr.status == 200) {
   //     arr = xhr.responseText;
   //     arr = JSON.parse(arr);
-
   //     var finalArray = arr.map(function (obj, key) {
   //       row = `<option>` + obj.weekly_source + `</option>`;
   //       all += row;
   //     });
-
   //     document.getElementById(tag).innerHTML = all;
   //   }
   // };
@@ -3849,47 +4277,39 @@ function filtersChange(
               obj.address +
               `</span>
 				  </div>
-				<div class="tabs_cols_two_main_1"				
-					${
-            obj.status === null
-              ? `<span style="color:#0e76a8 !important;" class="congrats_msg">LinkedIn Campaign</span>`
-              : ""
-          }
-					${
-            obj.status === "LinkedIn Campaign"
-              ? `<span style="color:#0e76a8 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
-          }
-					${
-            obj.status === "Talking/Replied"
-              ? `<span style="color:#89CFF0 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
-          }
-					${
-            obj.status === "Serious Conversations"
-              ? `<span style="color:#FFA500 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
-          }
-					${
-            obj.status === "Discovery Call Scheduled"
-              ? `<span style="color:#FF0000 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
-          }
-					${
-            obj.status === "Discovery Call Completed"
-              ? `<span style="color:#FFCB05 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
-          }
-					${
-            obj.status === "Boom"
-              ? `<span style="color:#85bb65 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
-          }
-					${
-            obj.status === "Lost"
-              ? `<span style="color:#808080 !important;" class="congrats_msg">${obj.status}</span>`
-              : ""
-          }
+				<div class="tabs_cols_two_main_1"
+					${obj.status === null
+                ? `<span style="color:#0e76a8 !important;" class="congrats_msg">LinkedIn Campaign</span>`
+                : ""
+              }
+					${obj.status === "LinkedIn Campaign"
+                ? `<span style="color:#0e76a8 !important;" class="congrats_msg">${obj.status}</span>`
+                : ""
+              }
+					${obj.status === "Talking/Replied"
+                ? `<span style="color:#89CFF0 !important;" class="congrats_msg">${obj.status}</span>`
+                : ""
+              }
+					${obj.status === "Serious Conversations"
+                ? `<span style="color:#FFA500 !important;" class="congrats_msg">${obj.status}</span>`
+                : ""
+              }
+					${obj.status === "Discovery Call Scheduled"
+                ? `<span style="color:#FF0000 !important;" class="congrats_msg">${obj.status}</span>`
+                : ""
+              }
+					${obj.status === "Discovery Call Completed"
+                ? `<span style="color:#FFCB05 !important;" class="congrats_msg">${obj.status}</span>`
+                : ""
+              }
+					${obj.status === "Boom"
+                ? `<span style="color:#85bb65 !important;" class="congrats_msg">${obj.status}</span>`
+                : ""
+              }
+					${obj.status === "Lost"
+                ? `<span style="color:#808080 !important;" class="congrats_msg">${obj.status}</span>`
+                : ""
+              }
 					</div>
 					<div class="tabs_cols_two_main_1"
 					>
@@ -3924,46 +4344,38 @@ function filtersChange(
                 `<div class="row m-0">
 	                                                <div class="col-12 p-1">
 	                                                    <div class="item owl_items">
-															${
-                                obj1[0].status === null
-                                  ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">LinkedIn Campaign</div>`
-                                  : ""
-                              }
-															${
-                                obj1[0].status === "LinkedIn Campaign"
-                                  ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
-                                  : ""
-                              }
-															${
-                                obj1[0].status === "Talking/Replied"
-                                  ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
-                                  : ""
-                              }
-															${
-                                obj1[0].status === "Serious Conversations"
-                                  ? `<div style="color:#FFA500 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
-                                  : ""
-                              }
-															${
-                                obj1[0].status === "Discovery Call Scheduled"
-                                  ? `<div style="color:#FF0000 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
-                                  : ""
-                              }
-															${
-                                obj1[0].status === "Discovery Call Completed"
-                                  ? `<div style="color:#FFCB05 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
-                                  : ""
-                              }
-															${
-                                obj1[0].status === "Boom"
-                                  ? `<div style="color:#85bb65 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
-                                  : ""
-                              }
-															${
-                                obj1[0].status === "Lost"
-                                  ? `<div style="color:#808080 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
-                                  : ""
-                              }
+															${obj1[0].status === null
+                  ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">LinkedIn Campaign</div>`
+                  : ""
+                }
+															${obj1[0].status === "LinkedIn Campaign"
+                  ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
+                  : ""
+                }
+															${obj1[0].status === "Talking/Replied"
+                  ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
+                  : ""
+                }
+															${obj1[0].status === "Serious Conversations"
+                  ? `<div style="color:#FFA500 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
+                  : ""
+                }
+															${obj1[0].status === "Discovery Call Scheduled"
+                  ? `<div style="color:#FF0000 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
+                  : ""
+                }
+															${obj1[0].status === "Discovery Call Completed"
+                  ? `<div style="color:#FFCB05 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
+                  : ""
+                }
+															${obj1[0].status === "Boom"
+                  ? `<div style="color:#85bb65 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
+                  : ""
+                }
+															${obj1[0].status === "Lost"
+                  ? `<div style="color:#808080 !important;" class="itms_btns my-2 bg-white">${obj1[0].status}</div>`
+                  : ""
+                }
 	                        `;
 
               var finalArray2 = obj1.map(function (obj2, key2) {
@@ -3972,124 +4384,115 @@ function filtersChange(
                   obj2.id +
                   `>
                               <div class="card-img">
-                                <img class="item_imgs" src="${
-                                  obj2.image != null
-                                    ? obj2.image
-                                    : "./Assets/img/user.png"
-                                }" alt="">
+                                <img class="item_imgs" src="${obj2.image != null
+                    ? obj2.image
+                    : "./Assets/img/user.png"
+                  }" alt="">
                                       <span class="new-list-icon"><i class="far fa-comment-alt"></i></span>
                                                           </div>
-            
+
                                                           <div class="card_body">
                                                               <h6 class="c_name">
-                                                                  
+
                               ${obj2.name != null ? obj2.name : "No Name Added"}
                                                               </h6>
                                                               <p class="c_paragraph">
-                                                                  
-                              ${
-                                obj2.company != null
-                                  ? obj2.company
-                                  : "No Company Added"
-                              }
-                              
+
+                              ${obj2.company != null
+                    ? obj2.company
+                    : "No Company Added"
+                  }
+
                                                               </p>
                                                               <h6 class="ceo_name">
-                                                                
-                              ${
-                                obj2.description != null
-                                  ? obj2.description
-                                  : "No Description Added"
-                              }
-                              
+
+                              ${obj2.description != null
+                    ? obj2.description
+                    : "No Description Added"
+                  }
+
                                                               </h6>
                                                               <h6 class="Location_name">
                                                                   Location
                                                               </h6>
                                                               <p class="location_paragraph">
-                                                                
-                              ${
-                                obj2.address != null
-                                  ? obj2.address
-                                  : "No Location Added"
-                              }
-                              
+
+                              ${obj2.address != null
+                    ? obj2.address
+                    : "No Location Added"
+                  }
+
                                                               </p>
                                                               <h6 class="Location_name">
                                                                   Status
                                                               </h6>
                                                               <p class="c_paragraph">
-                                                            
-                              ${
-                                obj2.status != null
-                                  ? obj2.status
-                                  : "No Status Added"
-                              }
+
+                              ${obj2.status != null
+                    ? obj2.status
+                    : "No Status Added"
+                  }
                                                               </p>
                                                               <h6 class="Location_name">
-                                                                  Notes
+                                                                  Messages
                                                               </h6>
                                                               <p class="c_paragraph_box">
-                              ${
-                                obj2.notes != null
-                                  ? obj2.notes
-                                  : "No Notes Added"
-                              }
+                              ${obj2.notes != null
+                    ? obj2.notes
+                    : "No Messages Added"
+                  }
                                                               </p>
                                                               <h6 class="Location_name">
                                                                   About Me
                                                               </h6>
                                                               <p class="c_paragraph">
-                                                              
-                              ${
-                                obj2.about != null
-                                  ? obj2.about
-                                  : "No About Added"
-                              }
-                              
+
+                              ${obj2.about != null
+                    ? obj2.about
+                    : "No About Added"
+                  }
+
                                                               </p>
                                                               <h6 class="Location_name">
                                                                   Profile URL
                                                               </h6>
                                                               <p class="c_paragraph_url">
-                                                                  
-                              ${
-                                obj2.profile_link != null
-                                  ? obj2.profile_link
-                                  : "No Profile Link Added"
-                              } 
-                              
+
+                              ${obj2.profile_link != null
+                    ? obj2.profile_link
+                    : "No Profile Link Added"
+                  }
+
                                                               </p>
-                                                              
-                                                              
+
+
                                                               <h6 class="Location_name">
                                                                   Follow up Date
                                                               </h6>
                                                               <p class="c_paragraph_date_calender">
-            
+
                                                                   <span class="c-date">
-                              ${
-                                obj2.follow_up != null
-                                  ? obj2.follow_up
-                                  : "No Date Added"
-                              }
+                              ${obj2.follow_up != null
+                    ? obj2.follow_up
+                    : "No Date Added"
+                  }
                               </span>
                                                                   <span class="c-calender"><i class="far fa-calendar-alt down_arrow"></i></span>
                                                               </p>
-                                                              
-                                                             
-            
+
+
+
                                                               <button class="btn btn-primary w-100 last_c_btn">MAKE CHANGES</button>
-            
+
                                                           </div>
-            
+
                                                       </div>`;
               });
 
               row += `</div>
                                             </div>
 
-                                               
+
                                             </div>
                                         </div>`;
 
@@ -4137,9 +4540,14 @@ function eventSave() {
     var company = document.getElementById("company").value;
     let address = document.getElementById("address").value;
     var about = document.getElementById("about").value;
-    var notes = document.getElementById("notes").innerHTML;
+    var notes = document.getElementById("client_messages").innerHTML;
+    var messages = document.getElementById("notes").innerHTML;
     var follow_up = document.getElementById("follow_up").value;
     var status = document.getElementById("status").value;
+    var attachment = document.querySelector(".attachmentPhoto").src;
+    if (attachment.includes("null")) {
+      attachment = "";
+    }
     var discovery_call = document.getElementById("discovery_call").value;
     var profile_image = document.getElementById("image").src;
     let strategy_date = document.getElementById("strategy_date").value;
@@ -4167,70 +4575,48 @@ function eventSave() {
     if (second_user_id != null) {
       user_id = second_user_id;
     }
-    console.log('profile',profile_image)
     var profile_link = document.getElementById("profile_link").innerText;
 
+    if (profile_image != null) {
+      const url = `${globalURl}/event-save`;
 
+      var xhr1 = new XMLHttpRequest();
+      xhr1.open("POST", url, true);
+      xhr1.setRequestHeader("Content-Type", "application/json");
+      xhr1.send(
+        JSON.stringify({
+          user_id: user_id,
+          profile_image: profile_image,
+          name: fname,
+          description: description,
+          company: company,
+          attachment: attachment,
+          about: about,
+          address: address,
+          notes: notes,
+          messages: messages,
+          follow_up: follow_up,
+          status: status,
+          discovery_call: discovery_call,
+          updated_at: updated_at,
+          conversion: conversion,
+          total_messages: total_messages,
+          endorsement: endorsement,
+          priority: priority,
+          profile_link: profile_link,
+          weekly_date: weekly_date,
+          weekly_source: weekly_source,
+          strategy_date: strategy_date,
+        })
+      );
 
-    const imageUrl = profile_image;
-
-    (async () => {
-     const response = await fetch(imageUrl)
-     const imageBlob = await response.blob()
-     const reader = new FileReader();
-     reader.readAsDataURL(imageBlob);
-     reader.onloadend = () => {
-       const base64data = reader.result;
-       var encodedString = btoa(base64data);
-       var decodedString = atob(encodedString);
-       profile_image = decodedString;
-       console.log(decodedString,'decoded');
-     }
-    })()
-
-
-
-    var i = setInterval(() => {
-      if(profile_image != null){
-
-    const url = `${globalURl}/event-save`;
-
-    var xhr1 = new XMLHttpRequest();
-    xhr1.open("POST", url, true);
-    xhr1.setRequestHeader("Content-Type", "application/json");
-    xhr1.send(
-      JSON.stringify({
-        user_id: user_id,
-        profile_image: profile_image,
-        name: fname,
-        description: description,
-        company: company,
-        about: about,
-        address: address,
-        notes: notes,
-        follow_up: follow_up,
-        status: status,
-        discovery_call: discovery_call,
-        updated_at: updated_at,
-        conversion: conversion,
-        total_messages: total_messages,
-        endorsement: endorsement,
-        priority: priority,
-        profile_link: profile_link,
-        weekly_date: weekly_date,
-        weekly_source: weekly_source,
-        strategy_date: strategy_date,
-      })
-    );
-
-    xhr1.onreadystatechange = function () {
-      //Call a function when the state changes.
-      if (xhr1.readyState == 4 && xhr1.status == "200") {
-      }
-    };
-    clearInterval(i)
-  }
-  }, 1500)
+      xhr1.onreadystatechange = function () {
+        //Call a function when the state changes.
+        if (xhr1.readyState == 4 && xhr1.status == "200") {
+        }
+      };
+      clearInterval(i);
+    }
   } else {
     var myToast = Toastify({
       text: "Login to access",
@@ -4239,8 +4625,6 @@ function eventSave() {
 
     myToast.showToast();
   }
-  
-  
 }
 
 // ........modal code..........................................
@@ -4257,9 +4641,13 @@ function eventSave() {
     (moving = true);
 
   function setInitialClasses() {
+    if(items[currentMonth - 1]){
     items[currentMonth - 1].classList.add("prev");
+    }
     items[currentMonth].classList.add("active");
+    if(items[currentMonth + 1]){
     items[currentMonth + 1].classList.add("next");
+    }
   }
 
   function setEventListeners() {
@@ -4368,7 +4756,9 @@ function openModal() {
 }
 
 function closeModal() {
-  modal.style.display = "none";
+  if(modal){
+    modal.style.display = "none";
+  }
 }
 
 function outsideClick(e) {
@@ -4414,7 +4804,7 @@ document.querySelectorAll(".resetBtn").forEach((item) => {
     let bottomDropDownFields = parentEle.querySelector(".bottomDropDownFields");
     bottomDropDownFields.innerHTML = `
 		<select class="selectFilter selectFilter1" id="statusFields" style="width: 99% !important; margin-top: 8px;">
-	
+
 			<option value="" selected>Select option</option>
 			<option value="LinkedIn Campaign" >LinkedIn Campaign</option>
 			<option value="Talking/Replied">Talking/Replied</option>
@@ -4423,7 +4813,7 @@ document.querySelectorAll(".resetBtn").forEach((item) => {
 			<option value="Discovery Call Completed">Discovery Call Completed</option>
 			<option value="Boom">Boom</option>
 			<option value="Lost">Lost</option>
-	
+
 		</select>
 		`;
   });
@@ -4504,7 +4894,7 @@ if (document.querySelector(".startCancelBtn")) {
     document.querySelectorAll(".bottomDropDownFields").forEach((ele) => {
       ele.innerHTML = `
 			<select class="selectFilter selectFilter1" id="statusFields" style="width: 99% !important; margin-top: 8px;">
-		
+
 				<option value="" selected>Select option</option>
 				<option value="LinkedIn Campaign" >LinkedIn Campaign</option>
 				<option value="Talking/Replied">Talking/Replied</option>
@@ -4513,7 +4903,7 @@ if (document.querySelector(".startCancelBtn")) {
 				<option value="Discovery Call Completed">Discovery Call Completed</option>
 				<option value="Boom">Boom</option>
 				<option value="Lost">Lost</option>
-		
+
 			</select>
 			`;
     });
@@ -4609,7 +4999,65 @@ function searchProspects(e) {
   ArrayMaker();
 }
 
+var pageNo = 10;
+var currentPage = 1;
+var numberOfPages = 0;
+
+document.querySelector("#first").addEventListener("click", () => {
+  document.querySelector("#first").disabled = true;
+  document.querySelector("#next").disabled = true;
+  document.querySelector("#previous").disabled = true;
+  document.querySelector("#last").disabled = true;
+
+  currentPage = 1;
+  pageNo = currentPage * 10;
+  ArrayMaker();
+});
+
+document.querySelector("#next").addEventListener("click", () => {
+  document.querySelector("#first").disabled = true;
+  document.querySelector("#next").disabled = true;
+  document.querySelector("#previous").disabled = true;
+  document.querySelector("#last").disabled = true;
+
+  currentPage = currentPage + 1;
+  pageNo = currentPage * 10;
+
+  if (currentPage >= numberOfPages) {
+    currentPage = numberOfPages;
+    pageNo = numberOfPages * 10;
+  }
+  ArrayMaker();
+});
+
+document.querySelector("#previous").addEventListener("click", () => {
+  document.querySelector("#first").disabled = true;
+  document.querySelector("#next").disabled = true;
+  document.querySelector("#previous").disabled = true;
+  document.querySelector("#last").disabled = true;
+
+  currentPage = currentPage - 1;
+  pageNo = currentPage * 10;
+  if (currentPage === 0) {
+    currentPage = 1;
+    pageNo = 10;
+  }
+  ArrayMaker();
+});
+
+document.querySelector("#last").addEventListener("click", () => {
+  document.querySelector("#first").disabled = true;
+  document.querySelector("#next").disabled = true;
+  document.querySelector("#previous").disabled = true;
+  document.querySelector("#last").disabled = true;
+
+  currentPage = numberOfPages;
+  pageNo = currentPage * 10;
+  ArrayMaker();
+});
+
 function ArrayMaker() {
+  console.log("arraymaker")
   closeModal();
   closeModal2();
 
@@ -4733,8 +5181,7 @@ function ArrayMaker() {
   if (second_user_id != null) {
     user_id = second_user_id;
   }
-  var i = setTimeout(() => {
-    console.log("finding")
+  // var i = setTimeout(() => {
   const url = `${globalURl}/filters`;
 
   let xhr = new XMLHttpRequest();
@@ -4750,6 +5197,7 @@ function ArrayMaker() {
       user_id,
       second_user_id,
       lists,
+      pageNo,
     })
   );
 
@@ -4760,6 +5208,7 @@ function ArrayMaker() {
       document.getElementById("getAll").innerHTML = "";
       document.getElementById("getAllCanban").innerHTML = "";
       document.getElementById("list_table_view").style.display = "block";
+      document.querySelector(".paginationContainer").style.display = "flex";
 
       if (arr == 200) {
         document.getElementById("get_all_message").style.display = "block";
@@ -4767,8 +5216,30 @@ function ArrayMaker() {
         document.getElementById("get_all_message").style.display = "none";
 
         if (!view_type) {
+          document.querySelector(".paginationContainer").style.display = "flex";
+
+          if (arr.total_data) {
+            numberOfPages = arr.total_data / 10;
+
+            if (Number.isInteger(numberOfPages) === false) {
+              numberOfPages = Math.floor(numberOfPages + 1);
+            }
+          }
+
+          document.getElementById("next").disabled =
+            currentPage === numberOfPages ? true : false;
+
+          document.getElementById("previous").disabled =
+            currentPage === 1 ? true : false;
+
+          document.getElementById("first").disabled =
+            currentPage === 1 ? true : false;
+
+          document.getElementById("last").disabled =
+            currentPage === numberOfPages ? true : false;
+
           arr != 200 &&
-            arr.map(function (obj, key) {
+            arr.arr.map(function (obj, key) {
               row =
                 `<div class="row m-0 tabs_two_main single_profile" id="` +
                 obj.id +
@@ -4780,32 +5251,30 @@ function ArrayMaker() {
 							  </div>
 							  <div class="tabs_cols_two_main_1">
                     <span class="left">
-								        <img src="${
-                          obj.image != null
-                            ? obj.image
-                            : "./Assets/img/user.png"
-                        }" class="tabs_two_imgs">
+								        <img src="${obj.image != null
+                  ? obj.image
+                  : "./Assets/img/user.png"
+                }" class="tabs_two_imgs">
 										</span>
 								  <span class="right"><i class="far fa-comment-alt comment_icon"></i></span>
 							  </div>
 							  <div class="tabs_cols_two_main_1">
-			
+
 								  <span class="left">
-                    ${
-                      obj.description != null
-                        ? obj.description
-                        : "No Description Added"
-                    }
+                    ${obj.description != null
+                  ? obj.description
+                  : "No Description Added"
+                }
                   </span>
-			
+
 							  </div>
-			
+
 							  <div class="tabs_cols_two_main_1">
-	
+
 								  <span class="left">
                     ${obj.company != null ? obj.company : "No Company Added"}
                   </span>
-			
+
 							  </div>
 							  <div class="tabs_cols_two_main_1"
 									   >
@@ -4814,46 +5283,38 @@ function ArrayMaker() {
                   </span>
 							  </div>
 								  <div class="tabs_cols_two_main_1">
-									  ${
-                      obj.status === null
-                        ? `<span style="color:#0e76a8 !important;" class="congrats_msg">LinkedIn Campaign</span>`
-                        : ""
-                    }
-									  ${
-                      obj.status === "LinkedIn Campaign"
-                        ? `<span style="color:#0e76a8 !important;" class="congrats_msg">${obj.status}</span>`
-                        : ""
-                    }
-									${
-                    obj.status === "Talking/Replied"
-                      ? `<span style="color:#89CFF0 !important;" class="congrats_msg">${obj.status}</span>`
-                      : ""
-                  }
-									${
-                    obj.status === "Serious Conversations"
-                      ? `<span style="color:#FFA500 !important;" class="congrats_msg">${obj.status}</span>`
-                      : ""
-                  }
-									${
-                    obj.status === "Discovery Call Scheduled"
-                      ? `<span style="color:#FF0000 !important;" class="congrats_msg">${obj.status}</span>`
-                      : ""
-                  }
-									${
-                    obj.status === "Discovery Call Completed"
-                      ? `<span style="color:#FFCB05 !important;" class="congrats_msg">${obj.status}</span>`
-                      : ""
-                  }
-									${
-                    obj.status === "Boom"
-                      ? `<span style="color:#85bb65 !important;" class="congrats_msg">${obj.status}</span>`
-                      : ""
-                  }
-									${
-                    obj.status === "Lost"
-                      ? `<span style="color:#808080 !important;" class="congrats_msg">${obj.status}</span>`
-                      : ""
-                  }
+									  ${obj.status === null
+                  ? `<span style="color:#0e76a8 !important;" class="congrats_msg">LinkedIn Campaign</span>`
+                  : ""
+                }
+									  ${obj.status === "LinkedIn Campaign"
+                  ? `<span style="color:#0e76a8 !important;" class="congrats_msg">${obj.status}</span>`
+                  : ""
+                }
+									${obj.status === "Talking/Replied"
+                  ? `<span style="color:#89CFF0 !important;" class="congrats_msg">${obj.status}</span>`
+                  : ""
+                }
+									${obj.status === "Serious Conversations"
+                  ? `<span style="color:#FFA500 !important;" class="congrats_msg">${obj.status}</span>`
+                  : ""
+                }
+									${obj.status === "Discovery Call Scheduled"
+                  ? `<span style="color:#FF0000 !important;" class="congrats_msg">${obj.status}</span>`
+                  : ""
+                }
+									${obj.status === "Discovery Call Completed"
+                  ? `<span style="color:#FFCB05 !important;" class="congrats_msg">${obj.status}</span>`
+                  : ""
+                }
+									${obj.status === "Boom"
+                  ? `<span style="color:#85bb65 !important;" class="congrats_msg">${obj.status}</span>`
+                  : ""
+                }
+									${obj.status === "Lost"
+                  ? `<span style="color:#808080 !important;" class="congrats_msg">${obj.status}</span>`
+                  : ""
+                }
 								</div>
 								<div class="tabs_cols_two_main_1"
 									   >
@@ -4867,6 +5328,8 @@ function ArrayMaker() {
               document.getElementById("getAllCanban").style.display = "none";
             });
         } else {
+          document.querySelector(".paginationContainer").style.display = "none";
+
           var count_arr = count_arr * 100;
           var temporary = null;
           arr = Object.keys(arr).map((key) => [arr[key]]);
@@ -4891,46 +5354,38 @@ function ArrayMaker() {
                   `<div class="row m-0">
                                                     <div class="col-12 p-1">
                                                         <div class="item owl_items">
-                                ${
-                                  obj1[0].status === null
-                                    ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">LinkedIn Campaign</div>`
-                                    : ""
-                                }
-                                ${
-                                  obj1[0].status === "LinkedIn Campaign"
-                                    ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
-                                    : ""
-                                }
-                                ${
-                                  obj1[0].status === "Talking/Replied"
-                                    ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
-                                    : ""
-                                }
-                                ${
-                                  obj1[0].status === "Serious Conversations"
-                                    ? `<div style="color:#FFA500 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
-                                    : ""
-                                }
-                                ${
-                                  obj1[0].status === "Discovery Call Scheduled"
-                                    ? `<div style="color:#FF0000 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
-                                    : ""
-                                }
-                                ${
-                                  obj1[0].status === "Discovery Call Completed"
-                                    ? `<div style="color:#FFCB05 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
-                                    : ""
-                                }
-                                ${
-                                  obj1[0].status === "Boom"
-                                    ? `<div style="color:#85bb65 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
-                                    : ""
-                                }
-                                ${
-                                  obj1[0].status === "Lost"
-                                    ? `<div style="color:#808080 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
-                                    : ""
-                                }
+                                ${obj1[0].status === null
+                    ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">LinkedIn Campaign</div>`
+                    : ""
+                  }
+                                ${obj1[0].status === "LinkedIn Campaign"
+                    ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
+                    : ""
+                  }
+                                ${obj1[0].status === "Talking/Replied"
+                    ? `<div style="color:#0e76a8 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
+                    : ""
+                  }
+                                ${obj1[0].status === "Serious Conversations"
+                    ? `<div style="color:#FFA500 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
+                    : ""
+                  }
+                                ${obj1[0].status === "Discovery Call Scheduled"
+                    ? `<div style="color:#FF0000 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
+                    : ""
+                  }
+                                ${obj1[0].status === "Discovery Call Completed"
+                    ? `<div style="color:#FFCB05 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
+                    : ""
+                  }
+                                ${obj1[0].status === "Boom"
+                    ? `<div style="color:#85bb65 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
+                    : ""
+                  }
+                                ${obj1[0].status === "Lost"
+                    ? `<div style="color:#808080 !important;" class="itms_btns my-2 bg-white">${obj1[0].status} (${link})</div>`
+                    : ""
+                  }
                             `;
 
                 var finalArray2 = obj1.map(function (obj2, key2) {
@@ -4939,99 +5394,96 @@ function ArrayMaker() {
                     obj2.id +
                     `>
                     <div class="card-img">
-                      <img class="item_imgs" src="${
-                        obj2.image != null
-                          ? obj2.image
-                          : "./Assets/img/user.png"
-                      }" alt="">
+                      <img class="item_imgs" src="${obj2.image != null
+                      ? obj2.image
+                      : "./Assets/img/user.png"
+                    }" alt="">
                             <span class="new-list-icon"><i class="far fa-comment-alt"></i></span>
                                                 </div>
-  
+
                                                 <div class="card_body">
                                                     <h6 class="c_name">
-                                                        
+
                     ${obj2.name != null ? obj2.name : "No Name Added"}
                                                     </h6>
                                                     <p class="c_paragraph">
-                                                        
+
                     ${obj2.company != null ? obj2.company : "No Company Added"}
-                    
+
                                                     </p>
                                                     <h6 class="ceo_name">
-                                                      
-                    ${
-                      obj2.description != null
-                        ? obj2.description
-                        : "No Description Added"
+
+                    ${obj2.description != null
+                      ? obj2.description
+                      : "No Description Added"
                     }
-                    
+
                                                     </h6>
                                                     <h6 class="Location_name">
                                                         Location
                                                     </h6>
                                                     <p class="location_paragraph">
-                                                      
+
                     ${obj2.address != null ? obj2.address : "No Location Added"}
-                    
+
                                                     </p>
                                                     <h6 class="Location_name">
                                                         Status
                                                     </h6>
                                                     <p class="c_paragraph">
-                                                  
+
                     ${obj2.status != null ? obj2.status : "No Status Added"}
                                                     </p>
                                                     <h6 class="Location_name">
-                                                        Notes
+                                                        Messages
                                                     </h6>
                                                     <p class="c_paragraph_box">
-                    ${obj2.notes != null ? obj2.notes : "No Notes Added"}
+                    ${obj2.notes != null ? obj2.notes : "No Messages Added"}
                                                     </p>
                                                     <h6 class="Location_name">
                                                         About Me
                                                     </h6>
                                                     <p class="c_paragraph">
-                                                    
+
                     ${obj2.about != null ? obj2.about : "No About Added"}
-                    
+
                                                     </p>
                                                     <h6 class="Location_name">
                                                         Profile URL
                                                     </h6>
                                                     <p class="c_paragraph_url">
-                                                        
-                    ${
-                      obj2.profile_link != null
-                        ? obj2.profile_link
-                        : "No Profile Link Added"
-                    } 
-                    
+
+                    ${obj2.profile_link != null
+                      ? obj2.profile_link
+                      : "No Profile Link Added"
+                    }
+
                                                     </p>
-                                                    
-                                                    
+
+
                                                     <h6 class="Location_name">
                                                         Follow up Date
                                                     </h6>
                                                     <p class="c_paragraph_date_calender">
-  
+
                                                         <span class="c-date">
                     ${obj2.follow_up != null ? obj2.follow_up : "No Date Added"}
                     </span>
                                                         <span class="c-calender"><i class="far fa-calendar-alt down_arrow"></i></span>
                                                     </p>
-                                                    
-                                                   
-  
+
+
+
                                                     <button class="btn btn-primary w-100 last_c_btn">MAKE CHANGES</button>
-  
+
                                                 </div>
-  
+
                                             </div>`;
                 });
                 row += `</div>
                                               </div>
-  
-                                                 
+
+
                                               </div>
                                           </div>`;
 
@@ -5052,6 +5504,7 @@ function ArrayMaker() {
     document.getElementById("results").style.display = "none";
     document.getElementById("getAll").style.display = "contents";
     document.getElementById("getAllButtons").style.display = "block";
+    localStorage.removeItem("pipeLineClick");
 
     var single_profile = document.getElementsByClassName("single_profile");
     for (var i = 0; i < single_profile.length; i++) {
@@ -5073,8 +5526,8 @@ function ArrayMaker() {
       listView.scroll(0, 0);
     }
   };
-  clearInterval(i)
-}, 1000)
+  clearInterval(i);
+  // }, 1000);
 }
 
 function addFilterDiv() {
@@ -5108,7 +5561,7 @@ function addFilterDiv() {
 
 					<div class="bottomDropDownFields">
 						<select class="filterInputField selectFilter selectFilter1" id="statusFields" style="width: 99% !important; margin-top: 8px;">
-            
+
 							<option value="" selected>Select option</option>
 							<option value="LinkedIn Campaign" >LinkedIn Campaign</option>
 							<option value="Talking/Replied">Talking/Replied</option>
@@ -5117,7 +5570,7 @@ function addFilterDiv() {
 							<option value="Discovery Call Completed">Discovery Call Completed</option>
 							<option value="Boom">Boom</option>
 							<option value="Lost">Lost</option>
-								
+
 						</select>
 					</div>
 
@@ -5139,7 +5592,7 @@ function addFilterDiv() {
 				<option value="Discovery Call Completed">Discovery Call Completed</option>
 				<option value="Boom">Boom</option>
 				<option value="Lost">Lost</option>
-	
+
 			</select>
 			`;
     }
@@ -5147,13 +5600,13 @@ function addFilterDiv() {
       let bottomDropDownFields = ele.querySelector(".bottomDropDownFields");
       bottomDropDownFields.innerHTML = `
 			<select class="filterInputField selectFilter selectFilter1" id="priorityFields" style="width: 99% !important; margin-top: 8px;">
-	
+
 			<option value="" selected>Select option</option>
 				<option value="A">A</option>
 				<option value="B">B</option>
 				<option value="C">C</option>
 				<option value="D">D</option>
-	
+
 			</select>
 			`;
     }
@@ -5161,7 +5614,7 @@ function addFilterDiv() {
       let bottomDropDownFields = ele.querySelector(".bottomDropDownFields");
       bottomDropDownFields.innerHTML = `
 			<select class="filterInputField selectFilter selectFilter1" style="width: 99% !important; margin-top: 8px;" id="conversionFields">
-	
+
 			<option value="" selected>Select option</option>
 				<option value="New Job - Congrats">New Job - Congrats</option>
 				<option value="Work Anniversary - Congrats">Work Anniversary - Congrats</option>
@@ -5182,7 +5635,7 @@ function addFilterDiv() {
 				</option>
 				<option value="Inbound">Inbound</option>
 				<option value="Direct Outreach">Direct Outreach</option>
-	
+
 			</select>
 			`;
     }
@@ -5384,7 +5837,6 @@ document.getElementById("openDatePicker").addEventListener("click", () => {
   var user_id = localStorage.getItem("user_id");
   var prospect = localStorage.getItem("prospect_id");
 
-
   if (access_token && user_id && prospect) {
     document
       .querySelector(".datePickerDiv")
@@ -5414,63 +5866,72 @@ function openProspectModal() {
   document.querySelector(".groupBoxContainer1").innerHTML = "";
 
   var user_id = localStorage.getItem("user_id");
+  value_getter =  document.getElementById("shring_in").value;
+  if(value_getter == "1"){
+    sharing_in()
+  }
+  else{
+    const url = `${globalURl}/check_groups/${user_id}/0`;
 
-  const url = `${globalURl}/check_groups/${user_id}/0`;
-
-  let xhr = new XMLHttpRequest();
-
-  xhr.open("GET", url, true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send();
-
-  xhr.onreadystatechange = function () {
-    //Call a function when the state changes.
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      let userData = JSON.parse(xhr.responseText);
-
-      if (userData.length > 0) {
-        userData.map((item) => {
-          document.querySelector(".groupBoxContainer1").innerHTML += `
-            <div style="position: relative;width: calc(30% - 20px); margin: auto 15px;"">
-            <div class="groupBox" data-group_id=${item.group_id} style="border-radius: 50%;
-            padding: 5px;
-            
-            position: relative;">
-              ${item.image ? `<img src="${item.image}" class="userIconDemo" data-receiverid="32">` :  `<img src="./Assets/img/group-bg.png" class="userIconDemo" data-receiverid="32">`}
-                 
-              
-              ${
-                item.notifications != 0
-                  ? `<div class="notificationBox">${item.notifications}</div>`
-                  : ""
+    let xhr = new XMLHttpRequest();
+  
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  
+    xhr.onreadystatechange = function () {
+      //Call a function when the state changes.
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        let userData = JSON.parse(xhr.responseText);
+  
+        if (userData.length > 0) {
+          userData.map((item) => {
+            document.querySelector(".groupBoxContainer1").innerHTML += `
+              <div style="position: relative;width: calc(30% - 20px); margin: auto 15px;"">
+              <div class="groupBox" data-group_id=${item.group_id
+              } style="border-radius: 50%;
+              padding: 5px;
+  
+              position: relative;">
+                ${item.image
+                ? `<img src="${item.image}" class="userIconDemo" data-receiverid="32">`
+                : `<img src="./Assets/img/group-bg.png" class="userIconDemo" data-receiverid="32">`
               }
+  
+  
+                ${item.notifications != 0
+                ? `<div class="notificationBox">${item.notifications}</div>`
+                : ""
+              }
+                </div>
+                <div class="groupName" style="display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                max-width: 328px;
+                width: auto;
+  height: auto;
+  line-height: 12px;
+  font-size: 11px;
+  white-space: break-spaces;
+                ">${item.name}</div>
               </div>
-              <div class="groupName" style="display: -webkit-box;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
-              overflow: hidden;
-              max-width: 328px;
-              width: auto;
-height: auto;
-line-height: 12px;
-font-size: 11px;
-white-space: break-spaces;
-              ">${
-                item.name }</div>
-            </div>
-          `;
-        });
-
-        document.querySelectorAll(".groupBox").forEach((element) => {
-          element.addEventListener("click", activeUserChat);
-        });
-      } else {
-        document.querySelector(".groupContainer").innerHTML = `
-			<h1>No groups to show</h1>
-	  	`;
+            `;
+          });
+  
+          document.querySelectorAll(".groupBox").forEach((element) => {
+            element.addEventListener("click", activeUserChat);
+          });
+        } else {
+          document.querySelector(".groupContainer").innerHTML = `
+        <h1>No groups to show</h1>
+        `;
+        }
       }
-    }
-  };
+    };
+  }
+
+  
 }
 
 var optionChooseModal = document.getElementById("optionChooseModal");
@@ -5516,8 +5977,9 @@ function activeUserChat(e) {
 
   localStorage.setItem("group_id", group_id);
 
-  document.getElementById("shareInGroupsModal").style.transform = "scale(1)";
-  document.getElementById("shareInGroupsModal").style.opacity = 1;
+  // document.getElementById("shareInGroupsModal").style.transform = "scale(1)";
+  // document.getElementById("shareInGroupsModal").style.opacity = 1;
+  shareInSubGroupsModal()
 }
 
 document
@@ -5548,13 +6010,17 @@ function prospectModalClose() {
 
 if (document.querySelector(".canban-item-4")) {
   document.querySelector(".canban-item-4").addEventListener("click", () => {
+    pagename = 'home'
+    localStorage.setItem('page_name',pagename)
     window.location.href = "home.html";
   });
 }
 
 if (document.querySelector(".canban-item-3")) {
   document.querySelector(".canban-item-3").addEventListener("click", () => {
-    localStorage.setItem("openchatbox","yeen");
+    localStorage.setItem("openchatbox", "yeen");
+    pagename = 'messagebox'
+  localStorage.setItem('page_name',pagename)
     window.location.href = "messagebox.html";
   });
 }
@@ -5570,6 +6036,36 @@ setTimeout(() => {
     document.getElementById("sharedm1").addEventListener("click", () => {
       var element = document.getElementById("value1").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
+      openDirectChat(element);
+    });
+  }
+  if (document.getElementById("sharedm1001")) {
+    document.getElementById("sharedm1001").addEventListener("click", () => {
+      console.log("10001")
+      var element = document.getElementById("value10001").value;
+      localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
+      openDirectChat(element);
+    });
+  }
+  if (document.getElementById("sharedm1002")) {
+    document.getElementById("sharedm1002").addEventListener("click", () => {
+      var element = document.getElementById("value10002").value;
+      localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
+      openDirectChat(element);
+    });
+  }
+  if (document.getElementById("sharedm1003")) {
+    document.getElementById("sharedm1003").addEventListener("click", () => {
+      var element = document.getElementById("value10003").value;
+      localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -5577,6 +6073,8 @@ setTimeout(() => {
     document.getElementById("sharedm2").addEventListener("click", () => {
       var element = document.getElementById("value2").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -5584,6 +6082,8 @@ setTimeout(() => {
     document.getElementById("sharedm3").addEventListener("click", () => {
       var element = document.getElementById("value3").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -5591,6 +6091,8 @@ setTimeout(() => {
     document.getElementById("sharedm4").addEventListener("click", () => {
       var element = document.getElementById("value4").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -5598,6 +6100,8 @@ setTimeout(() => {
     document.getElementById("sharedm5").addEventListener("click", () => {
       var element = document.getElementById("value5").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -5605,12 +6109,16 @@ setTimeout(() => {
     document.getElementById("sharedm6").addEventListener("click", () => {
       var element = document.getElementById("value6").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
-}, 1000);
+}, 3000);
 function openDirectChat(element) {
   localStorage.setItem("isChatIcon", true);
+  pagename = 'messagebox'
+  localStorage.setItem('page_name',pagename)
   window.location.href = "messagebox.html";
 }
 
@@ -5646,6 +6154,8 @@ function shareProspectData() {
           localStorage.removeItem("sub_group_id");
           localStorage.removeItem("subgroup_id");
           localStorage.setItem("shared", true);
+          pagename = 'messagebox'
+  localStorage.setItem('page_name',pagename)
           window.location.href = "messagebox.html";
         }
       };
@@ -5680,9 +6190,14 @@ let logoInterval = setInterval(() => {
     document.querySelector(".img__logo").addEventListener("click", gettohome);
   }
 });
+
 document.getElementById("comment_box").addEventListener("keyup", getMutuals);
 
+document.getElementById("input-list-multi-dbs").addEventListener("keyup", getmoreusers);
+
+
 function getMutuals() {
+  console.log("work work")
   let text = document.getElementById("comment_box").value;
   let lenght = 0;
   const myArray = text.split("@");
@@ -5745,7 +6260,7 @@ function getMutuals() {
             userData.map((item, i, arr) => {
               var row =
                 item.name != null
-                  ? `<span data-id=${item.linked_to_id} data-email=${item.mutual} class="addtocomment" >${item.mutual}</span>`
+                  ? `<span data-id=${item.id} data-email=${item.name} class="addtocomment" >${item.name}</span>`
                   : "";
               document.getElementById("myDropdown").innerHTML += row;
             });
@@ -5788,9 +6303,8 @@ function addMemberToComment(e) {
     yeen[yeen.length - 1] = email;
     let string = yeen.join("");
 
-    let tagDiv = ` <span class='tag' data-id='${receiver_id}'>${
-      yeen[yeen.length - 1]
-    } <i class="fas fa-times tagIcon"></i></span>`;
+    let tagDiv = ` <span class='tag' data-id='${receiver_id}'>${yeen[yeen.length - 1]
+      } <i class="fas fa-times tagIcon"></i></span>`;
 
     commentArray.forEach((item) => {
       if (item === receiver_id) {
@@ -5838,6 +6352,8 @@ function deleteTag(e) {
 }
 
 function gettohome() {
+  pagename = 'home'
+    localStorage.setItem('page_name',pagename)
   window.location.href = "home.html";
 }
 
@@ -5876,7 +6392,8 @@ function openDataInCalendar() {
         localStorage.setItem("prospectDate", getProspectDate);
         localStorage.setItem("prospectMonth", getProspectMonth);
         localStorage.setItem("prospect_id_calender", prospect_id);
-
+        pagename = 'calender'
+        localStorage.setItem('page_name',pagename)
         window.location.href = "calender.html";
       } else {
         var myToast = Toastify({
@@ -5917,9 +6434,9 @@ let yInterval = setInterval(() => {
 
   if (access_token && user_id) {
     clearInterval(yInterval);
-    document.getElementById("notes").disabled = false;
+    document.getElementById("client_messages").disabled = false;
   } else {
-    document.getElementById("notes").disabled = true;
+    document.getElementById("client_messages").disabled = true;
   }
 }, 100);
 
@@ -5928,19 +6445,29 @@ if (document.getElementById("listing")) {
 }
 
 function showListing() {
-  localStorage.removeItem("editList");
+    let prospect_id = localStorage.getItem("prospect_id");
+  if(!prospect_id){
+    var myToast = Toastify({
+          text: "Save prospect to view lists",
+          duration: 2000,
+        });
+
+        myToast.showToast();
+    }
+  else{
+    localStorage.removeItem("editList");
 
   document.getElementById("optionChooseModal").style.transform = "scale(1)";
   document.getElementById("optionChooseModal").style.opacity = 1;
 
   let user_id = localStorage.getItem("user_id");
-  let prospect_id = localStorage.getItem("prospect_id");
 
   var second_user_id = localStorage.getItem("second_user_id");
 
   if (second_user_id != null) {
     user_id = second_user_id;
   }
+  
 
   const url = `${globalURl}/get_lists/${user_id}/${prospect_id}`;
 
@@ -5961,28 +6488,25 @@ function showListing() {
       if (response) {
         response.data.length > 0
           ? response.data.map((obj) => {
-              openChooseContainer.innerHTML += `
+            openChooseContainer.innerHTML += `
           <div class="listItemContainer" data-id=${obj.id} data-hex=${obj.hex} >
             <div class="listDelIcon" style="margin-right: 10px">
               <i class="fas fa-trash-alt trashIcon"></i>
             </div>
             <div class="listContentContainer" style="margin-right: 10px">
-              <div class="listContent" style='color: ${obj.hex} !important;'>${
-                obj.title?.length > 20
-                  ? `${obj.title.slice(0, 30)}...`
-                  : obj.title
+              <div class="listContent" style='color: ${obj.hex} !important;'>${obj.title?.length > 20
+                ? `${obj.title.slice(0, 30)}...`
+                : obj.title
               }</div>
-              <input type="hidden" class="listDesc1" value="${
-                obj.description != null ? obj.description : ""
+              <input type="hidden" class="listDesc1" value="${obj.description != null ? obj.description : ""
               }"/>
-              <div class="listToggleBox" ${
-                obj.check != false ? `style='background-color: ${obj.hex}'` : ""
+              <div class="listToggleBox" ${obj.check != false ? `style='background-color: ${obj.hex}'` : ""
               }></div>
               </div>
               <i class="far fa-edit editIcon"></i>
           </div>
           `;
-            })
+          })
           : (openChooseContainer.innerHTML = `<div class="noListMessage">No lists to show</div>`);
 
         document.querySelectorAll(".listContentContainer").forEach((ele) => {
@@ -5995,6 +6519,8 @@ function showListing() {
       }
     }
   };
+  }
+  
 }
 
 function checkOrUncheckedList(e) {
@@ -6293,7 +6819,7 @@ function swipeRightContainer() {
     }
 
     let listView = document.getElementById("items-container-1");
-    listView.scroll(swipeArray[count], 0);
+    listView.scroll(swipeArray[count], listView.scrollTop);
   } else {
     count++;
 
@@ -6302,7 +6828,8 @@ function swipeRightContainer() {
     }
 
     let listView = document.getElementById("items-container");
-    listView.scroll(swipeArray[count], 0);
+    console.log(listView.scrollTop, "container.scrollTop")
+    listView.scroll(swipeArray[count], listView.scrollTop);
   }
 }
 
@@ -6319,7 +6846,7 @@ function swipeLeftContainer() {
     count--;
 
     let listView = document.getElementById("items-container-1");
-    listView.scroll(swipeArray[count], 0);
+    listView.scroll(swipeArray[count], listView.scrollTop);
 
     if (count <= 0) {
       count = 0;
@@ -6328,7 +6855,7 @@ function swipeLeftContainer() {
     count--;
 
     let listView = document.getElementById("items-container");
-    listView.scroll(swipeArray[count], 0);
+    listView.scroll(swipeArray[count], listView.scrollTop);
 
     if (count <= 0) {
       count = 0;
@@ -6365,14 +6892,12 @@ function renderListItemInPiplines() {
 
       response.data?.length > 0
         ? response.data.slice(0, 4).map((obj) => {
-            document.getElementById("listItemContainer").innerHTML += `
-        <span class="text-right1" data-listId=${obj.id} data-hex=${
-              obj.hex
-            } style="background-color: ${obj.hex};">${
-              obj.title.length > 6 ? `${obj.title.slice(0, 8)}...` : obj.title
+          document.getElementById("listItemContainer").innerHTML += `
+        <span class="text-right1" data-listId=${obj.id} data-hex=${obj.hex
+            } style="background-color: ${obj.hex};">${obj.title.length > 6 ? `${obj.title.slice(0, 8)}...` : obj.title
             }</span>
         `;
-          })
+        })
         : (document.getElementById("listItemContainer").innerHTML = `
         <span class="text-right1" style="background-color: #084DD1;">No list to show </span>
       `);
@@ -6421,7 +6946,7 @@ function filterLisiting() {
       if (response) {
         response.data?.length > 0
           ? response.data.map((obj) => {
-              openChooseContainer.innerHTML += `
+            openChooseContainer.innerHTML += `
           <div class="listItemContainer" data-listId=${obj.id} >
             <div class="listDelIcon1">
               <i class="fas fa-trash-alt trashIcon1"></i>
@@ -6432,7 +6957,7 @@ function filterLisiting() {
             </div>
           </div>
           `;
-            })
+          })
           : (openChooseContainer.innerHTML = `<div class="noListMessage">No lists to show</div>`);
 
         document.querySelectorAll(".listContentContainer1").forEach((ele) => {
@@ -6514,11 +7039,9 @@ function checkFilterList(e) {
   listLocal?.length > 0 &&
     listLocal.slice(0, 4).map((obj) => {
       document.getElementById("listItemContainer").innerHTML += `
-      <span class="text-right1" data-listId=${obj.id} data-hex=${
-        obj.hex
-      } style="background-color: ${obj.hex};">${
-        obj.title.length > 6 ? `${obj.title.slice(0, 8)}...` : obj.title
-      }</span>
+      <span class="text-right1" data-listId=${obj.id} data-hex=${obj.hex
+        } style="background-color: ${obj.hex};">${obj.title.length > 6 ? `${obj.title.slice(0, 8)}...` : obj.title
+        }</span>
     `;
     });
 }
@@ -6563,11 +7086,9 @@ if (listLocal?.length > 0) {
     listLocal.slice(0, 4).map((obj) => {
       if (second_user_id == obj.user_id || !second_user_id) {
         document.getElementById("listItemContainer").innerHTML += `
-        <span class="text-right1" data-listId=${obj.id} data-hex=${
-          obj.hex
-        } style="background-color: ${obj.hex};">${
-          obj.title.length > 6 ? `${obj.title.slice(0, 8)}...` : obj.title
-        }</span>
+        <span class="text-right1" data-listId=${obj.id} data-hex=${obj.hex
+          } style="background-color: ${obj.hex};">${obj.title.length > 6 ? `${obj.title.slice(0, 8)}...` : obj.title
+          }</span>
       `;
       } else {
         document.getElementById("listItemContainer").style.display = "none";
@@ -6626,15 +7147,14 @@ document
   .addEventListener("click", shareInSubGroupsModal);
 
 function shareInSubGroupsModal() {
-
   document.getElementById("shareInGroupsModal").style.transform = "scale(0)";
   document.getElementById("shareInGroupsModal").style.opacity = 0;
 
   document.getElementById("showSubGroupsModal").style.transform = "scale(1)";
   document.getElementById("showSubGroupsModal").style.opacity = 1;
 
-  let user_id = localStorage.getItem('user_id');
-  let group_id = localStorage.getItem('group_id');
+  let user_id = localStorage.getItem("user_id");
+  let group_id = localStorage.getItem("group_id");
 
   const url = `${globalURl}/get_sub_groups/${group_id}/${user_id}`;
 
@@ -6646,29 +7166,42 @@ function shareInSubGroupsModal() {
   xhr.onreadystatechange = () => {
     if (xhr.readyState == 4 && xhr.status == 200) {
       let userData = JSON.parse(xhr.responseText);
-
-      if (userData.length > 0) {
+      image_group = userData.image
+      if (userData.data.length > 0) {
         document.querySelector(".subGroupBoxContainer").innerHTML = "";
-        userData.map((item) => {
+        document.querySelector(".subGroupBoxContainer").innerHTML = `<div style="position: relative;margin-left: 10px;">
+
+        <div class="yeeeeen" id="yeeeeen" style="cursor:pointer !important">
+        
+
+         <img src="${image_group}" class="userIconDemo" data-receiverid="32">
+
+
+          </div>
+          <div class="groupName" >#General</div>
+
+        </div>`;
+
+        
+          
+
+
+        userData.data.map((item) => {
           document.querySelector(".subGroupBoxContainer").innerHTML += `
                 <div style="position: relative;margin-left: 10px;">
 
-                <div class="subGroupBox" data-sub-group_id=${item.sub_group_id} style="cursor:pointer !important">
-                <span class="tooltiptext"><span style="color:red">Name: </span>${
-                  item.name
-                }
+                <div class="subGroupBox" data-sub-group_id=${item.sub_group_id
+            } style="cursor:pointer !important">
+                <span class="tooltiptext"><span style="color:red">Name: </span>${item.name
+            }
                 </span>
 
-                 <img src="./Assets/img/user.png" class="userIconDemo" data-receiverid="32">
-                  
-                  
+                 <img src="${image_group}" class="userIconDemo" data-receiverid="32">
+
+
                   </div>
-                  <div class="groupName" >${
-                    item.name.length > 10
-                      ? `${item.name.slice(0, 10)} ...`
-                      : item.name
-                  }</div>
-                  
+                  <div class="groupName" >#${item.name}</div>
+
                 </div>
             `;
         });
@@ -6681,16 +7214,33 @@ function shareInSubGroupsModal() {
             shareProspectInSubGroup();
           });
         });
-
+        document.getElementById("yeeeeen").addEventListener("click",() => {
+          shareProspectData()
+        })
       } else {
-        document.querySelector(".subGroupBoxContainer").innerHTML =
-          "<h1 class='groupNullHeading'>No sub groups to show</h1>";
+        document.querySelector(".subGroupBoxContainer").innerHTML = `<div style="position: relative;margin-left: 10px;">
+
+        <div class="yeeeeen" id="yeeeeen" style="cursor:pointer !important">
+        
+
+         <img src="${image_group}" class="userIconDemo" data-receiverid="32">
+
+
+          </div>
+          <div class="groupName" >#General</div>
+
+        </div>`;
+        document.getElementById("yeeeeen").addEventListener("click",() => {
+          shareProspectData()
+        })
       }
     }
   };
 }
 
-document.getElementById('showSubGroupsModalCloseBtn').addEventListener('click', showSubGroupsModalClose);
+document
+  .getElementById("showSubGroupsModalCloseBtn")
+  .addEventListener("click", showSubGroupsModalClose);
 
 function showSubGroupsModalClose() {
   document.getElementById("showSubGroupsModal").style.transform = "scale(0)";
@@ -6706,7 +7256,7 @@ function shareProspectInSubGroup() {
   var user_id = localStorage.getItem("user_id");
   var group_id = localStorage.getItem("group_id");
   var sub_group_id = localStorage.getItem("sub_group_id");
-  localStorage.setItem("subgroup_id",sub_group_id)
+  localStorage.setItem("subgroup_id", sub_group_id);
   var prospect_id = localStorage.getItem("prospect_id");
 
   if (prospect_id) {
@@ -6734,6 +7284,8 @@ function shareProspectInSubGroup() {
         if (xhr.readyState == 4 && xhr.status == 200) {
           let userData = JSON.parse(xhr.responseText);
           localStorage.setItem("shared", true);
+          pagename = 'messagebox'
+        localStorage.setItem('page_name',pagename)
           window.location.href = "messagebox.html";
         }
       };
@@ -6754,20 +7306,349 @@ function shareProspectInSubGroup() {
 }
 
 var i = setInterval(() => {
-  database = localStorage.getItem("OpenShowDataBase")
-  if(database){
+  database = localStorage.getItem("OpenShowDataBase");
+  if (database) {
     localStorage.removeItem("OpenShowDataBase");
     getAllDatabases();
   }
-  clearInterval(i)
-
-}, 50)
-
-
+  clearInterval(i);
+}, 500);
 
 if (document.getElementById("profilePicc")) {
   document.getElementById("profilePicc").addEventListener("click", () => {
-    localStorage.setItem("OpenShowDataBase",true)
+    localStorage.setItem("OpenShowDataBase", true);
     window.location.href = "popup.html";
   });
 }
+
+// setTimeout(() => {
+//   if (document.getElementById("loader").style.display == "block") {
+//     bgpage.word.loader = "yeen";
+//     window.location.href = "home.html";
+//   }
+// }, 7000);
+// setTimeout(() => {
+//   loader = localStorage.getItem("loader_check");
+//   if (loader) {
+//     if (document.getElementById("loader").style.display == "block") {
+//       document.getElementById("loader").style.display = "none";
+//     }
+//     if (!bgpage.word.loader || bgpage.word.loader == "yeen") {
+//       document.getElementById("go_back").disabled = true;
+//     } else {
+//       document.getElementById("go_back").disabled = false;
+//     }
+//     localStorage.removeItem("loader_check");
+//   }
+// }, 50);
+
+if (document.querySelector(".removePhoto")) {
+  document.querySelector(".removePhoto").addEventListener("click", () => {
+    document.querySelector(".attachmentPhotoContainer").style.display = "none";
+    document.querySelector(".attachmentPhoto").src = null;
+    eventSave();
+  });
+}
+
+if (document.getElementById("attachmentInp")) {
+  document.getElementById("attachmentInp").addEventListener("change", (e) => {
+    let attachmentImage = document.querySelector(".attachmentPhoto");
+
+    let imageFile = document.getElementById("attachmentInp").files[0];
+
+    const data = new FormData();
+    data.append("file", imageFile);
+    data.append("upload_preset", "group_images");
+    data.append("cloud_name", "fastech");
+    fetch("https://api.cloudinary.com/v1_1/fastech/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        savedImage = data.url;
+        attachmentImage.src = savedImage;
+        document.querySelector(".attachmentPhotoo").src = savedImage;
+        document.querySelector(".attachmentPhotoContainer").style.display =
+          "block";
+        attachmentImage.style.display = "block";
+        console.log(savedImage);
+        eventSave();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+}
+if (document.querySelector(".attachmentPhoto")) {
+  document.querySelector(".attachmentPhoto").addEventListener("click", () => {
+    document.getElementById("dynamicModal").style.transform = "scale(1)";
+    document.getElementById("dynamicModal").style.opacity = "1";
+  });
+}
+if (document.getElementById("logo_convert")) {
+  document.getElementById("logo_convert").addEventListener("click", () => {
+    window.location.reload()
+  });
+}
+if (document.getElementById("go_back_baby")) {
+  document.getElementById("go_back_baby").addEventListener("click", () => {
+    window.location.reload()
+  });
+}
+
+
+window.addEventListener("click", dynamicModalClose);
+function dynamicModalClose(e) {
+  console.log(e.target);
+  dynamicModal = document.querySelector(".attachmentPhoto");
+  if (e.target != dynamicModal) {
+    document.getElementById("dynamicModal").style.transform = "scale(0)";
+    document.getElementById("dynamicModal").style.opacity = 0;
+  }
+}
+
+if (document.getElementById("updateImage")) {
+  document.getElementById("updateImage").addEventListener("click", () => {
+    let bgData = JSON.parse(localStorage.getItem("bgData"));
+    let prospect_id = localStorage.getItem("prospect_id");
+
+    const url = `${globalURl}/event-save`;
+
+    var xhr1 = new XMLHttpRequest();
+    xhr1.open("POST", url, true);
+    xhr1.setRequestHeader("Content-Type", "application/json");
+    xhr1.send(
+      JSON.stringify({
+        prospect_id,
+        profile_image: bgData.img,
+        updatePhoto: true,
+      })
+    );
+
+    xhr1.onreadystatechange = function () {
+      if (xhr1.readyState == 4 && xhr1.status == "200") {
+        let response = JSON.parse(xhr1.response);
+        console.log(response);
+        document.getElementById("image").src = response.image;
+        document.getElementById("updateImage").style.display = "none";
+        var myToast = Toastify({
+          text: "Image Updated Successfully",
+          duration: 2000,
+        });
+
+        myToast.showToast();
+      }
+    };
+  });
+}
+
+if (document.getElementById("searching_DB_user")) {
+  document
+    .getElementById("searching_DB_user")
+    .addEventListener("change", searching_DB_user);
+}
+function searching_DB_user(){
+  text = document.querySelector(".nav-link.active").innerText;
+  search = document.getElementById("searching_DB_user").value
+  if(text.includes("shared")){
+    document.getElementById("user-listings1").innerHTML = "";
+
+    data = JSON.parse(localStorage.getItem("yours"))
+    console.log(data,"data")
+
+    data.map(function (obj, key) {
+      console.log(text,"text")
+      if(obj.names_original.includes(search)){
+        row = `<div class="user-list single_database" style="cursor:pointer" id="` +
+        obj.link_id +
+        `"  data-name=${obj.naming} data-image=${
+          obj.image != null ? obj.image : "./Assets/img/user.png"
+        }>
+          <div class="img-name">
+            <img src="${obj.image}" alt="">
+            <h5 class="name">${obj.names_original}</h5>
+          </div>
+          ${obj.status == 0? `<div data-id=${obj.id} style="cursor:pointer" class="access-box granted changing_access">Access Granted</div> ` : `<div data-id=${obj.id} style="cursor:pointer;background-color:rgb(128, 128, 128) !important" class="access-box granted changing_access">Access Denied</div> `}
+          
+        </div>`
+      
+        
+      // all1 += row;
+      document.getElementById("user-listings1").innerHTML += row;
+      }
+      
+    });
+    document.querySelectorAll(".changing_access").forEach((ele) => {
+      ele.addEventListener("click", (e) => {
+        get_inside = e.currentTarget.innerHTML
+        message_id = e.currentTarget.getAttribute("data-id")
+
+
+        const url = `${globalURl}/changing_access/${message_id}`;
+
+          let xhr = new XMLHttpRequest();
+
+          xhr.open("GET", url, true);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.send();
+
+        if(get_inside.includes("Granted")){
+
+          e.currentTarget.innerHTML = `Access Denied`
+          e.currentTarget.style.backgroundColor = `rgb(128, 128, 128)`
+        }
+        else{
+          e.currentTarget.innerHTML = `Access Granted`
+          e.currentTarget.style.backgroundColor = `#00B731`
+        }
+      })
+    })
+
+  }
+  else{
+    console.log('hereeee')
+    document.getElementById("user-listings2").innerHTML = "";
+
+    data = JSON.parse(localStorage.getItem("friends"))
+    console.log(data,"data")
+
+    data.map(function (obj, key) {
+      console.log(text,"text")
+      if(obj.names_original.includes(search)){
+        row = `<div class="user-list ${obj.naming ? `single_database`:``}" style="cursor:pointer" id="` +
+        obj.link_id +
+        `"  data-name=${obj.naming} data-image=${
+          obj.image != null ? obj.image : "./Assets/img/user.png"
+        }>
+          <div class="img-name">
+            <img src="${obj.image}" alt="">
+            <h5 class="name">${obj.names_original}</h5>
+          </div>
+          ${obj.naming ? `<div class="access-box granted">Access Granted</div>` : `<div class="access-box granted"style="background-color:#FFBF00">Pending</div>`}
+          
+        </div>`
+      
+        
+      // all1 += row;
+      document.getElementById("user-listings2").innerHTML += row;
+      }
+      
+    });
+    var single_database =
+              document.querySelectorAll(".single_database");
+            for (var i = 0; i < single_database.length; i++) {
+              single_database[i].addEventListener(
+                "click",
+                getSingleDatabase,
+                false
+              );
+            }
+  }
+}
+
+
+
+
+setInterval(() => {
+  if(document.getElementById("multi_database").style.display == "block"){
+    document.getElementById("results").style.display = "none"
+  }
+  if(document.getElementById("list_table_view").style.display == "block"){
+    document.getElementById("results").style.display = "none"
+  }
+  console.log('hitting here')
+},50)
+
+
+function getmoreusers(){
+  value = document.getElementById("input-list-multi-dbs").value
+  if(value){
+    document.querySelector(".searchBoxContainer").innerHTML = ``
+    document.querySelector(".searchBoxContainer").style.display = "flex"
+  }
+  else{
+    document.querySelector(".searchBoxContainer").style.display = "none"
+  }
+  user_id = localStorage.getItem("user_id")
+  
+
+  const url = `${globalURl}/getmoreusers/${value}/${user_id}`;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send();
+  xhr.onreadystatechange = function () {
+    //Call a function when the state changes.
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      document.querySelector(".searchBoxContainer").innerHTML = ``
+      arr = JSON.parse(xhr.responseText);
+      if(arr.data){
+        arr.data.map((item) => {
+          console.log(item,"item")
+          document.querySelector(".searchBoxContainer").innerHTML += `<p class="searchProspect row1TimeSpecial3" data-email="${item.username}"  style="width: 100%;
+          font-size: 14px;
+          padding: 10px;
+          box-sizing: border-box;
+          border-radius: 5px;
+          margin-bottom: 13px !important;
+          cursor: pointer;
+          animation: scaleAnim 0.2s ease-in-out forwards;background: #dcfff2 0% 0% no-repeat padding-box; line-height: 0px; margin-bottom: 0px;">
+          <img style="width: 20px; border-radius: 50%; margin-right: 10px;" id="searchBoxImage" src="${item.image}"/>
+          ${item.name}
+        </p>`
+        })
+
+        document.querySelectorAll(".searchProspect").forEach((ele) => {
+          ele.addEventListener("click", (e) => {
+            let currentMessage = e.currentTarget
+            let message_id = currentMessage.getAttribute("data-email");
+            document.getElementById("input-list-multi-dbs").value = message_id;
+            document.querySelector(".searchBoxContainer").style.display = "none"
+            shareSubmit()
+          });
+        });
+      }
+      else{
+        document.querySelector(".searchBoxContainer").innerHTML += `No such user`
+      }
+
+
+      
+    }
+  }
+
+}
+
+  function link_click(){
+    console.log("click")
+    document.querySelectorAll(".link_clicking").forEach((ele) => {
+    ele.addEventListener("click", () => {
+    values = ele.getAttribute("href")
+    let params = {
+    active: true,
+    currentWindow: true,
+  };
+  chrome.tabs.query(params, gotTab);
+
+  function gotTab(tabs) {
+    let msg = {
+      txt: values,
+      the_id: user_id,
+    };
+    chrome.tabs.sendMessage(tabs[0].id, msg);
+  }
+
+    })
+    
+  })
+
+  }
+  
+  
+
+
+
+
+

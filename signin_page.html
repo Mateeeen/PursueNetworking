@@ -381,10 +381,13 @@
         }
 
         .img__logo {
-            width: 27px;
-            height: 30px;
-            cursor: pointer;
-            margin: auto;
+            width: 44px;
+    height: 49px;
+    cursor: pointer;
+    margin: auto;
+    left: 216px;
+    top: 70px;
+    position: relative;
         }
 
         .loader {
@@ -790,219 +793,21 @@
 <body>
 
     <div class="mainContainer" style="padding: 0px 10px; padding-top: 30px; box-sizing: border-box;">
-        <div class="new-header" style="position: relative;">
-
-            <div class="imgContainer">
-                <div class="loaderIcons"></div>
-            </div>
-
-            <div class="logoContainer">
-                <img src="./Assets/img/index-logo.png" class="img__logo" alt="">
-            </div>
-
-
-            <div class="new_header_right_imgs" >
-                <div class="loadergroupIcons"></div>
-            </div>
-        </div>
-
-        <div class="middleNav">
+        <div class="logoContainer">
+            <img style="width: 83px;
+            height: 100px;
+            left: 196px;
+            top: 8px;" src="./Assets/img/signin_logo.png" class="img__logo" alt="">
             
-            <div class="profileDiv" id="loginBtn" style="display:none">
-
-                Login
-
-            </div>
-            <div class="profileDiv" id="profile_btn" >
-
-                <i class="fas fa-paperclip paperIcon"></i>
-
-            </div>
-
-            <div class="searchDiv">
-                <input type="text" id="search_box" placeholder="Search" autocomplete="off">
-            </div>
-
-            <div class="signoutDiv profileDiv" id="signoutDiv">
-                <i class="fas fa-sign-out paperIcon"></i>
-            </div>
-
-            <div class="HomeDiv">
-                <i class="fas fa-home homeIcon"></i>
-            </div>
-
-        </div>
-
-        <div class="row m-0 tabs-row" style="display: none;">
-            <div class="tabs_layer_box" style="width: 100% !important;">
-                <div class="tab-content tabs-data" id="pills-tabContent">
-                    <div class="tab-pane fade tabs_two_list_view show active" id="pills-profile" role="tabpanel"
-                        aria-labelledby="pills-profile-tab">
-
-                        <div class="tab_2_main_x_scroll" style="max-height: 500px !important" id="items-container">
-
-                            <div class="tab_2_main_y_scroll">
-                                <div class="slide-1">
-
-                                    <div class="row m-0 tabs_two_main">
-                                        <div class="tabs_cols_two_main"
-                                            style="width: 162.9px;height: 38px; font-size:13px; padding-top: 9px; padding-left: 8px; padding-right: 8px;">
-                                            <span class="left" style="color: white !important;">Full Name</span>
-                                            <span class="right"><i class="fas fa-caret-down down_arow_tabs_two"
-                                                    style="color: white !important; font-size: 18px !important;"></i></span>
-                                        </div>
-                                        <div class="tabs_cols_two_main"
-                                            style="width: 162.9px;height: 38px; font-size:13px; padding-top: 9px; padding-left: 8px; padding-right: 8px;">
-                                            <span class="left" style="color: white !important;">Profile
-                                                Image</span>
-                                        </div>
-                                        <div class="tabs_cols_two_main"
-                                            style="width: 162.9px;height: 38px; font-size:13px; padding-top: 9px; padding-left: 8px; padding-right: 8px;">
-                                            <span class="left" style="color: white !important;">Title</span>
-                                            <span class="right"><i class="fas fa-caret-down down_arow_tabs_two"
-                                                    style="color: white !important; font-size: 18px !important;"></i></span>
-                                        </div>
-                                        <div class="tabs_cols_two_main"
-                                            style="width: 162.9px;height: 38px; font-size:13px; padding-top: 9px; padding-left: 8px; padding-right: 8px;">
-                                            <span class="left" style="color: white !important;">Company</span>
-                                            <span class="right"><i class="fas fa-caret-down down_arow_tabs_two"
-                                                    style="color: white !important; font-size: 18px !important;"></i></span>
-                                        </div>
-                                        <div class="tabs_cols_two_main"
-                                            style="width: 162.9px;height: 38px; font-size:13px; padding-top: 9px; padding-left: 8px; padding-right: 8px;">
-                                            <span class="left" style="color: white !important;">Location</span>
-                                            <span class="right"><i class="fas fa-caret-down down_arow_tabs_two"
-                                                    style="color: white !important; font-size: 18px !important;"></i></span>
-                                        </div>
-                                        <div class="tabs_cols_two_main"
-                                            style="width: 162.9px;height: 38px; font-size:13px; padding-top: 9px; padding-left: 8px; padding-right: 8px;">
-                                            <span class="left" style="color: white !important;">Status</span>
-                                            <span class="right"><i class="fas fa-caret-down down_arow_tabs_two"
-                                                    style="color: white !important; font-size: 18px !important;"></i></span>
-                                        </div>
-                                        <div class="tabs_cols_two_main"
-                                            style="width: 162.9px;height: 38px; font-size:13px; padding-top: 9px; padding-left: 8px; padding-right: 8px;">
-                                            <span class="left" style="color: white !important;">Follow Up
-                                                Date</span>
-                                            <span class="right"><i class="fas fa-caret-down down_arow_tabs_two"
-                                                    style="color: white !important; font-size: 18px !important;"></i></span>
-                                        </div>
-                                    </div>
-                                    <div id="getAll"></div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="errorMessage"></div>
-
-        <div class="loaderContainer"
-            style="width: 100%; height: 420px; justify-content: center; align-items: center; display: none;">
-            <div class="loader"></div>
-        </div>
-        <div class="user-img-and-text" style=" text-align: center;">
-            <div class="userImage">
-                <img src=""
-                    style="display: block;position: relative;width: 56px;height: 56px;border-radius: 50%;margin: 0px  auto 10px; cursor: pointer;"
-                    id="profilePic">
-            </div>
-            <span class="new-header-record" style="color: #757575 !important;
-            font-size: 14px !important;" id="savedUserMessage"></span>
-        </div>
-        <div class="bottomContent">
-
-            <div class="box1 box1Current" id="dashboard_open">
-                <i class="fas fa-chart-pie"></i>
-                <h1>Dashboard</h1>
-
-                <p>Manage your CRM</p>
-            </div>
-
-            <div class="box1 box2" id="pipelines">
-                <i class="fas fa-th-list"></i>
-                <h1>Pipelines</h1>
-                <p>Manage LinkedIn Prospect</p>
-                <p class="hidePipeParas" style="display: none;">Create and Manage Lists</p>
-                <p class="hidePipeParas" style="display: none;">Filter Prospect Data</p>
-                <p class="hidePipeParas" style="display: none;">Manage Pipelines</p>
-            </div>
-
-            <span id="moreSpan" class="moreSpan">more</span>
-
-            <div class="box1 box3" id="calender">
-                <i class="fas fa-calendar-alt"></i>
-                <h1>Calendar</h1>
-                <p>Manage Follow Up Calendar</p>
-            </div>
-
-            <div class="box1 box4" id="msg_btn">
-                <i class="fas fa-comment-dots"></i>
-                <h1>Collaboration</h1>
-                <p>Manage Direct Message</p>
-                <p class="hidePipeParas1" style="display: none;">Manage Group Conversations</p>
-            </div>
-
-            <span id="moreSpan1" class="moreSpan moreSpan1">more</span>
-
-        </div>
-
-    </div>
-
-    <!-- Top Members Modal -->
-
-    <div class="membersModal" id="membersDynamicModal">
-
-        <div class="membersModalContainer">
-
-            <div class="upperRow">
-
-                <h1 id="membersDynamicModalH1">Chat Members</h1>
-
-                <div class="closeDiv" id='membersDynamicModalCloseBtn'>
-                    <img src="./Assets/img/close.png" alt="">
-                </div>
-
-            </div>
-
-            <div class="membersMainContentContainer">
-
-                <div class="membersContainer"></div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Top Groups Modal -->
-
-    <div class="membersModal" id="groupsDynamicModal">
-
-        <div class="membersModalContainer">
-
-            <div class="upperRow">
-
-                <h1 id="groupsDynamicModalH1"></h1>
-
-                <div class="closeDiv" id='groupsDynamicModalCloseBtn'>
-                    <img src="./Assets/img/close.png" alt="">
-                </div>
-
-            </div>
-
-            <div class="membersMainContentContainer">
-
-                <div class="groupContainer">
-
-                    <div class="groupBoxContainer groupDynamicContainer"></div>
-
-                </div>
-
-            </div>
+            <button style="padding: 0% 20px;height: 40px; border-radius: 5px; background-color: #0077B7 ; color: #fff;
+            border: none; outline: none; cursor: pointer; margin: auto; margin-top: 51px; box-shadow: 0px 0px 10px #999; font-size: 14px;
+            font-weight: 500; display: flex; justify-content: space-between; align-items: center;" id="loginBtn"> <i class="fab fa-linkedin"
+                    style="font-size: 22px; margin-right: 10px; margin-top: 0px;"></i>Login with
+                LinkedIn </button>
+                <img style="width: 320px;
+                height: 320px;
+                left: 79px;
+                top: 13px;" src="./Assets/img/topbanner.png" class="img__logo" alt="">
 
         </div>
 
@@ -1010,7 +815,7 @@
 
 </body>
 
-<script type="text/javascript" src="./customHome.js"></script>
 <script src="js/toastify.js"></script>
+<script type="text/javascript" src="./signin_page.js"></script>
 
 </html>

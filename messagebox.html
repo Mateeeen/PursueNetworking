@@ -23,8 +23,97 @@
     }
 
     body {
-      font-family: "Roboto"sans-serif;
+      font-family: "Roboto" sans-serif;
     }
+
+    
+
+    .hover_tag {
+		background: #ffffff;
+		border: solid 1px #e6e6e6;
+		border-radius: 2px;
+		display: inline-block;
+		height: 100px;
+		line-height: 100px;
+		margin: 5px;
+		position: relative;
+		text-align: center;
+		vertical-align: middle;
+		width: 100px;
+    position:relative;
+    margin-left: 100px !important;
+}
+
+.hover_tag .span_center_parent{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50% , -50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 1111;
+}
+
+.hover_tag span {
+		background: #f2594b;
+		border-radius: 4px;
+		color: #ffffff;
+		display: inline-block;
+		font-size: 11px;
+		font-weight: 700;
+		line-height: normal;
+		padding: 5px 10px;
+		position: relative;
+		text-transform: uppercase;
+    margin:auto !important;
+}
+
+.hover_tag span:last-child {
+		margin-left: -20px;
+}
+
+.hover_tag:before,
+.hover_tag:after {
+  background: #ffffff;
+    border: solid 3px #9fb4cc;
+    border-radius: 4px;
+    content: '';
+    display: block;
+    height: 50px;
+    left: 45%;
+    margin: -17px 0 0 -12px;
+    position: absolute;
+    top: 45%;
+    /* transform: translate(-50%,-50%); */
+    width: 32px;x
+}
+
+.hover_tag:hover:before,
+.hover_tag:hover:after {
+		background: #e2e8f0;
+}
+/*a:before{transform:translate(-30%,-60%);}*/
+
+.hover_tag:before {
+		margin: -23px 0 0 -5px;
+}
+
+.hover_tag:hover {
+		background: #e2e8f0;
+		border-color: #9fb4cc;
+}
+
+.hover_tag:active {
+		background: #dae0e8;
+		box-shadow: inset 0 2px 2px rgba(0, 0, 0, .25);
+}
+
+
+
+
+
+
 
     .main__container {
       width: 500px;
@@ -38,6 +127,24 @@
       justify-content: center;
       flex-direction: column;
     }
+    .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-conten {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-conten {
+  display: block;
+}
 
     .container__content {
       width: 460px;
@@ -188,6 +295,7 @@
       font-family: "Roboto", sans-serif;
       font-weight: 600;
       margin-top: 2px;
+      line-height: 14px;
       color: black !important;
       z-index: 10;
       width: 100%;
@@ -196,9 +304,8 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      white-space: nowrap;
+      white-space: break-spaces;
       text-overflow: ellipsis;
-      overflow: hidden;
       margin-top: 7px;
     }
 
@@ -624,7 +731,9 @@
       color: #084dd1;
       transition: all 0.2s ease-in-out;
     }
-
+    .msg-box-chat:hover .btn-hover{
+      visibility: visible;
+    }
     .prospectContent:hover,
     .prospectContent1:hover {
       background-color: #084dd1;
@@ -1573,7 +1682,7 @@
       position: absolute;
       top: 120%;
       left: 0%;
-      z-index: 1000;
+      z-index: 1150;
       background-color: white;
       display: flex;
       justify-content: center;
@@ -2417,7 +2526,7 @@
       right: 0;
       width: 100%;
       display: flex;
-      padding: 10px;
+      padding: 5px;
       background-color: #fff;
     }
 
@@ -2429,6 +2538,12 @@
     }
 
     .type-msg-box-input input {
+      width: 80%;
+      background-color: transparent;
+      border: 0;
+      outline: 0;
+    }
+    .type-msg-box-input textarea {
       width: 80%;
       background-color: transparent;
       border: 0;
@@ -2598,16 +2713,27 @@
       width: calc(100% - 43px);
     }
 
-    .reply-box {
+    .chat-thread-box {
       width: calc(86% + -15px);
-      height: 15px;
+      min-height: 15px;
       background-color: #f3f3f3;
       font-size: 8px;
       padding: 2px 5px;
       transform: translate(45px, -8px);
-      font-family: "Roboto"sans-serif;
+      font-family: "Roboto" sans-serif;
       border-radius: 2px;
       cursor: pointer;
+    }
+    .chat-thread-box-prospect {
+      width: calc(93% + -13px);
+    min-height: 15px;
+    background-color: #f3f3f3;
+    font-size: 8px;
+    padding: 2px 5px;
+    transform: translate(38px, -8px);
+    font-family: "Roboto" sans-serif;
+    border-radius: 2px;
+    cursor: pointer;
     }
 
     .card.card-child {
@@ -2625,6 +2751,7 @@
 
     .sand-msg-input-box {
       background-color: #f5f5f5;
+      z-index: 2;
     }
 
     .sand-msg-input::placeholder,
@@ -2701,7 +2828,7 @@
       font-size: 14px;
       line-height: 25px;
       color: #a1a1a1;
-      font-family: "Roboto"sans-serif;
+      font-family: "Roboto" sans-serif;
       text-decoration: none !important;
       position: relative;
       margin-right: 35px;
@@ -2799,6 +2926,7 @@
       visibility: hidden;
       position: absolute;
       right: 3px;
+      z-index: 1000;
       top: 0px;
     }
 
@@ -2917,7 +3045,7 @@
     .edit-group-name-modal h3 {
       font-size: 20px;
       line-height: 24px;
-      font-family: "Roboto"sans-serif;
+      font-family: "Roboto" sans-serif;
       margin-bottom: 25px;
     }
 
@@ -3398,40 +3526,99 @@
     }
 
     [data-title]:hover:after {
-    opacity: 1;
-    transition: all 0.1s ease 0.5s;
-    visibility: visible;
-}
-/* box for title text */
-[data-title]:after {
-    content: attr(data-title);
-  	/* position for title view box */
-  	position: absolute;
-    color: #084DD1;
-    left: -280%;
-    top: -60%;
+      opacity: 1;
+      transition: all 0.1s ease 0.5s;
+      visibility: visible;
+    }
 
-    font: normal normal normal 12px/16px Roboto;
-    z-index: 99999;
-    visibility: hidden;
-    /* optional */
-    white-space: nowrap;
-  	/* stilization */
-    background-color: #dfe9fa;
-    color: #111;
-    font-size: 60%;
-    padding: 1px 3px 2px 3px;
-    box-shadow: 1px 1px 3px #222222;
-    opacity: 0;
-    border-radius: 6px;
+    /* box for title text */
+    [data-title]:after {
+      content: attr(data-title);
+      /* position for title view box */
+      position: absolute;
+      color: #084DD1;
+      left: -280%;
+      top: -60%;
+
+      font: normal normal normal 12px/16px Roboto;
+      z-index: 99999;
+      visibility: hidden;
+      /* optional */
+      white-space: nowrap;
+      /* stilization */
+      background-color: #dfe9fa;
+      color: #111;
+      font-size: 60%;
+      padding: 1px 3px 2px 3px;
+      box-shadow: 1px 1px 3px #222222;
+      opacity: 0;
+      border-radius: 6px;
+    }
+
+    [data-title] {
+      position: relative;
+    }
+    .container_notification {
+  border: 2px solid #dedede;
+  background-color: rgb(223, 233, 250);
+  border-radius: 5px;
+  padding-left: 6px;
+  padding-right: 6px;
+
+  margin: 6px 0;
+  width: 342px;
 }
-[data-title] {
-    position: relative;
+.container_notification::after {
+  content: "";
+  clear: both;
+  display: table;
 }
 
+.container_notification .noti_img {
+  float: left;
+  max-width: 47px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
 
-    .lastcss {}
-  </style>
+.container_notification img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+.time-rightt {
+  float: right;
+  color: #084DD1 ;
+  margin-right: 7px;
+  font-size:12px;
+}
+
+.time-leftt {
+  float: left;
+  color: #999;
+}
+.rec{
+	animation-name: pulse;
+	animation-duration: 1.5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes pulse{
+	0%{
+		box-shadow: 0px 0px 5px 0px rgba(173,0,0,.3);
+	}
+	65%{
+		box-shadow: 0px 0px 5px 13px rgba(173,0,0,.3);
+	}
+	90%{
+		box-shadow: 0px 0px 5px 13px rgba(173,0,0,0);
+	}
+}
+</style>
+
+
 </head>
 
 <body>
@@ -3554,16 +3741,16 @@
 
           </div>
         </div>
-        <div class="type-msg-box-input flex-wrap">
+        <div class="type-msg-box-input flex-wrap" style="z-index: 100;">
           <div class="top-right-icon w-100 d-flex flex-row-reverse">
             <button> <label for="screenaddimageInput" style="margin-bottom: 0;
-              cursor: pointer;"> <i class="fas fa-image"></i> </label></button>
+              cursor: pointer;display: none;"> <i class="fas fa-image"></i> </label></button>
             <input type="file" id="screenaddimageInput" style="display: none;"
               accept="image/png, image/gif, image/jpeg">
-            <button> <label for="screenaddFileInput" style="margin-bottom: 0;
-              cursor: pointer;"> <i class="far fa-paperclip"></i> </label> </button>
-            <input type="file" id="screenaddFileInput" style="display: none;">
-            <button><i class="fad fa-microphone"></i></button>
+            <button> <label id="click_background_file" style="margin-bottom: 0;
+              cursor: pointer;"> <i class="fas fa-upload"></i></label> </button>
+            <input type="file" name="file" id="screenaddFileInput" style="display: none;" accept="application/pdf,.zip,.rar,.7zip,.docx,.xls,.xlsx,.pptx,.mkv,.mp4,.mp3">
+            <button><i class="fad fa-microphone recorder"></i></button>
             <button class="farfar"><i class="far fa-grin-beam"></i></button>
             <button id="add_member_in_screen"><i class="fal fa-user-plus"></i></button>
           </div>
@@ -3573,7 +3760,7 @@
           </div>
 
           <div class="input-box w-100 d-flex justify-content-center sand-msg-input-box">
-            <input id="second_message_div" type="text" class="yen sand-msg-input" placeholder="Type Your Message">
+            <textarea id="second_message_div" type="text" class="yen sand-msg-input" placeholder="Type Your Message" style="max-height: 200px;min-height: 45px;"></textarea>
             <button id="second_send_message_button" class="" style="cursor: pointer; display: block">
               SEND
             </button>
@@ -3592,7 +3779,7 @@
           </div>
         </div>
       </div>
-      <div class="rightBox" style="display: block">
+      <div class="rightBox" style="display: none">
         <div id="nullHeading" style="
               width: 100%;
               height: 100%;
@@ -3600,7 +3787,7 @@
               justify-content: center;
               align-items: center;
             ">
-          <h1 class="nullHeading">Select user to see chats</h1>
+          <h1 class="nullHeading"></h1>
         </div>
 
         <div class="rightProspectBox" style="display: none">
@@ -3779,8 +3966,8 @@
               <div class="row">
                 <div class="list_name" style="
                 align-items: center;">
-                  <a id="subgroup_name" href="#" class="text-dark font-weight-bolder" style="margin-right: 10px;">#General <i
-                      class="fas fa-sort-down"></i></a>
+                  <a id="subgroup_name" href="#" class="text-dark font-weight-bolder"
+                    style="margin-right: 10px;">#General <i class="fas fa-sort-down"></i></a>
                   <p id="nameofgroup" class="m-0" style="max-width: 153px;line-height: normal;">Ui Design</p>
                   <span></span>
                 </div>
@@ -3795,7 +3982,7 @@
                   <a href="#"><img src="https://picsum.photos/200/200" alt="" /></a>
                 </div>
                 <div class="w-100 btn-boxs mt-2">
-                  <button style="display:none"class="btn btn-own btn-active btn-sm">
+                  <button style="display:none" class="btn btn-own btn-active btn-sm">
                     Conversations
                   </button>
                   <button id="showprospectBox" class="btn btn-own btn-sm">
@@ -3845,20 +4032,20 @@
 
 
 
-                
+
               </div>
             </div>
-            <div class="type-msg-box-input flex-wrap">
+            <div class="type-msg-box-input flex-wrap"style="z-index: 100;">
               <div class="top-right-icon w-100 d-flex flex-row-reverse">
                 <button><label for="addimageInput" style="margin-bottom: 0;
-                  cursor: pointer;"><i class="fas fa-image"></i></label></button>
+                  cursor: pointer;display: none;"><i class="fas fa-image"></i></label></button>
                 <input type="file" id="addimageInput" style="display: none;" accept="image/png, image/gif, image/jpeg">
-                <button><label for="addFileInput" style="margin-bottom: 0;
-                  cursor: pointer;"><i class="far fa-paperclip"></i> </label></button>
-                <input type="file" id="addFileInput" style="display: none;">
+                <button><label id="click_file_group" style="margin-bottom: 0;
+                  cursor: pointer;"><i class="fas fa-upload"></i></label></button>
+                <input type="file" name="file" id="addFileInput" style="display: none;" accept="application/pdf,.zip,.rar,.7zip,.docx">
 
-                <button><i class="fad fa-microphone"></i></button>
-                <button class="emojiIconn"><i class="far fa-grin-beam"></i></button>
+                <button><i class="fad fa-microphone group_recorder"></i></button>
+                <button class="emojiIconn" style="display:block"><i class="far fa-grin-beam"></i></button>
                 <button id="add_member_in_chat"><i class="fal fa-user-plus"></i></button>
               </div>
               <div class="edit-text-msg-box">
@@ -3866,8 +4053,11 @@
                 <p class="msg"></p>
               </div>
               <div class="input-box w-100 d-flex justify-content-center sand-msg-input-box">
-                <input id="send_message_div" type="text" class="yeeeen sand-msg-input"
-                  placeholder="Type Your Message" />
+                <textarea id="send_message_div" type="text" contenteditable="true" class="yeeeen sand-msg-input"
+                  placeholder="Type Your Message" style="min-height: 40px;max-height: 250px;"></textarea>
+                  <div id="myDropdown" class="dropdown-content" style="top:-208px !important">
+                    
+                  </div>
                 <button id="send_message_button" class="" style="cursor: pointer">
                   SEND
                 </button>
@@ -3984,6 +4174,19 @@
             <!-- <span class="img">X</span> -->
           </div>
         </div>
+        <select class="channel_status" style="padding: 5px 10px 5px 10px;
+        border-radius: 5px;
+        /* border-color: red; */
+        border: 2px solid #dfe9fa; cursor: pointer; display: none;">
+          <option style="cursor: pointer;" value="0" selected>
+           Public
+          </option>
+          
+          <option style="cursor: pointer;" value = "1">
+            Private
+          </option>
+
+        </select>
 
         <div class="group-details-modal" id="whole_container">
           <div class="text-center" id="adding_image_div">
@@ -4153,12 +4356,13 @@
         <div class="text-center top-profile-image-container" style="margin: 25px">
           <label for="profile_image_icon-main"
             class="top-img text-center position-relative profile-image rounded-circle">
-            <img id="group_chat_icon" src="./Assets/img/index-logo.png" alt="profile img" class="" />
+									
+            <img id="group_chat_icon" src="./Assets/img/index-logo.png" alt="profile img" class=""  />
             <span class="icon" style="padding-top: 0">
               <img id="" src="./Assets/img/cam.svg" alt="cam" />
             </span>
           </label>
-          <input type="file" name="filee" id="profile_image_icon-main" />
+          <input type="file" name="filee" id="profile_image_icon-main" accept="image/png,image/gif, image/jpeg" />
           <h5 id="group_setting_name" class="mb-2 upload-heading">
             Pursue Networking
           </h5>
@@ -4182,15 +4386,15 @@
                       border-bottom: 0;
                       border-bottom-left-radius: 0;
                       border-bottom-right-radius: 0;
-                      display: none;
+                      display: block;
                     ">
                 <h1 class="name">Topic</h1>
                 <p id="subgroup_setting_topic" class="dessc">
 
                 </p>
-                <buttun id="edit_btn_group_topic" class="edit_btn">Edit</buttun>
+                <buttun id="edit_btn_group_topic" style="display:none" class="edit_btn">Edit</buttun>
               </div>
-              <div class="group-name-box" style="border-bottom: 0; border-radius: 0;display: none;
+              <div class="group-name-box" style="border-bottom: 0; border-radius: 0;display: block;
               ">
                 <h1 class="name">Description</h1>
                 <p id="group_setting_description" class="dessc">
@@ -4204,6 +4408,7 @@
                   Lorem ipsum dolor sit amet.
                 </p>
               </div>
+              
               <div id="Leave_current_group" class="group-name-box" style="
                       border-top-left-radius: 0;
                       border-top-right-radius: 0;cursor: pointer;;
@@ -4359,12 +4564,14 @@
                 </p>
                 <buttun id="Subgroup_edit_btn_group_description" class="edit_btn">Edit</buttun>
               </div>
+              
               <div class="group-name-box" style="border-bottom: 0; border-radius: 0">
                 <h1 class="name">Created By</h1>
                 <p id="Subgroup_created_by" class="dessc">
                   Lorem ipsum dolor sit amet.
                 </p>
               </div>
+              
               <div id="Subgroup_Leave_current_group" class="group-name-box" style="
                     border-top-left-radius: 0;
                     border-top-right-radius: 0;cursor: pointer;;
@@ -4400,7 +4607,7 @@
                     " />
               </div>
               <div class="btn-box" style="margin: 20px 0">
-                <button id="AddMemberSecond" style="display:none"  class="btn btn-own-btm">
+                <button id="AddMemberSecond" style="display:none" class="btn btn-own-btm">
                   <!-- <i class="fas fa-user-plus"></i>  -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="23.199" height="19.775" viewBox="0 0 23.199 19.775">
                     <g id="Group_468" data-name="Group 468" transform="translate(-1555.051 -527)">
@@ -4437,6 +4644,12 @@
                   Lorem ipsum dolor sit amet.
                 </p>
                 <buttun id="Subgroup_second_group_edit" class="edit_btn">Edit</buttun>
+              </div>
+              <div class="group-name-box channeling" style=" border-radius: 0;padding-bottom: 0px">
+                <h1 class="name">Channel Status <span style="font-size: 10px;">(Only admin can change it)</span></h1> 
+                <p id="channeling" class="" style="font-weight: bold; cursor: pointer;">
+                  Private
+                </p>
               </div>
             </div>
           </div>
@@ -4496,6 +4709,35 @@
           <div id="temporary_buttons" class="text-right" style="margin-top: 38px;">
             <button id="closeIt" class="btn ">Cancel</button>
             <button class="btn ">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="prospectModal" id="MessageDeleteThreadModal">
+    <div class="prospectModalContainer"
+      style="height: 206px;margin: 0 auto; top: 50%; transform: translateY(-50%); padding: 30px;">
+      <div class="upperRow">
+        <h1 style="font-size: 20px; line-height: 24px;margin-top: 20px;">Delete Text</h1>
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;transform: translate(-3px, 10px);"
+          id="MessageDeleteModalCloseBtn_thread" width="19.092" height="19.092" viewBox="0 0 19.092 19.092">
+          <g id="Icon_feather-plus" data-name="Icon feather-plus" transform="translate(9.546 -15.91) rotate(45)">
+            <path id="Path_93" data-name="Path 93" d="M18,7.5v21" fill="none" stroke="#474747" stroke-linecap="round"
+              stroke-linejoin="round" stroke-width="3" />
+            <path id="Path_94" data-name="Path 94" d="M7.5,18h21" fill="none" stroke="#474747" stroke-linecap="round"
+              stroke-linejoin="round" stroke-width="3" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="prospectMainContentContainer" style="height: auto; margin-top: 60px;">
+        <div class="subGroupContainer">
+          <p class="del_msg" style="font-size: 18px; line-height: 24px; font-weight: 400;">Are you sure you want to
+            delete this text?</p>
+          <div id="temporary_buttons" class="text-right" style="margin-top: 38px;">
+            <button id="close_delete_thread" class="btn">Cancel</button>
+            <button id="delete_thread_message" class="btn "style="background-color: #ff0000 !important;color:white">Delete</button>
           </div>
         </div>
       </div>
@@ -4763,19 +5005,220 @@
   </div>
 
 
+  <!-- new custom modal  -->
+  <style>
+    .newCustomModal {
+      opacity: 1;
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      z-index: 100;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.2s ease-in-out;
+      z-index: 999999;
+    }
+
+    .newCustomModal .prospectModalllContainer {
+      width: 85%;
+      min-height: 80vh;
+      max-height: fit-content;
+      background: #f7fbff 0% 0% no-repeat padding-box;
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .newCustomModal .prospectModalllContainerrr {
+      width: 85%;
+      min-height: 32vh;
+      max-height: fit-content;
+      background: #f7fbff 0% 0% no-repeat padding-box;
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .newCustomModal .prospectModalllContainer .close-btn {
+      width: 40px;
+      height: 40px;
+      background-color: #0375FF;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      color: #fff;
+      cursor: pointer;
+      outline: 0px;
+      border: 0px;
+      border-radius: 50%;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 11111;
+    }
+    
+    .newCustomModal .prospectModalllContainerrr .close-btn-thread {
+      width: 40px;
+      height: 40px;
+      background-color: #0375FF;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      color: #fff;
+      cursor: pointer;
+      outline: 0px;
+      border: 0px;
+      border-radius: 50%;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 11111;
+    }
+
+    .newCustomModal .prospectModalllContainer .close-btn:hover {
+      color: red;
+    }
+    .newCustomModal .prospectModalllContainerrr .close-btn-thread:hover {
+      color: red;
+    }
+    
+
+    .custom-modal-content {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .card-left-content-box {
+      position: relative;
+    }
+
+    .card-left-content-box:hover>.btn-hover {
+      visibility: visible;
+    }
+
+    .btn-hover {
+      position: absolute;
+      top: 0px;
+      right: 20px;
+      background: #fff;
+      visibility: hidden;
+      padding: 3px 5px;
+      border-radius: 5px;
+      border: 2px solid #dfe9fa
+    }
+
+    .btn-hover button {
+      background-color: transparent;
+      border: 0px;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 0px 5px;
+    }
+  </style>
+  <div class="newCustomModal" id="newCustomModal">
+    <div class="prospectModalllContainer" style="min-height: 98vh !important;">
+      <button class="close-btn" data-modal="#newCustomModal"> <i class="far fa-times-circle"></i> </button>
+      <div class="custom-modal-content" id="adding_threads" style="margin-bottom: 57px;">
+      </div>
+
+      <div class="type-msg-box-input flex-wrap" style="z-index: 100;">
+        <div class="top-right-icon w-100 d-flex flex-row-reverse">
+          <!-- <button><label for="addimageInput" style="margin-bottom: 0;
+            cursor: pointer;"><i class="fas fa-image"></i></label></button> -->
+          <!-- <input type="file" id="addimageInput" style="display: none;" accept="image/png, image/gif, image/jpeg"> -->
+          <!-- <button><label for="addFileInput" style="margin-bottom: 0;
+            cursor: pointer;"><i class="far fa-paperclip"></i> </label></button> -->
+          <!-- <input type="file" id="addFileInput" style="display: none;"> -->
+
+          <button style="color:rgb(42, 206, 206)"><i class="fad fa-microphone recorder_thread"></i></button>
+          <!-- <button class="emojiIconn"><i class="far fa-grin-beam"></i></button> -->
+          <!-- <button id="add_member_in_chat"><i class="fal fa-user-plus"></i></button> -->
+        </div>
+        <div class="paste_audio" style="margin-left: 53px;display:none"></div>
+
+        <div class="input-box w-100 d-flex justify-content-center sand-msg-input-box">
+          <textarea id="send_thread_div" type="text" class="sand-msg-input" placeholder="Type Your Message" style="max-height:200px;min-height: 40px;"></textarea>
+          <button id="send_thread_button" class="" style="cursor: pointer; display: block;">
+            SEND
+          </button>
+          <button id="update_thread_button" class="" style="cursor: pointer; display: none;">
+            Update
+          </button>
+          
+          <button id="cancel_thread_button" class="" style="cursor: pointer; display: none; margin-left: 5px !important;margin-right: 5px !important;">
+            Cancel
+          </button>
+
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="newCustomModal" id="share_thread">
+    <div class="prospectModalllContainerrr">
+      <button class="close-btn-thread" data-modal="#share_thread"> <i class="far fa-times-circle"></i> </button>
+      <div class="custom-modal-content" id="add_single_thread" style="margin-bottom: 60px;">
+      </div>
+
+      <div class="type-msg-box-input flex-wrap" style="z-index: 100;">
+        <div class="top-right-icon w-100 d-flex flex-row-reverse">
+          <!-- <button><label for="addimageInput" style="margin-bottom: 0;
+            cursor: pointer;"><i class="fas fa-image"></i></label></button> -->
+          <!-- <input type="file" id="addimageInput" style="display: none;" accept="image/png, image/gif, image/jpeg"> -->
+          <!-- <button><label for="addFileInput" style="margin-bottom: 0;
+            cursor: pointer;"><i class="far fa-paperclip"></i> </label></button> -->
+          <!-- <input type="file" id="addFileInput" style="display: none;"> -->
+
+          <!-- <button><i class="fad fa-microphone"></i></button>
+          <button class="emojiIconn"><i class="far fa-grin-beam"></i></button>
+          <button id=""><i class="fal fa-user-plus"></i></button> -->
+        </div>
+
+        <div class="input-box w-100 d-flex justify-content-center sand-msg-input-box">
+          <textarea id="share_thread_msg" type="text" class="sand-msg-input" placeholder="Type Your Message" style="max-height: 150px;min-height: 40px;"></textarea>
+          <button id="share_thread_send" class="" style="cursor: pointer; display: block;">
+            SEND
+          </button>
+
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
 
 
   <div data-ml-modal id="modal-12">
-    
+
     <a href="#!" class="modal-overlay">
       <div class="modal-dialog modal-dialog-lg">
         <div class="top-info-box">
           <div class="row d-none" style="padding: 15px 15px 0 0; justify-content: right">
-            <div id="Screen_notify_img" class="notify_img" style="display: none;">   <a href="#"><img src="https://media-exp2.licdn.com/dms/image/C4D03AQFUxaX7FjH2kA/profile-displayphoto-shrink_800_800/0/1644700707608?e=1660176000&amp;v=beta&amp;t=tA996kdoGg50E4spy50_1nnL5O8LVBPvy482TEZOeVA" alt=""></a>   <a href="#"><img src="https://media-exp2.licdn.com/dms/image/C4E03AQEDC4g8-vMEQQ/profile-displayphoto-shrink_800_800/0/1636762353634?e=1661385600&amp;v=beta&amp;t=vWFkPXVqCuBaO81asqdJYO9kuBr2hRgGUEhEXIRAzKE" alt=""></a>   <a href="#"><img src="./Assets/img/user.png" alt=""></a></div>
+            <div id="Screen_notify_img" class="notify_img" style="display: none;"> <a href="#"><img
+                  src="https://media-exp2.licdn.com/dms/image/C4D03AQFUxaX7FjH2kA/profile-displayphoto-shrink_800_800/0/1644700707608?e=1660176000&amp;v=beta&amp;t=tA996kdoGg50E4spy50_1nnL5O8LVBPvy482TEZOeVA"
+                  alt=""></a> <a href="#"><img
+                  src="https://media-exp2.licdn.com/dms/image/C4E03AQEDC4g8-vMEQQ/profile-displayphoto-shrink_800_800/0/1636762353634?e=1661385600&amp;v=beta&amp;t=vWFkPXVqCuBaO81asqdJYO9kuBr2hRgGUEhEXIRAzKE"
+                  alt=""></a> <a href="#"><img src="./Assets/img/user.png" alt=""></a></div>
           </div>
           <div class="userInfoBoxChattModal d-flex">
             <div class="imgBox">
-              <img id="prospect_image_heading_comment" src="" alt="" style="width: 59px; height: 59px" class="img-fluid rounded-circle">
+              <img id="prospect_image_heading_comment" src="" alt="" style="width: 59px; height: 59px"
+                class="img-fluid rounded-circle">
             </div>
             <div class="rightImgSideContent">
               <div class="prospect_name_heading_comment" style="margin-top: 0px;"></div>
@@ -4792,20 +5235,21 @@
                 Status:
                 <span class="prospect_subgroup_status_comment" style="color: #084dd1"></span>
               </div>
-        <div>        <p class="notes_comment" style="    display: -webkit-box;
+              <div>
+                <p class="notes_comment" style="    display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
           max-width: 328px;"></p>
-          
-        </div>
+
+              </div>
             </div>
           </div>
           <div class="row profileMainBox-2 d-none">
             <div class="w-100 btn-boxs my-2">
-              
-              
-              
+
+
+
             </div>
           </div>
         </div>
@@ -4817,7 +5261,7 @@
         <input type="hidden" id="temporary_prospect_id" value="">
         <input type="hidden" id="temporary_url" value="">
 
-        <div class="modal-content modal-content-comments">
+        <div class="modal-content modal-content-comments" style="min-height: 250px !important;">
           <button id="send_CRM" class="send_CRM btn btn-sm" style="margin-bottom: 10px;">
             Open in CRM
           </button>
@@ -4837,21 +5281,29 @@
                 style="background-color: #0375FF; color: white; width: 20%; height: 40px; display: none;">Update</button>
               <button id="cancel_comment" class="btn btn-sm"
                 style="background-color: #0375FF; color: white; width: 20%; height: 40px; display: none; margin-left: 8px;">Cancel</button>
-              <div id="myDropdown" class="dropdown-content">
-              </div>
+                
             </div>
           </span>
         </div>
       </div>
     </a>
-    
+
 
   </div>
   <!-- group name edit modal  -->
 
 </body>
 <script src="js/vanillaEmojiPicker.js"></script>
-<script type="text/javascript" src="./customMessage.js"></script>
 <script src="js/toastify.js"></script>
+<script src="./Assets/axios.js"></script>
+<script type="text/javascript" src="./customMessage.js"></script>
+
+
+<!-- <script src="js/Emoji.js"></script> -->
+
+
+
+<!-- <script nonce="2726c7f26c" src="js/vrecorder.js"></script> -->
+
 
 </html>

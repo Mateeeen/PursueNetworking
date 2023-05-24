@@ -1,19 +1,18 @@
-<!DOCTYPE html>
 <html>
 
 <head>
 	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
 		integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<!-- <link rel="stylesheet" href="./css/fontawesome-com.css" /> -->
+	<script type="text/javascript" src="./js/jsdelivr.net-npm.js"></script>
+	<link rel="stylesheet" href="./css/bootstrap-4.css">
 
 	<title>Linkedin Tester</title>
 
-	<link rel="stylesheet" href="./Assets/css/style.css">
-	</link>
-	<link rel="stylesheet" href="css/style.css">
-	</link>
+	<link rel="stylesheet" href="./Assets/css/style.css" />
+	<link rel="stylesheet" href="css/style.css" />
+
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
@@ -32,6 +31,21 @@
 
 		#name {
 			color: #0375FF;
+		}
+
+		.removePhoto {
+			font-size: 18px;
+			color: red;
+			position: absolute;
+			bottom: -3px;
+			right: 0%;
+			border: 3px solid transparent;
+			padding: 8px;
+			box-sizing: border-box;
+			background-color: white;
+			border-radius: 5px;
+			border-top-right-radius: 0px;
+			cursor: pointer;
 		}
 
 		#alreadyStored {
@@ -264,7 +278,7 @@
 		.slider:after {
 			color: black !important;
 			position: absolute;
-			content: "CANBAN";
+			content: "KANBAN";
 			height: 27px;
 			padding-top: 2px;
 			width: 48%;
@@ -287,7 +301,7 @@
 		}
 
 		input:checked+.slider:before {
-			content: "CANBAN" !important;
+			content: "KANBAN" !important;
 			-webkit-transform: translateX(104%);
 			-ms-transform: translateX(104%);
 			transform: translateX(104%);
@@ -330,6 +344,10 @@
 			height: 34px;
 			margin-left: 2.5%;
 
+		}
+
+		.new-content-notes img {
+			width: 150px;
 		}
 
 		.switch-2 input {
@@ -708,6 +726,7 @@
 			padding-bottom: 10px;
 			font-size: 14px !important;
 			transform: translate(-50%, 0%);
+			white-space: nowrap;
 		}
 
 		.btn_popup:hover {
@@ -1060,7 +1079,7 @@
 		}
 
 		.sub-hero-1-itme-3 {
-			margin-right: -40px !important;
+			margin-right: -4px !important;
 		}
 
 		/*.sub-hero-1-itme-4{
@@ -1233,15 +1252,15 @@
 
 		.new-content-notes {
 			width: 99%;
-		    height: fit-content;
-		    font-size: 14px;
-		    margin-top: 5px;
-		    outline: none;
-		    border: none;
-		    border-radius: 10px;
+			height: fit-content;
+			font-size: 14px;
+			margin-top: 5px;
+			outline: none;
+			border: none;
+			border-radius: 10px;
 		}
 
-		.new-content-notes::-webkit-scrollbar{
+		.new-content-notes::-webkit-scrollbar {
 			width: 10px;
 			/* background-color: transparent; */
 		}
@@ -1291,6 +1310,47 @@
 			left: 0px;
 			bottom: 0px;
 			opacity: 1;
+		}
+
+		.new-img-icon-sync {
+			position: absolute;
+			height: 30px;
+			width: 30px;
+			border-top-left-radius: 4px;
+			border-bottom-right-radius: 4px;
+			background-color: white;
+			right: 0px;
+			bottom: 0px;
+			opacity: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			display: none;
+		}
+
+		.new-img-icon-sync i {
+			font-size: 17px;
+			color: red !important;
+		}
+
+		.new-img-icon-sync::after {
+			content: "Update Image";
+			width: 100%;
+			height: 100%;
+			font-size: 12px;
+			font-weight: 700;
+			position: absolute;
+			top: 110%;
+			left: 0%;
+			background-color: transparent;
+			color: transparent;
+			white-space: nowrap;
+			transition: all .2s ease-in-out;
+		}
+
+		.new-img-icon-sync:hover:after {
+			color: #000;
 		}
 
 		.new-img-star-icon {
@@ -1472,6 +1532,14 @@
 		/* Apply 'border-box' to 'box-sizing' so border and padding is included in the width and height. */
 		.carousel-wrapper * {
 			box-sizing: border-box;
+		}
+
+		.attachmentPhotoContainer {
+			width: fit-content;
+			height: fit-content;
+			position: relative;
+			display: none;
+			margin-bottom: 5px;
 		}
 
 		/* We'll be using the 'transform' property to move the carousel's items, so setting the 'transform-style' to 'preserve-3d' will make sure our nested elements are rendered properly in the 3D space. */
@@ -2108,7 +2176,8 @@
 			transition: all 300ms ease-in-out;
 		}
 
-		.createNewListBtn, .updateNewListBtn{
+		.createNewListBtn,
+		.updateNewListBtn {
 			width: 100%;
 		}
 
@@ -2440,7 +2509,7 @@
 			margin-bottom: 15px;
 		}
 
-		.prospectMainContentContainer{
+		.prospectMainContentContainer {
 			height: 430px;
 		}
 
@@ -2568,14 +2637,14 @@
 			/* grid-template-columns: repeat(3, 30%); */
 		}
 
-		.subGroupBoxContainer{
-            width: 100%;
-            height: fit-content;
-            position: relative;
-            display: grid;
-            grid-template-columns: repeat(3, 30%);
-            justify-content: space-between;
-        }
+		.subGroupBoxContainer {
+			width: 100%;
+			height: fit-content;
+			position: relative;
+			display: grid;
+			grid-template-columns: repeat(3, 30%);
+			justify-content: space-between;
+		}
 
 		/* .groupBox,
 		.subGroupBox {
@@ -2594,44 +2663,44 @@
 		} */
 
 		.groupBox .tooltiptext {
-            visibility: hidden;
-            width: 100%;
-            background-color: #DFE9FA;
-            color: #000 !important;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 10px;
-            font-size: 10px;
-            font-weight: 700;
-            display: block;
-            word-break: break-all;
-            position: absolute;
-            z-index: 10;
-            top: 0%;
-            left: -10%;
-        }
+			visibility: hidden;
+			width: 100%;
+			background-color: #DFE9FA;
+			color: #000 !important;
+			text-align: center;
+			border-radius: 6px;
+			padding: 5px 10px;
+			font-size: 10px;
+			font-weight: 700;
+			display: block;
+			word-break: break-all;
+			position: absolute;
+			z-index: 10;
+			top: 0%;
+			left: -10%;
+		}
 
-        .groupBox:hover .tooltiptext {
-            visibility: visible;
-        }
+		.groupBox:hover .tooltiptext {
+			visibility: visible;
+		}
 
-        .subGroupBox .tooltiptext {
-            visibility: hidden;
-            width: 100%;
-            background-color: #DFE9FA;
-            color: #000 !important;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 10px;
-            font-size: 13px;
-            font-weight: 700;
-            display: block;
-            word-break: break-all;
-            position: absolute;
-            z-index: 1;
-            top: 0%;
-            left: -10%;
-        }
+		.subGroupBox .tooltiptext {
+			visibility: hidden;
+			width: 100%;
+			background-color: #DFE9FA;
+			color: #000 !important;
+			text-align: center;
+			border-radius: 6px;
+			padding: 5px 10px;
+			font-size: 13px;
+			font-weight: 700;
+			display: block;
+			word-break: break-all;
+			position: absolute;
+			z-index: 1;
+			top: 0%;
+			left: -10%;
+		}
 
 		/* .userIconDemo {
             width: 100% !important;
@@ -2665,20 +2734,20 @@
         } */
 
 		.groupName {
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 2px;
-            color: black !important;
-            z-index: 10;
-            width: 100%;
-            height: 25px;
-            border-radius: 5px;
-            cursor: default;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+			font-size: 13px;
+			font-weight: 600;
+			margin-top: 2px;
+			color: black !important;
+			z-index: 10;
+			width: 100%;
+			height: 25px;
+			border-radius: 5px;
+			cursor: default;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
 
 		.smallgroupBox {
 			width: 45px;
@@ -2761,10 +2830,10 @@
 
 		.new-header {
 			width: 95%;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+			margin-bottom: 30px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 		}
 
 		.userImage {
@@ -2781,12 +2850,14 @@
 			justify-content: right;
 			align-items: center;
 		}
-		.groupBox.groupChats{
+
+		.groupBox.groupChats {
 			border-radius: 50%;
 			padding: 5px;
 			/* overflow: hidden; */
 			position: relative;
 		}
+
 		.userIconDemo {
 			width: 100%;
 			height: 73px;
@@ -3407,7 +3478,7 @@
 			height: 13px;
 		}
 
-		.closeDiv i{
+		.closeDiv i {
 			font-size: 13px !important;
 			color: #084DD1;
 		}
@@ -3437,7 +3508,8 @@
 			box-sizing: border-box;
 		}
 
-		.swipeRightContainer, .swipeLeftContainer{
+		.swipeRightContainer,
+		.swipeLeftContainer {
 			width: fit-content;
 			height: fit-content;
 			display: flex;
@@ -3457,7 +3529,8 @@
 			font-size: 18px;
 		}
 
-		.openChooseContainer, .openChooseFilterContainer,
+		.openChooseContainer,
+		.openChooseFilterContainer,
 		.showSubGroupsContainer {
 			width: 100%;
 			height: 85%;
@@ -3465,11 +3538,12 @@
 			overflow-y: scroll;
 		}
 
-		.openChooseFilterContainer{
+		.openChooseFilterContainer {
 			height: 75%;
 		}
 
-		.openChooseContainer::-webkit-scrollbar, .openChooseFilterContainer::-webkit-scrollbar {
+		.openChooseContainer::-webkit-scrollbar,
+		.openChooseFilterContainer::-webkit-scrollbar {
 			display: none;
 		}
 
@@ -3489,7 +3563,8 @@
 			align-items: center;
 		}
 
-		.listDelIcon, .listDelIcon1 {
+		.listDelIcon,
+		.listDelIcon1 {
 			width: 35px;
 			height: 35px;
 			background-color: #FFE5E5;
@@ -3500,12 +3575,14 @@
 			cursor: pointer;
 		}
 
-		.trashIcon, .trashIcon1 {
+		.trashIcon,
+		.trashIcon1 {
 			font-size: 14px;
 			color: #FF0000;
 		}
 
-		.listContentContainer, .listContentContainer1 {
+		.listContentContainer,
+		.listContentContainer1 {
 			width: 86%;
 			height: 35px;
 			background-color: #F4F4F4;
@@ -3531,7 +3608,8 @@
 			overflow: hidden;
 		}
 
-		.listToggleBox, .listToggleBox1 {
+		.listToggleBox,
+		.listToggleBox1 {
 			width: 15px;
 			height: 15px;
 			border-radius: 50%;
@@ -3540,47 +3618,47 @@
 			transition: all .2s ease-in-out;
 		}
 
-		.listToggleBox1Checked{
+		.listToggleBox1Checked {
 			background-color: #084DD1;
 		}
 
-		.editIcon{
+		.editIcon {
 			font-size: 16px;
 			color: #084DD1;
 			cursor: pointer;
 			transition: all .2s ease-in-out;
 		}
 
-		.editIcon:hover{
+		.editIcon:hover {
 			margin-top: -4px;
 		}
 
-		.listInpContainer{
+		.listInpContainer {
 			width: 100%;
 			height: 100%;
 			padding: 5px 10px;
 			box-sizing: border-box;
 		}
 
-		.inputFields{
+		.inputFields {
 			margin-top: 10px;
 		}
 
-		.inputFields label{
+		.inputFields label {
 			display: block;
 			font-size: 12px;
 			font-weight: 600;
 			color: #000;
 		}
 
-		.colorTagLbl{
+		.colorTagLbl {
 			font-size: 12px;
 			font-weight: 600;
 			color: #000;
 		}
 
 		.inputFields input,
-		.inputFields textarea{
+		.inputFields textarea {
 			width: 100%;
 			height: 30px;
 			padding: 5px 10px;
@@ -3594,12 +3672,12 @@
 			font-weight: 400;
 		}
 
-		.inputFields textarea{
+		.inputFields textarea {
 			height: 80px;
 			resize: none;
 		}
 
-		.colorTagContainer{
+		.colorTagContainer {
 			width: 60%;
 			height: fit-content;
 			display: flex;
@@ -3608,7 +3686,7 @@
 			margin-top: -10px;
 		}
 
-		.colorTag{
+		.colorTag {
 			width: 15px;
 			height: 15px;
 			border-radius: 50%;
@@ -3617,38 +3695,38 @@
 			transition: all .2s ease-in-out;
 		}
 
-		.colorTagSelected{
+		.colorTagSelected {
 			padding: 8px;
 			box-sizing: border-box;
 			border: 2px solid #5990f5 !important;
 			transition: all .2s ease-in-out;
 		}
 
-		.color1{
+		.color1 {
 			background-color: #B400FF;
 		}
 
-		.color2{
+		.color2 {
 			background-color: #0033FF;
 		}
 
-		.color3{
+		.color3 {
 			background-color: #00B731;
 		}
 
-		.color4{
+		.color4 {
 			background-color: #6ABB00;
 		}
 
-		.color5{
+		.color5 {
 			background-color: #FF8800;
 		}
 
-		.color6{
+		.color6 {
 			background-color: #FF0000;
 		}
 
-		.noListMessage{
+		.noListMessage {
 			width: 100%;
 			height: 100%;
 			color: #FF0000;
@@ -3659,7 +3737,7 @@
 			align-items: center;
 		}
 
-		.text-right1{
+		.text-right1 {
 			padding: 5px 10px;
 			box-sizing: border-box;
 			color: white !important;
@@ -3669,36 +3747,37 @@
 			margin-left: 8px;
 		}
 
-		#items-container, #items-container-1 {
+		#items-container,
+		#items-container-1 {
 			scroll-behavior: smooth;
 		}
 
-		.resetDiv{
+		.resetDiv {
 			transform: translateY(0px);
 			transition: all .2s ease-in-out;
 		}
 
-		.resetDiv:hover{
+		.resetDiv:hover {
 			transform: translateY(-3px);
 		}
 
 		.notificationBox {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: #084DD1;
-            color: white;
-            position: absolute;
-            top: 70%;
-            right: 0%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: default;
-            font-size: 12px;
-        }
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			background-color: #084DD1;
+			color: white;
+			position: absolute;
+			top: 70%;
+			right: 0%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: default;
+			font-size: 12px;
+		}
 
-		.threeDotsMenu{
+		.threeDotsMenu {
 			font-size: 14px;
 			color: white !important;
 			margin-right: 4px;
@@ -3707,11 +3786,11 @@
 			transition: all .2s ease-in-out;
 		}
 
-		.threeDotsMenu:hover{
+		.threeDotsMenu:hover {
 			margin-top: -2px;
 		}
 
-		.menuBox{
+		.menuBox {
 			width: 100px;
 			height: fit-content;
 			background-color: white;
@@ -3726,7 +3805,8 @@
 			transition: all .2s ease-in-out;
 		}
 
-		.editContainer, .deleteContainer{
+		.editContainer,
+		.deleteContainer {
 			width: 90%;
 			height: fit-content;
 			display: flex;
@@ -3741,41 +3821,42 @@
 			cursor: pointer;
 		}
 
-		.editContainer:hover{
+		.editContainer:hover {
 			background-color: #084DD1;
 		}
 
-		.deleteContainer:hover{
+		.deleteContainer:hover {
 			background-color: #ffd4d4;
 		}
 
-		.editContainer:hover i{
+		.editContainer:hover i {
 			color: white !important;
 		}
 
-		.deleteContainer:hover i{
+		.deleteContainer:hover i {
 			color: red !important;
 		}
 
-		.editContainer:hover h1{
+		.editContainer:hover h1 {
 			color: white !important;
 		}
 
-		.deleteContainer:hover h1{
+		.deleteContainer:hover h1 {
 			color: red !important;
 		}
 
-		.editContainer i{
+		.editContainer i {
 			font-size: 15px;
 			color: black !important;
 		}
 
-		.deleteContainer i{
+		.deleteContainer i {
 			font-size: 15px;
 			color: red !important;
 		}
 
-		.editContainer h1, .deleteContainer h1{
+		.editContainer h1,
+		.deleteContainer h1 {
 			font-size: 14px;
 			line-height: 0%;
 			margin-bottom: 0%;
@@ -3785,23 +3866,126 @@
 			margin-left: 8px;
 		}
 
-		.deleteContainer h1{
+		.deleteContainer h1 {
 			color: red;
 		}
 
-		.groupNullHeading{
-            position: absolute;
-            top: 180px;
-            left: 120px;
-            font-size: 15px;
-            font-weight: 600;
-            color: red;
-        }
-
-		.new-content-notes img {
-			width: 150px;
+		.groupNullHeading {
+			position: absolute;
+			top: 180px;
+			left: 120px;
+			font-size: 15px;
+			font-weight: 600;
+			color: red;
 		}
 
+		.paginationContainer {
+			width: 100%;
+			height: fit-content;
+			display: none;
+			justify-content: center;
+			align-items: center;
+			margin: 10px 0px;
+		}
+
+		.paginationBtn {
+			width: fit-content;
+			height: fit-content;
+			padding: 5px 15px;
+			box-sizing: border-box;
+			color: #084DD1;
+			background-color: #DEEDFF;
+			transition: all .3s;
+			border-radius: 5px;
+			outline: none;
+			border: none;
+			cursor: pointer;
+		}
+
+		.paginationBtn:disabled {
+			background-color: #eef6ff;
+			color: #999;
+		}
+
+		.paginationBtn:disabled:hover {
+			background-color: #eef6ff;
+			color: #999;
+		}
+
+		.paginationBtn:hover {
+			background-color: #084DD1;
+			color: white;
+		}
+
+		.loaderContainer {
+			width: 100%;
+			height: 105vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: fixed;
+			top: 0%;
+			left: 0%;
+			z-index: 100000;
+			background-color: #F7FBFF;
+		}
+
+		.row2 {
+			width: 100%;
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			margin-top: 25px;
+			-webkit-box-pack: justify;
+			-ms-flex-pack: justify;
+			justify-content: space-between;
+		}
+
+		.row2 .left {
+			width: 30%;
+			font-weight: 500;
+			font-size: 14px;
+			color: #757575 !important;
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			align-items: center;
+			padding-left: 15px;
+		}
+
+		.row2 .right {
+			width: 60%;
+			margin-right: 10%;
+		}
+
+		.attachBtn {
+			width: fit-content;
+			height: fit-content;
+			padding: 5px 15px;
+			box-sizing: border-box;
+			background-color: #074dd1;
+			color: white;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 14px;
+			margin-top: 10px;
+		}
+
+		.attachBtn:hover {
+			background-color: #074dd1;
+			color: white;
+		}
+
+		.attachmentPhoto {
+			width: 150px;
+			height: 150px;
+			border-radius: 10px;
+			object-fit: cover;
+			display: none;
+			margin-bottom: 5px;
+		}
 	</style>
 
 </head>
@@ -3872,7 +4056,16 @@
 
 			<div class="upperRow">
 
-				<h1>Groups</h1>
+				<select class="shring_in" id="shring_in" style="padding: 5px 10px; border-radius: 5px; border: 2px solid rgb(223, 233, 250); cursor: pointer; display: block;">
+					<option style="cursor: pointer;" value="0" selected="">
+					 Groups
+					</option>
+					
+					<option style="cursor: pointer;" value="1">
+					  Direct Messages
+					</option>
+		  
+				  </select>
 
 				<div class="closeDiv" id='prospectModalCloseBtn'>
 					<img src="./Assets/img/close.png" alt="">
@@ -3903,7 +4096,7 @@
 			<div class="openChooseContainer">
 			</div>
 			<div class="bottomBtnContainer">
-				<button type="button" style="width: 100%;" class="createListBtn" >Create New List</button>
+				<button type="button" style="width: 100%;" class="createListBtn">Create New List</button>
 			</div>
 		</div>
 	</div>
@@ -3912,7 +4105,7 @@
 
 	<div class="optionChooseModal" id="optionChooseFilterModal">
 		<div class="optionChooseModalContainer" style="transform: translate(0%, -150px);">
-			<div class="upperRow" >
+			<div class="upperRow">
 				<h1 style="color: #084DD1; font-size: 16px; font-weight: 600; margin: auto;"></h1>
 				<div class="closeDiv resetDiv" id='listFilterReset'>
 					<i class="fas fa-undo"></i>
@@ -3931,8 +4124,11 @@
 	<div class="optionChooseModal" id="createListModal">
 		<div class="optionChooseModalContainer" style=" height: 370px; width: 70%; background-color: white;">
 			<div class="upperRow">
-				<h1 id="createListHeading" style="color: #084DD1; font-size: 16px; font-weight: 600; margin: auto;">Create a New List</h1>
-				<h1 id="updateListHeading" style="color: #084DD1; font-size: 16px; font-weight: 600; margin: auto; display: none;">Update a List</h1>
+				<h1 id="createListHeading" style="color: #084DD1; font-size: 16px; font-weight: 600; margin: auto;">
+					Create a New List</h1>
+				<h1 id="updateListHeading"
+					style="color: #084DD1; font-size: 16px; font-weight: 600; margin: auto; display: none;">Update a
+					List</h1>
 
 				<div class="closeDiv" id='createListModalCloseBtn'>
 					<img src="./Assets/img/close.png" alt="">
@@ -3946,15 +4142,18 @@
 
 					<div class="inputFields">
 						<label for="listTitle">List Title</label>
-						<input type="text" autocomplete="off" id="listTitle" placeholder="Enter Title" class="listTitleInp">
+						<input type="text" autocomplete="off" id="listTitle" placeholder="Enter Title"
+							class="listTitleInp">
 					</div>
 
 					<div class="inputFields">
 						<label for="listDesc">List Description</label>
-						<textarea id="listDesc" autocomplete="off" placeholder="Enter Details (200 characters)" class="listDescInp"></textarea>
+						<textarea id="listDesc" autocomplete="off" placeholder="Enter Details (200 characters)"
+							class="listDescInp"></textarea>
 					</div>
 
-					<div class="inputFields" style="display: flex; justify-content: space-between; align-items: center;">
+					<div class="inputFields"
+						style="display: flex; justify-content: space-between; align-items: center;">
 						<label class="colorTagLbl">Color Tag</label>
 						<div class="colorTagContainer">
 							<span class="colorTag color1 colorTagSelected" data-color-value="#B400FF"></span>
@@ -3991,8 +4190,10 @@
 
 			</div>
 			<div class="openChooseContainer">
-				<button type="button" style="width: 100%;" class="shareInGroupBtn" id="shareProspectBtn" >Share in Groups</button>
-				<button type="button" style="width: 100%;" class="shareInGroupBtn" id="shareInSubGroups">Share in Sub Groups</button>
+				<button type="button" style="width: 100%;" class="shareInGroupBtn" id="shareProspectBtn">Share in
+					Groups</button>
+				<button type="button" style="width: 100%;" class="shareInGroupBtn" id="shareInSubGroups">Share in Sub
+					Groups</button>
 			</div>
 		</div>
 	</div>
@@ -4003,7 +4204,7 @@
 		<div class="showSubGroupsModalContainer">
 			<div class="upperRow">
 
-				<h1>Sub Groups</h1>
+				<h1>Select Channel</h1>
 
 				<div class="closeDiv" id='showSubGroupsModalCloseBtn'>
 					<img src="./Assets/img/close.png" alt="">
@@ -4021,7 +4222,9 @@
 	</div>
 
 	<div class="justify-content-center">
-		<div class="loader" id="loader" style="display: none;"></div>
+		<div class="loaderContainer" id="loader" style="display: none;">
+			<div class="loader"></div>
+		</div>
 		<div>
 
 			<div id="api_return" class="text-center mt-5" style="display: none;">
@@ -4032,16 +4235,359 @@
 				<button class="btn btn-lg btn-warning" style="background-color: #084cd1 !important" id="view_all">View
 					All</button>
 			</div>
+			<style>
+				.new-multi-dbs .input-list-multi-dbs {
+					width: 90%;
+					margin: 20px auto 0px;
+				}
 
-			<div id="multi_database" style="display: none">
+				.new-multi-dbs .input-list-multi-dbs label {
+					display: block;
+					font-size: 14px;
+					font-weight: 500;
+					color: gray;
+				}
+
+				.new-multi-dbs .input-list-multi-dbs input {
+					border: 0px;
+					width: 100%;
+					padding: 10px;
+					border-radius: 7px;
+					outline: 1px solid #C4DEFF;
+					font-size: 12px;
+					color: gray;
+				}
+
+				.tabs-boxes-bottom {
+					background-color: #fff;
+					width: 90%;
+					margin: 20px auto 0px;
+					padding: 15px;
+					border-radius: 5px;
+					box-shadow: 0px 3px 6px #00000029;
+				}
+
+				.tabs-boxes-bottom .nav-pills {
+					border: 1px solid #C4DEFF;
+					border-radius: 10px;
+					overflow: hidden;
+				}
+
+				.tabs-boxes-bottom .nav-pills .nav-item {
+					width: 50%;
+					text-align: center;
+					font-size: 13px;
+					line-height: 16px;
+				}
+
+				.tabs-boxes-bottom .nav-pills .nav-item .active {
+					background-color: #084DD1 !important;
+				}
+
+				.input-search-filter {
+					outline: 1px solid #C4DEFF;
+					position: relative;
+					border-radius: 7px;
+					margin-bottom: 25px;
+				}
+
+				.input-search-filter input {
+					border: 0px;
+					width: calc(100% - 150px);
+					padding: 10px;
+					font-size: 15px;
+					color: gray;
+					margin: 0px 120px 0px 30px;
+					outline: none !important;
+				}
+
+				.input-search-filter select {
+					position: absolute;
+					top: 50%;
+					right: 20px;
+					max-width: 100px;
+					transform: translateY(-50%);
+					font-size: 14px;
+					color: gray;
+					background-color: #F7FBFF;
+					padding: 2px 3px;
+					border-radius: 5px;
+					border: 1px solid #C4DEFF;
+					outline: none;
+					cursor: pointer;
+				}
+
+				.input-search-filter i {
+					position: absolute;
+					top: 50%;
+					left: 8px;
+					transform: translateY(-50%);
+					font-size: 22px;
+					color: #000 !important;
+					cursor: pointer;
+				}
+
+				.user-listings {
+					max-height: 200px;
+					overflow-y: auto;
+				}
+
+				.user-listings .user-list {
+					background-color: #F7FBFF;
+					display: flex !important;
+					justify-content: space-between !important;
+					align-items: center;
+					position: relative;
+					border-radius: 5px;
+					margin-bottom: 15px;
+					padding: 5px 10px;
+				}
+
+				.user-listings .user-list.selected,
+				.user-listings .user-list.selected .access-box {
+					background-color: #3174F5 !important;
+					color: #fff !important;
+				}
+
+				.user-listings .user-list img {
+					width: 50px;
+					height: 50px;
+					border-radius: 50%;
+					margin-right: 15px;
+				}
+
+				.user-listings .user-list .img-name {
+					display: flex;
+					align-items: center;
+					margin-right: 40px;
+				}
+
+				.user-listings .user-list .img-name h5 {
+					font-size: 16px;
+					margin-bottom: 0px;
+				}
+
+				.user-listings .user-list .access-box {
+					margin-right: 15px;
+					background-color: gray;
+					font-size: 12px;
+					padding: 3px 7px;
+					border-radius: 5px;
+					width: 120px;
+					text-align: center;
+					color: #fff;
+				}
+
+				.user-listings .user-list .access-box.granted {
+					background-color: #00B731;
+					color: #fff;
+				}
+
+				.user-listings .user-list .access-box.reject {
+					background-color: red;
+					color: #fff;
+				}
+
+				.user-listings .user-list .more-btn {
+					position: absolute;
+					top: 5px;
+					right: 5px;
+					background-color: transparent;
+					cursor: pointer;
+					outline: 0px;
+					border: 0px;
+				}
+			</style>
+
+			<div id="multi_database" style="display: none" class="new-multi-dbs">
+				<div class="new-header">
+					<div class="new-header-left-imgs"></div>
+					<div class="new-header-logo">
+						<img src="./Assets/img/index-logo.png" id="logo_convert" height="30px;" width="27px;" style="cursor:pointer">
+					</div>
+					<div class="new_header_right_imgs"></div>
+				</div>
+				<div class="new-sub-header">
+					<div class="item1-sub-header upperBackBtn" style="visibility: visible;">
+						<button type="button" class="new-back-btn" id="go_back_baby"><i class="fas fa-arrow-left"></i></button>
+					</div>
+					<div class="item2-sub-header"
+						style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+						<div class="userImage">
+							<img src="" id="database_in"
+								style="display: block; position: relative; width: 56px; height: 56px; border-radius: 50%;">
+						</div>
+						<span class="new-header-main-text" id="add_desc" style="font-size: 14px !important;
+						height: fit-content;
+						display: flex;
+						justify-content: center;
+						align-items: center;"></span>
+					</div>
+					<div class="item2-sub-header upperMessageBtn" style="visibility: hidden;">
+						<div class="HomeDiv">
+							<i class="fas fa-comment-dots homeIcon"></i>
+						</div>
+					</div>
+				</div>
+				<div class="input-list-multi-dbs">
+					<label for="input-list-multi-dbs">Share or access a database</label>
+					<input type="text" id="input-list-multi-dbs" placeholder="Enter Email Address" >
+					<div class="searchBoxContainer" style="display: block;width: 50%;
+					height: auto;
+					max-height: 200px;
+
+					overflow-x: hidden;
+					overflow-y: scroll;
+					transition: all 0.2s ease-in-out;
+					padding: 15px;
+					padding-bottom: 7px;
+					box-sizing: border-box;
+					position: absolute;
+					top: 38%;
+					left: 5%;
+					z-index: 1000;
+					background-color: white;
+					display: none;
+					align-items: center;
+					flex-direction: column;
+					border-radius: 10px;
+					box-shadow: 0px 0px 4px rgb(0 0 0 / 22%), 0px 0px 24px rgb(0 0 0 / 40%);">
+						<p class="searchProspect row1TimeSpecial3" data-id="380" data-follow-date="2022-06-15" style="width: 100%;
+						font-size: 14px;
+						padding: 10px;
+						box-sizing: border-box;
+						border-radius: 5px;
+						margin-bottom: 8px;
+						cursor: pointer;
+						animation: scaleAnim 0.2s ease-in-out forwards;background: #dcfff2 0% 0% no-repeat padding-box; line-height: 0px; margin-bottom: 0px;">
+						<img style="width: 20px; border-radius: 50%; margin-right: 10px;" id="searchBoxImage" src="/Assets/img/user.png"/>
+						Yash Jani
+					</p>
+						
+						</div>
+				</div>
+				<div class="tabs-boxes-bottom">
+					<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="pills-tab-1" data-toggle="pill" href="#pills-tab-one"
+								role="tab" aria-controls="pills-tab-one" aria-selected="true">Your Database has been
+								shared with (0)</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" id="pills-tab-2" data-toggle="pill" href="#pills-tab-two" role="tab"
+								aria-controls="pills-tab-two" aria-selected="false"></a>
+						</li>
+					</ul>
+					<div class="input-search-filter">
+						<i class="far fa-search"></i>
+						<input type="search" name="search-filter" id="searching_DB_user" placeholder="Search Users...">
+						<select name="" id="">
+							<option value="S">Select Filter</option>
+							<!-- <option value="a">Option 1</option>
+							<option value="b">Option 2</option>
+							<option value="c">Option 3</option>
+							<option value="d">Option 4</option> -->
+						</select>
+					</div>
+					<div class="tab-content" id="pills-tabContent">
+						<div class="tab-pane fade show active" id="pills-tab-one" role="tabpanel"
+							aria-labelledby="pills-tab-1">
+							<div class="user-listings" id="user-listings1">
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box granted">Access Granted</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box granted">Access Granted</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box granted">Access Granted</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box ">Pending</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box ">Pending</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box ">Pending</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box reject">Pending</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+								<div class="user-list">
+									<div class="img-name">
+										<img src="https://picsum.photos/200/200" alt="">
+										<h5 class="name">Jawad Bashir</h5>
+									</div>
+									<div class="access-box reject">Pending</div>
+									<button class="more-btn">
+										<i class="fal fa-ellipsis-v"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-tab-two" role="tabpanel" aria-labelledby="pills-tab-2">
+							<div class="user-listings" id="user-listings2">
+								
+								
+								
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div style="display: none" id="results">
-				<button style="padding: 0% 20px;height: 40px; border-radius: 5px; background-color: #fff; color: #0A66C2;
-				border: none; outline: none; cursor: pointer; margin: auto; margin-top: 20px; box-shadow: 0px 0px 10px #999; font-size: 14px;
-				font-weight: 500; display: flex; justify-content: space-between; align-items: center;" id="loginBtn">Login via
-					LinkedIn <i class="fab fa-linkedin"
-						style="font-size: 22px; margin-left: 10px; margin-top: 0px;"></i></button>
+				
 
 				<!-- <div id="logged_in_buttons" style="display: none">
 			<i class="far fa-save fa-2x m-3  btn btn-info bg-own" style="color: green; cursor: pointer;" id="request"></i>
@@ -4075,7 +4621,8 @@
 						<button type="button" id="view_all_1" class="new-back-btn"><i
 								class="fas fa-arrow-left"></i></button>
 					</div>
-					<div class="item2-sub-header" style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+					<div class="item2-sub-header"
+						style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
 						<h1 class="new-header-main-text" id="topTitleName"></h1><br>
 						<div class="userImage">
 
@@ -4124,6 +4671,9 @@
 					<div class="new-main-hero">
 						<div class="hero-left-part">
 							<img class="hero-main-img" id="image" src="" height="130px;" width="130px;">
+							<span class="new-img-icon-sync" id="updateImage">
+								<i class="fas fa-sync"></i>
+							</span>
 							<span class="new-img-icon">
 								<i id="yeen" class="fa fa-spinner fa-spin" style="display: none;margin-left: -2px;
 								margin-top: 7px;"></i>
@@ -4139,8 +4689,8 @@
 									</button>
 
 								</div>
-								<div class="sub-hero-1-itme-2"><button class="hero-btns" id="share"><i
-											class="fal fa-share-alt"></i></button></div>
+								<!-- <div class="sub-hero-1-itme-2" style="display: none;"><button class="hero-btns" id="share"><i
+											class="fal fa-share-alt"></i></button></div> -->
 
 								<div class="sub-hero-1-itme-3">
 									<button class="hero-btns" id="openDatePicker">
@@ -4148,8 +4698,8 @@
 									</button>
 								</div>
 
-								<div class="sub-hero-1-itme-4"><button class="hero-btns"><i
-											class="fas fa-wallet"></i></button></div>
+								<!-- <div class="sub-hero-1-itme-4" style="display: none;"><button class="hero-btns"><i
+											class="fas fa-wallet"></i></button></div> -->
 
 								<div class="sub-hero-1-itme-5"><button class="hero-btns" id="listing"><i
 											class="fas fa-stream"></i></button></div>
@@ -4234,12 +4784,78 @@
 						</div>
 					</div>
 
+					<div class="row2">
+						<div class="left">Attachment</div>
+						<div class="right">
+							<div class="attachmentPhotoContainer">
+
+								<img src="" style="cursor: pointer;" class="attachmentPhoto" alt="">
+								<div class="prospectModal" id="dynamicModal" style="transform: scale(0); opacity: 0;width: 100%;
+    height: 0%;
+    position: absolute;
+    top: 0%;
+    left: 12%;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    transition: opacity 0.2s ease-in-out;">
+
+									<div class="prospectModalContainer" style="width: 491px; height: 307px !important;
+    min-height: 300px;
+    max-height: fit-content;
+    background: #f7fbff 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    padding: 20px;
+    position: relative;
+    box-sizing: border-box;">
+
+										<div class="imageContainer" style="cursor: pointer;
+    width: 345px;
+    height: 261px;
+    border-radius: 10px;">
+											<img style="width: 100%;
+    height: 100%;
+    border-radius: 10px;" src="" class="attachmentPhotoo" alt="">
+
+										</div>
+
+
+
+
+
+
+									</div>
+
+								</div>
+
+
+								<i class="fas fa-trash removePhoto"></i>
+							</div>
+
+							<div style="text-align: left;">
+								<label for="attachmentInp" class="attachBtn">
+									Attach a photo
+								</label>
+								<input type="file" style="display: none;" id="attachmentInp"
+									accept="image/png, image/gif, image/jpeg">
+							</div>
+						</div>
+					</div>
 
 					<p class="hero-content-names-head">Notes</p>
 					<div class="new-motes">
 						<div contenteditable="true" class="new-content-notes" id="notes" style="resize: vertical;
     text-align: left; min-height: 100px;padding: 5px"></div>
 					</div>
+					<p class="hero-content-names-head">Messages</p>
+					<div class="new-motes">
+						<div  class="new-content-notes" id="client_messages" style="resize: vertical;
+    text-align: left;height: 200px;
+    padding: 5px;
+    overflow: auto;"></div>
+					</div>
+
 
 
 					<div class="new-open-clender">
@@ -4797,7 +5413,9 @@
 
 				<div class="user-img-and-text" style=" text-align: center;margin-bottom:7px">
 					<div class="userImage" style="margin-bottom: 0px !important;">
-						<img src="" style="display: block;position: relative;width: 56px;height: 56px;border-radius: 50%;margin: 0px  auto 10px; cursor: pointer;" id="profilePicc">
+						<img src=""
+							style="display: block;position: relative;width: 56px;height: 56px;border-radius: 50%;margin: 0px  auto 10px; cursor: pointer;"
+							id="profilePicc">
 					</div>
 					<span class="new-header-record" style="color: #757575 !important;
 					font-size: 14px !important;" id="savedUserMessagee"></span>
@@ -4838,7 +5456,8 @@
 					</div>
 
 					<div class="clender_bar">
-						<div class="clender_view_1" id="listingModal" style="width: 100%; height: 40px; display: flex; justify-content: space-between; align-items: center;">
+						<div class="clender_view_1" id="listingModal"
+							style="width: 100%; height: 40px; display: flex; justify-content: space-between; align-items: center;">
 							<span class="text-left">List</span>
 							<div id="listItemContainer" style="display: none;">
 							</div>
@@ -4931,11 +5550,19 @@
 						</div>
 					</div>
 				</div>
+				<div id="get_all_message" class="text-center" style="color: red; display: none">
+					No Records Found..
+				</div>
+				<div class="paginationContainer">
+					<input type="button" id="first" class="paginationBtn" value="First" />
+					<input type="button" id="next" style="margin-left: 5px;" class="paginationBtn" value="Next" />
+					<input type="button" id="previous" style="margin-left: 5px;" class="paginationBtn"
+						value="Previous" />
+					<input type="button" id="last" style="margin-left: 5px;" class="paginationBtn" value="Last" />
+				</div>
 
 			</div>
-			<div id="get_all_message" class="text-center" style="color: red; display: none">
-				No Records Found..
-			</div>
+
 
 			<!-- first modal code start-->
 
@@ -5051,10 +5678,13 @@
 								<!-- carosuel -->
 								<div class="carousel-wrapper">
 									<div class="carousel">
-
+										<div class="imageDiv"><span class="slider_months_second_tab">2023</span>
+										</div>
 										<div class="imageDiv"><span class="slider_months_second_tab">2022</span>
 										</div>
 										<div class="imageDiv"><span class="slider_months_second_tab">2021</span>
+										</div>
+										<div class="imageDiv"><span class="slider_months_second_tab">2023</span>
 										</div>
 										<div class="imageDiv"><span class="slider_months_second_tab">2022</span>
 										</div>
@@ -5350,15 +5980,9 @@
 
 			  </div>  -->
 
-			<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-				integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-				crossorigin="anonymous"></script>
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-				integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-				crossorigin="anonymous"></script>
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-				integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-				crossorigin="anonymous"></script>
+			<script src="./Assets/js/jquery.min.js"></script>
+			<script src="./Assets/js/popper.js"></script>
+			<script src="./Assets/js/bootstrap.min.js"></script>
 
 </body>
 <!-- <script type="text/javascript" src="carousal.js"></script> -->

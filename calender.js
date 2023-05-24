@@ -15,7 +15,7 @@ setTimeout(() => {
 
 // Stable URL
 
-const globalURl = "https://linkedin.thefastech.com";
+const globalURl = "https://linkedin.thefastech.com/";
 
 // Test URL
 
@@ -42,6 +42,8 @@ setTimeout(() => {
     document.getElementById("shardm1").addEventListener("click", () => {
       var element = document.getElementById("value1").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -49,6 +51,8 @@ setTimeout(() => {
     document.getElementById("shardm2").addEventListener("click", () => {
       var element = document.getElementById("value2").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -56,6 +60,8 @@ setTimeout(() => {
     document.getElementById("shardm3").addEventListener("click", () => {
       var element = document.getElementById("value3").value;
       localStorage.setItem("reciever_id", element);
+      dms = "dms"
+      localStorage.setItem("buttonClick",dms)
       openDirectChat(element);
     });
   }
@@ -160,8 +166,8 @@ function topbaricons() {
               if (xhr.readyState == 4 && xhr.status == 200) {
                 let userData = JSON.parse(xhr.responseText);
   
-                if(userData.length > 0 ){
-                  userData.map((item, i, arr) => {
+                if(userData.data.length > 0 ){
+                  userData.data.map((item, i, arr) => {
                     var row = `
                       <div class="prospectContent memberDiv" data-member_id=${
                         item.linked_to_id
@@ -196,6 +202,8 @@ function topbaricons() {
                 ele.addEventListener('click', (e) => {
                   let receiver_id = ele.getAttribute('data-member_id')
                   localStorage.setItem("reciever_id", receiver_id);
+                  dms = "dms"
+                  localStorage.setItem("buttonClick",dms)
                   openDirectChat();
                 })
               })
@@ -334,8 +342,21 @@ function topbaricons() {
 document.querySelectorAll(".slideBtn").forEach((ele) => {
   ele.addEventListener("click", activeSlideBtn);
 });
+document.querySelector(".shring_in").addEventListener("click", changeYear);
 
+function changeYear(){
+  if(document.querySelector(".monthlyScreen").style.display == "block"){
+    getMonthlyCalendarData();
+  }
+  if(document.querySelector(".weeklyScreen").style.display == "block"){
+    getWeeklyCalendarData();
+  }
+  if(document.querySelector(".dailyScreen").style.display == "block"){
+    getDailyCalendarData();
+  }
+}
 function activeSlideBtn(e) {
+  console.log('month')
   for (
     let index = 0;
     index < e.currentTarget.parentNode.children.length;
@@ -418,7 +439,8 @@ function monthlySlider_prev() {
   monthlySliderContainer.style.left = `${monthlyArr[monthlyCounter]}%`;
 
   if (monthlyCounter <= 0) {
-    monthlyCounter = 0;
+    monthlyCounter = 11;
+    monthlySliderContainer.style.left = `${monthlyArr[monthlyCounter]}%`;
   }
 
   getMonthlyCalendarData();
@@ -426,11 +448,15 @@ function monthlySlider_prev() {
 
 function monthlySlider_next() {
   monthlyCounter++;
+  console.log('counter',monthlyCounter)
+  console.log('monthArr',monthlyArr[monthlyCounter])
   monthlySliderContainer.style.left = `${monthlyArr[monthlyCounter]}%`;
 
   if (monthlyCounter == monthlyArr.length) {
-    monthlyCounter = monthlyArr.length - 1;
+    monthlyCounter = 0;
+    monthlySliderContainer.style.left = `${monthlyArr[monthlyCounter]}%`;
   }
+  
 
   getMonthlyCalendarData();
 }
@@ -816,7 +842,8 @@ function weeklySlider_prev1() {
   weeklySliderContainer1.style.left = `${weeklyMonthArr[weeklyMonthCounter]}%`;
 
   if (weeklyMonthCounter <= 0) {
-    weeklyMonthCounter = 0;
+    weeklyMonthCounter = 11;
+    weeklySliderContainer1.style.left = `${weeklyMonthArr[weeklyMonthCounter]}%`;
   }
 
   getWeeklyCalendarData();
@@ -827,7 +854,8 @@ function weeklySlider_next1() {
   weeklySliderContainer1.style.left = `${weeklyMonthArr[weeklyMonthCounter]}%`;
 
   if (weeklyMonthCounter == weeklyMonthArr.length) {
-    weeklyMonthCounter = weeklyMonthArr.length - 1;
+    weeklyMonthCounter = 0
+    weeklySliderContainer1.style.left = `${weeklyMonthArr[weeklyMonthCounter]}%`;
   }
 
   getWeeklyCalendarData();
@@ -1414,7 +1442,8 @@ function dailySlider_prev1() {
   dailySliderContainer1.style.left = `${dailyMonthArr[dailyMonthCounter]}%`;
 
   if (dailyMonthCounter <= 0) {
-    dailyMonthCounter = 0;
+    dailyMonthCounter = 11;
+    dailySliderContainer1.style.left = `${dailyMonthArr[dailyMonthCounter]}%`;
   }
 
   let getMonthNumber2 = dailyMonthCounter;
@@ -1439,7 +1468,8 @@ function dailySlider_next1() {
   dailySliderContainer1.style.left = `${dailyMonthArr[dailyMonthCounter]}%`;
 
   if (dailyMonthCounter == dailyMonthArr.length) {
-    dailyMonthCounter = dailyMonthArr.length - 1;
+    dailyMonthCounter = 0;
+    dailySliderContainer1.style.left = `${dailyMonthArr[dailyMonthCounter]}%`;
   }
   
   let getMonthNumber2 = dailyMonthCounter;
@@ -1541,6 +1571,8 @@ if (document.querySelector(".home_btn")) {
 }
 
 function redirectHomePage() {
+  pagename = 'home'
+        localStorage.setItem('page_name',pagename)
   document.location.href = "home.html";
 }
 
@@ -1562,9 +1594,13 @@ function redirectProfilePage() {
 
   if (clipper) {
     if (prospect) {
+      pagename = 'popup'
+        localStorage.setItem('page_name',pagename)
       window.location.href = "popup.html";
     }
   } else {
+    pagename = 'popup'
+        localStorage.setItem('page_name',pagename)
     window.location.href = "popup.html";
   }
 }
@@ -1618,8 +1654,9 @@ function getMonthlyCalendarData() {
   if (second_user_id != null) {
     user_id = second_user_id;
   }
+  year_getter =  document.getElementById("shring_in").value;
 
-  const url = `${globalURl}/calender/${user_id}/${month}/`;
+  const url = `${globalURl}/calender/${user_id}/${month}/${year_getter}`;
 
   let xhr = new XMLHttpRequest();
 
@@ -1910,8 +1947,8 @@ function listingMonthlyProspects(e) {
   if (second_user_id != null) {
     user_id = second_user_id;
   }
-
-  const url = `${globalURl}/daily_calender/${user_id}/${activeMonth}/${currentDate}/`;
+  year_getter =  document.getElementById("shring_in").value;
+  const url = `${globalURl}/daily_calender/${user_id}/${activeMonth}/${currentDate}/${year_getter}`;
 
   let xhr = new XMLHttpRequest();
 
@@ -2009,8 +2046,9 @@ function getWeeklyCalendarData() {
   if (second_user_id != null) {
     user_id = second_user_id;
   }
+  year_getter =  document.getElementById("shring_in").value;
 
-  const url = `${globalURl}/weekly_calender/${user_id}/${month}/${week}/`;
+  const url = `${globalURl}/weekly_calender/${user_id}/${month}/${week}/${year_getter}`;
 
   let xhr = new XMLHttpRequest();
 
@@ -2281,8 +2319,9 @@ function listingWeeklyProspects(e) {
   if (second_user_id != null) {
     user_id = second_user_id;
   }
+  year_getter =  document.getElementById("shring_in").value;
 
-  const url = `${globalURl}/daily_calender/${user_id}/${activeMonth}/${currentDate}/`;
+  const url = `${globalURl}/daily_calender/${user_id}/${activeMonth}/${currentDate}/${year_getter}`;
 
   let xhr = new XMLHttpRequest();
 
@@ -2368,8 +2407,8 @@ function getDailyCalendarData() {
     }
 
     console.log(currentDate);
-  
-    const url = `${globalURl}/daily_calender/${user_id}/${activeMonth}/${currentDate}/`;
+    year_getter =  document.getElementById("shring_in").value;
+    const url = `${globalURl}/daily_calender/${user_id}/${activeMonth}/${currentDate}/${year_getter}`;
   
     let xhr = new XMLHttpRequest();
   
@@ -2526,6 +2565,8 @@ function openprofile(e) {
     localStorage.setItem("modalProspectId", prospect_id);
     localStorage.setItem("modalProspectLink", link);
     localStorage.setItem("isImageClicked", true);
+    pagename = 'popup'
+        localStorage.setItem('page_name',pagename)
     window.location.replace("popup.html");
   }
 }
@@ -2923,6 +2964,8 @@ function showProspectData(e) {
 }
 
 function iconShareGroupChat(e) {
+  dms = "group"
+  localStorage.setItem("buttonClick",dms)
   var user_id = localStorage.getItem("user_id");
   var group_id = e.currentTarget.getAttribute("data-group_id");
   localStorage.setItem("group_id", group_id);
@@ -2952,6 +2995,8 @@ function iconShareGroupChat(e) {
   };
 }
 function gotohome() {
+  pagename = 'home'
+        localStorage.setItem('page_name',pagename)
   window.location.href = "home.html";
 }
 
@@ -3034,6 +3079,10 @@ setTimeout(() => {
 if (document.getElementById("profilePic")) {
   document.getElementById("profilePic").addEventListener("click", () => {
     localStorage.setItem("OpenShowDataBase",true)
+    pagename = 'popup'
+        localStorage.setItem('page_name',pagename)
+
+        
     window.location.href = "popup.html";
 
   });
