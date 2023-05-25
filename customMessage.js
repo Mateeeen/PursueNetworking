@@ -29485,3 +29485,11 @@ btnColapser.addEventListener("click", () => {
   }
 });
 // Expaning Collapsing Channel List END
+
+// Auto Expanding Message Box START
+const messageBoxTextAreaExpand = document.getElementById('send_message_div');
+messageBoxTextAreaExpand.addEventListener('input', () => {
+  messageBoxTextAreaExpand.style.height = 'auto';
+  messageBoxTextAreaExpand.style.height = `${messageBoxTextAreaExpand.scrollHeight}px`;
+});
+// Auto Expanding Message Box END
