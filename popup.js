@@ -47,80 +47,53 @@ else{
 
 // const globalURl = "https://testlinkedin.thefastech.com";
 
-var interval = setInterval(() => {
-  chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-    bgpage = msg;
+chrome.storage.local.get((result) => {
+  console.log('result.scrap_data',result.scrap_data)
+  localStorage.setItem("bgData", result.scrap_data);
+})
+
+// var interval = setInterval(() => {
+//   chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+//     bgpage = msg;
    
-    if (bgpage.word?.name) {
-      localStorage.setItem("bgData", JSON.stringify(bgpage.word));
-    }
+//     if (bgpage.word?.name) {
+//       localStorage.setItem("bgData", JSON.stringify(bgpage.word));
+//     }
 
-    if (bgpage.word?.name && counts == 1) {
-      clearInterval(interval);
-      counts = counts + 1;
-      localStorage.setItem("bgData", JSON.stringify(bgpage.word));
+//     if (bgpage.word?.name && counts == 1) {
+//       clearInterval(interval);
+//       counts = counts + 1;
+//       localStorage.setItem("bgData", JSON.stringify(bgpage.word));
 
-      if (
-        bgpage.word.img.includes("https://media-exp1.licdn.com") &&
-        localStorage.getItem("damagedImage")
-      ) {
-        document.getElementById("updateImage").style.display = "flex";
-      } else {
-        console.log("inside else check");
-        document.getElementById("updateImage").style.display = "none";
-      }
+//       if (
+//         bgpage.word.img.includes("https://media-exp1.licdn.com") &&
+//         localStorage.getItem("damagedImage")
+//       ) {
+//         document.getElementById("updateImage").style.display = "flex";
+//       } else {
+//         console.log("inside else check");
+//         document.getElementById("updateImage").style.display = "none";
+//       }
 
-      vari = localStorage.getItem("saved_item");
-      if (!vari && document.hasFocus()) {
-        window.location.reload();
-      }
+//       vari = localStorage.getItem("saved_item");
+//       if (!vari && document.hasFocus()) {
+//         window.location.reload();
+//       }
 
-      removeLoader();
-      localStorage.removeItem("saved_item");
+//       removeLoader();
+//       localStorage.removeItem("saved_item");
+//     } else {
+//       demo = localStorage.getItem("saved_item");
+//       if (!demo && counts == 1) {
+//         // addLoader();
+//       } else {
+//         console.log("no demo bhai");
+//       }
+//     }
 
-      // if (bgpage.loginId) {
-      //   const url = `${globalURl}/login`;
-
-      //   var xhr = new XMLHttpRequest();
-      //   xhr.open("POST", url, true);
-      //   xhr.setRequestHeader("Content-Type", "application/json");
-      //   xhr.send(
-      //     JSON.stringify({
-      //       id: bgpage.loginId,
-      //     })
-      //   );
-
-      //   xhr.onreadystatechange = function () {
-      //     if (xhr.readyState == 4 && xhr.status == 200) {
-      //       let user = JSON.parse(xhr.responseText);
-
-      //       if (user) {
-      //         localStorage.removeItem("loginId");
-      //         localStorage.setItem("access_token", user.access_token);
-      //         localStorage.setItem("user_id", user.id);
-      //         localStorage.setItem("username", user.username);
-      //         localStorage.setItem("second_user_id", user.id);
-      //         localStorage.setItem("second_user_name", user.name);
-      //         localStorage.setItem("secondUserPic", user.image);
-
-      //         localStorage.setItem("profilePic", user.image);
-      //         window.location.reload();
-      //       }
-      //     }
-      //   };
-      // }
-    } else {
-      demo = localStorage.getItem("saved_item");
-      if (!demo && counts == 1) {
-        // addLoader();
-      } else {
-        console.log("no demo bhai");
-      }
-    }
-
-    sendResponse(1);
-  });
-}, 10);
+//     sendResponse(1);
+//   });
+// }, 10);
 
 function setup() {
   noCanvas();
@@ -253,91 +226,6 @@ function setup() {
   }
 
   isImage = localStorage.getItem("profilePic");
-
-  // var http = new XMLHttpRequest();
-
-  // http.open('HEAD', isImage, false);
-  // http.send();
-  // console.log('htpptp',http)
-  // if(http.statusText == "OK"){
-  //   console.log('BRAH haha BRAH')
-  // }else{
-  //   localStorage.clear()
-  //   console.log('yeenyeen',);
-  // }
-
-  // var e = setInterval(() => {
-  //   imageIS = localStorage.getItem("profilePic");
-  //   if (imageIS) {
-  //     var http = new XMLHttpRequest();
-  //     http.open("HEAD", imageIS, false);
-  //     http.send();
-  //     console.log("yeen", http);
-  //     if (http.status != 200) {
-  //       localStorage.clear();
-  //       console.log("User Image Damaged");
-  //       window.location.reload();
-  //     } else {
-  //       console.log("User Image Correct");
-  //     }
-  //   }
-  //   clearInterval(e);
-  // }, 4000);
-
-  // var e = setInterval(() => {
-
-  // var title = bgpage.word.title;
-  // var name = bgpage.word.name;
-  // var description = bgpage.word.description;
-  // var address = bgpage.word.address;
-  // var company = bgpage.word.company;
-  // var about = bgpage.word.about;
-  // var img = bgpage.word.img;
-  // var profile_link = bgpage.word.profile_link;
-
-  //   clearInterval(e)
-  // },6000)
-  // var xhr = new XMLHttpRequest();
-  // xhr.open('GET',img,true);
-  // xhr.responseType = 'blob';
-  // xhr.onload = function(){
-  //   var urlCreator = window.URL || window.webkitURL;
-  //   var imageUrl = urlCreator.createObjectURL(this.response)
-  //   console.log(imageUrl,"imageUrl")
-  //   var tag = document.createElement('a');
-  //   tag.href = imageUrl;
-  //   tag.target = '_blank';
-  //   tag.download = 'demo.png';
-  //   document.body.appendChild(tag);
-  // fetch('https://www.google.com/')
-  // .then(response => response.json())
-  // .then(data => console.log(data));
-  //   // tag.click();
-  //   document.body.removeChild(tag);
-  //   // console.log(tag,'tag')
-
-  // };
-  // xhr.onerror = err => {
-  //   alert('Yeen Failer')
-  // }
-  // xhr.send();
-
-  //   const imageUrl = img;
-
-  // (async () => {
-  //   const response = await fetch(imageUrl)
-  //   const imageBlob = await response.blob()
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(imageBlob);
-  //   reader.onloadend = () => {
-  //     const base64data = reader.result;
-  //     var encodedString = btoa(base64data);
-  //     var decodedString = atob(encodedString);
-  //     img = decodedString;
-  //     console.log(decodedString,'decoded');
-  //   }
-  // })()
-  // console.log(img,'imgg')
 
   var prev = null;
   var access_token = localStorage.getItem("access_token");
@@ -1399,15 +1287,20 @@ function setup() {
       if (document.getElementById("image")) {
           addLoader();
         setTimeout(() => {
-          chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-            bgpage = msg;
-           
-            if (bgpage.word?.name) {
-              // removeLoader()
-              window.location.reload();            
+          chrome.storage.local.get((result) => {
+            if(result.scrap_data){
+              window.location.reload(); 
             }
-          }
-          )
+          })
+          // chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+          //   bgpage = msg;
+           
+          //   if (bgpage.word?.name) {
+          //     removeLoader()
+          //     window.location.reload();            
+          //   }
+          // }
+          // )
           setTimeout(() => {
             removeLoader()
             var myToast = Toastify({
@@ -1419,7 +1312,7 @@ function setup() {
 
           
           clearInterval(imageInterval);
-        }, 6000);
+        }, 10000);
       }
     }, 500);
   }
@@ -1694,6 +1587,10 @@ if (document.getElementById("shring_in")) {
     .addEventListener("change", sharing_in);
 }
 function sharing_in(){
+  document.getElementById("group_edit_name").style.display = 'block'  
+  document.getElementById("edit_modal_heading").innerText = 'Add a comment'
+  document.querySelector(".small_message").innerText = 'Add a comment with the prospect you want to share'
+  document.querySelector(".edit-group-name-modal").style.height = '200px'
 
   value_getter =  document.getElementById("shring_in").value;
   if(value_getter == "0"){
@@ -1721,11 +1618,32 @@ function sharing_in(){
                     if (userData.data.length > 0) {
                       userData.data.map((item, i, arr) => {
                         var row = `
-                      <div class="prospectContent memberDiv shareToFriends" data-member_id=${item.linked_to_id}>
+                      <div class="shareToFriends" style="width: 100%;
+                      height: 50px;
+                      display: flex;
+                      justify-content: start;
+                      align-items: center;
+                      position: relative;
+                      background: #FFFFFF 0% 0% no-repeat padding-box;
+                      border-radius: 10px;
+                      margin-bottom: 15px;
+                      padding: 0% 15px;
+                      box-sizing: border-box;
+                      cursor: pointer;
+                      transition: all 0.3s ease-in-out;" data-member_id=${item.linked_to_id}>
 
-                        <img src=${item.image} alt=""/>
+                        <img style="width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        margin-right: 15px;" src=${item.image} alt=""/>
 
-                        <h1 style="margin-bottom:33px !important">${item.mutual}</h1>
+                        <h1 style="margin-bottom:33px !important;width: fit-content;
+                        font: normal normal normal 14.5px Roboto;
+                        letter-spacing: 0px;
+                        font-weight: 400;
+                        margin: 0%;
+                        color: black;
+                        transition: all 0.2s ease-in-out;">${item.mutual}</h1>
 
                       </div>
                     `;
@@ -1733,48 +1651,107 @@ function sharing_in(){
                         document.querySelector(".groupBoxContainer1").innerHTML +=
                           row;
                       });
-                      document.querySelector(".groupBoxContainer1").innerHTML += `<div class="prospectContent memberDiv shareToFriends" data-member_id=${user_id}>
+                      document.querySelector(".groupBoxContainer1").innerHTML += `<div class="shareToFriends" style="width: 100%;
+                      height: 50px;
+                      display: flex;
+                      justify-content: start;
+                      align-items: center;
+                      position: relative;
+                      background: #FFFFFF 0% 0% no-repeat padding-box;
+                      border-radius: 10px;
+                      margin-bottom: 15px;
+                      padding: 0% 15px;
+                      box-sizing: border-box;
+                      cursor: pointer;
+                      transition: all 0.3s ease-in-out;" data-member_id=${user_id}>
 
-                      <img src=${userData.user_image} alt=""/>
+                      <img style="width: 30px;
+                      height: 30px;
+                      border-radius: 50%;
+                      margin-right: 15px;" src=${userData.user_image} alt=""/>
 
-                      <h1 style="margin-bottom:33px !important">${userData.user_name}</h1>
+                      <h1 style="margin-bottom:33px !important;width: fit-content;
+                      font: normal normal normal 14.5px Roboto;
+                      letter-spacing: 0px;
+                      font-weight: 400;
+                      margin: 0%;
+                      color: black;
+                      transition: all 0.2s ease-in-out;">${userData.user_name}</h1>
 
                     </div>`
 
                     } else {
-                      document.querySelector(".groupBoxContainer1").innerHTML += `<div class="prospectContent memberDiv shareToFriends" data-member_id=${user_id}>
+                      document.querySelector(".groupBoxContainer1").innerHTML += `<div class="shareToFriends" style="width: 100%;
+                      height: 50px;
+                      display: flex;
+                      justify-content: start;
+                      align-items: center;
+                      position: relative;
+                      background: #FFFFFF 0% 0% no-repeat padding-box;
+                      border-radius: 10px;
+                      margin-bottom: 15px;
+                      padding: 0% 15px;
+                      box-sizing: border-box;
+                      cursor: pointer;
+                      transition: all 0.3s ease-in-out;" data-member_id=${user_id}>
 
-                      <img src=${userData.user_image} alt=""/>
+                      <img style="width: 30px;
+                      height: 30px;
+                      border-radius: 50%;
+                      margin-right: 15px;" src=${userData.user_image} alt=""/>
 
-                      <h1 style="margin-bottom:33px !important">${userData.user_name}</h1>
+                      <h1 style="margin-bottom:33px !important;width: fit-content;
+                      font: normal normal normal 14.5px Roboto;
+                      letter-spacing: 0px;
+                      font-weight: 400;
+                      margin: 0%;
+                      color: black;
+                      transition: all 0.2s ease-in-out;">${userData.user_name}</h1>
 
                     </div>`
                       
                     }
                     document.querySelectorAll(".shareToFriends").forEach((ele) => {
                       ele.addEventListener("click", ()=>{
-                        let receiver_id = ele.getAttribute("data-member_id");
-                        var user_id = localStorage.getItem("user_id");
-                        var prospect_id = localStorage.getItem("prospect_id");
-                        var text = "Some text";
-                        if (receiver_id.length > 0 && prospect_id) {
-                          const url = `${globalURl}/send_message_shared`;
+                        let prospect_check = localStorage.getItem("prospect_id");
+                          if(!prospect_check)
+                          {
+                            var myToast = Toastify({
+                                  text: "Save prospect to share",
+                                  duration: 2000,
+                                });
 
-                          let xhr = new XMLHttpRequest();
+                              myToast.showToast();
+                          }
+                          else
+                          {
+                            let receiver_id = ele.getAttribute("data-member_id");
+                            var user_id = localStorage.getItem("user_id");
+                            var prospect_id = localStorage.getItem("prospect_id");
+                            localStorage.setItem("commentID",receiver_id)
+                            document.querySelector(".edit-group-name-modal").style.display = "block"
+                          }
+                        
 
-                          xhr.open("POST", url, true);
-                          xhr.setRequestHeader("Content-Type", "application/json");
-                          xhr.send(
-                            JSON.stringify({
-                              user_id,
-                              receiver_id,
-                              prospect_id,
-                              shring: "yes",
-                              text: "",
-                              replied_id: "",
-                            })
-                          );
-                        }
+                        // var text = "Some text";
+                        // if (receiver_id.length > 0 && prospect_id) {
+                        //   const url = `${globalURl}/send_message_shared`;
+
+                        //   let xhr = new XMLHttpRequest();
+
+                        //   xhr.open("POST", url, true);
+                        //   xhr.setRequestHeader("Content-Type", "application/json");
+                        //   xhr.send(
+                        //     JSON.stringify({
+                        //       user_id,
+                        //       receiver_id,
+                        //       prospect_id,
+                        //       shring: "yes",
+                        //       text: "",
+                        //       replied_id: "",
+                        //     })
+                        //   );
+                        // }
                       });
                     });
 
@@ -5970,16 +5947,36 @@ function activeUserChat(e) {
   document.querySelectorAll(".groupBox").forEach((ele) => {
     ele.classList.remove("groupBoxClicked");
   });
+  let prospect_check = localStorage.getItem("prospect_id");
+    if(!prospect_check)
+    {
+      var myToast = Toastify({
+      text: "Save prospect to share",
+      duration: 2000,
+      });
 
-  e.currentTarget.classList.add("groupBoxClicked");
-
-  let group_id = e.currentTarget.getAttribute("data-group_id");
-
-  localStorage.setItem("group_id", group_id);
-
-  // document.getElementById("shareInGroupsModal").style.transform = "scale(1)";
-  // document.getElementById("shareInGroupsModal").style.opacity = 1;
-  shareInSubGroupsModal()
+      myToast.showToast();
+    }
+    else{
+      document.getElementById("group_edit_name").style.display = 'none'  
+      document.getElementById("edit_modal_heading").innerText = 'Share prospect'
+      document.querySelector(".small_message").innerText = 'Are you sure you want to share this prospect?'
+      document.querySelector(".edit-group-name-modal").style.height = '145px'
+    
+    
+      // document.querySelector(".edit-group-name-modal").style.display = "block"
+    
+      e.currentTarget.classList.add("groupBoxClicked");
+    
+      let group_id = e.currentTarget.getAttribute("data-group_id");
+    
+      localStorage.setItem("group_id", group_id);
+    
+      document.getElementById("shareInGroupsModal").style.transform = "scale(1)";
+      document.getElementById("shareInGroupsModal").style.opacity = 1;
+      shareInSubGroupsModal()
+    }
+  
 }
 
 document
@@ -7211,11 +7208,14 @@ function shareInSubGroupsModal() {
               "sub_group_id",
               ele.getAttribute("data-sub-group_id")
             );
-            shareProspectInSubGroup();
+            // shareProspectInSubGroup();
+            document.querySelector(".edit-group-name-modal").style.display = "block"
           });
         });
         document.getElementById("yeeeeen").addEventListener("click",() => {
-          shareProspectData()
+          // shareProspectData()
+          document.querySelector(".edit-group-name-modal").style.display = "block"
+
         })
       } else {
         document.querySelector(".subGroupBoxContainer").innerHTML = `<div style="position: relative;margin-left: 10px;">
@@ -7283,10 +7283,10 @@ function shareProspectInSubGroup() {
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
           let userData = JSON.parse(xhr.responseText);
-          localStorage.setItem("shared", true);
-          pagename = 'messagebox'
-        localStorage.setItem('page_name',pagename)
-          window.location.href = "messagebox.html";
+        //   localStorage.setItem("shared", true);
+        //   pagename = 'messagebox'
+        // localStorage.setItem('page_name',pagename)
+        //   window.location.href = "messagebox.html";
         }
       };
     } else {
@@ -7558,7 +7558,6 @@ setInterval(() => {
   if(document.getElementById("list_table_view").style.display == "block"){
     document.getElementById("results").style.display = "none"
   }
-  console.log('hitting here')
 },50)
 
 
@@ -7644,7 +7643,183 @@ function getmoreusers(){
     
   })
 
+}
+
+document.querySelector(".close_modal_second").addEventListener("click", close_modal_add_comment_share_modal);
+document.querySelector(".close_modal").addEventListener("click", close_modal_add_comment_share_modal);
+
+function close_modal_add_comment_share_modal(){
+  document.querySelector(".edit-group-name-modal").style.display = "none"
+}
+
+document.getElementById("save_changes").addEventListener("click", (e) => {
+  value_getter =  document.getElementById("shring_in").value;
+  if(value_getter == "0"){
+    if(localStorage.getItem("sub_group_id")){
+      shareProspectInSubGroup()
+    }else{
+      shareProspectData()
+    }
+    close_modal_add_comment_share_modal()
   }
+  else{
+    share_prospect_dms()
+  }
+})
+
+document.getElementById("save_changes").addEventListener("click", share_prospect_dms);
+
+function share_prospect_dms(){
+  var receiver = localStorage.getItem("commentID");
+  var access_token = localStorage.getItem("access_token");
+  var user_id = localStorage.getItem("user_id");
+  var prospect_id = localStorage.getItem("prospect_id");
+  var text = document.getElementById("group_edit_name").value;
+  var secondary_id = localStorage.getItem("second_user_id");
+
+  if (access_token && user_id) {
+      var myToast = Toastify({
+        text: "Prospect Shared Successfully",
+        duration: 2000,
+      });
+
+      myToast.showToast();
+
+        const url = `${globalURl}/send_message`;
+
+        let xhr2 = new XMLHttpRequest();
+        if(text != ''){
+          xhr2.open("POST", url, true);
+          xhr2.setRequestHeader("Content-Type", "application/json");
+          xhr2.send(
+            JSON.stringify({
+              user_id,
+              receiver_id: receiver,
+              prospect_id,
+              text: text,
+              replied_id: "",
+            })
+          );
+        }
+        else{
+          xhr2.open("POST", url, true);
+          xhr2.setRequestHeader("Content-Type", "application/json");
+          xhr2.send(
+            JSON.stringify({
+              user_id,
+              receiver_id: receiver,
+              prospect_id,
+              text: text,
+              shring: "yes",
+              replied_id: "",
+            })
+          );
+        }
+
+    localStorage.setItem("commentID", JSON.stringify(commentArray));
+
+    commentArray = [];
+
+    if (document.getElementById("update_comment").style.display == "none") {
+      const url = `${globalURl}/addComment`;
+      var actual_id = localStorage.getItem("second_user_id");
+      if (!actual_id) {
+        actual_id = user_id;
+      }
+      var profile_link = document.getElementById("profile_link").innerText;
+      var comment = document.getElementById("group_edit_name").value;
+
+      if (comment.includes("http")) {
+        myArray = comment.split(" ");
+        j = 0;
+        for (j = 0; j <= myArray.length - 1; j++) {
+          if (myArray[j].includes("http")) {
+            myArray[
+              j
+            ] = `<a class="link_clicking" style="cursor:pointer;color:#b0c4de" href=${myArray[j]}>${myArray[j]}</a>`;
+          }
+        }
+        comment = myArray.join(" ");
+      } else {
+      }
+
+      document.getElementById("group_edit_name").value = "";
+
+      if (comment.length != 0) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(
+          JSON.stringify({
+            user_id: user_id,
+            actual_id: actual_id,
+            profile_link: profile_link,
+            comment: comment,
+          })
+        );
+        xhr.onreadystatechange = function () {
+          //Call a function when the state changes.
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            // alert(xhr.responseText);
+            let userData = JSON.parse(xhr.responseText);
+
+            if (userData.status == "200") {
+
+              var user_id = localStorage.getItem("user_id");
+              var secondary_id = localStorage.getItem("second_user_id");
+              if (!secondary_id) {
+                var secondary_id = null;
+              }
+              if (secondary_id == user_id) {
+                secondary_id = null;
+              }
+              var profile_link =
+                document.getElementById("profile_link").innerText;
+              const url = `${globalURl}/getCommentsCount`;
+
+              var xhr7 = new XMLHttpRequest();
+              xhr7.open("POST", url, true);
+              xhr7.setRequestHeader("Content-Type", "application/json");
+              xhr7.send(
+                JSON.stringify({
+                  profile_link: profile_link,
+                  user_id: user_id,
+                  secondary_id: secondary_id,
+                })
+              );
+              xhr7.onreadystatechange = function () {
+                if (xhr7.readyState == 4 && xhr7.status == 200) {
+                  res = JSON.parse(xhr7.responseText);
+                  var count = res.count;
+                  if (count == 0) {
+                    document.getElementById("comment_count").style.display =
+                      "none";
+                  } else {
+                    document.getElementById("comment_count").style.display =
+                      "block";
+                    document.getElementById("comment_count").innerHTML = count;
+                  }
+                }
+              };
+            } 
+          }
+        };
+      }
+    } 
+    close_modal_add_comment_share_modal()
+    commentArray = [];
+  } else {
+    var myToast = Toastify({
+      text: "Login to access",
+      duration: 2000,
+    });
+
+    myToast.showToast();
+  }
+  link_click();
+
+}
+
   
   
 

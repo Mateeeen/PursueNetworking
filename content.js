@@ -61,9 +61,6 @@ var x = setInterval(() => {
 
 function action() {
   
-  
-
-
   var f = setInterval(function () {
  
     new_location_new = window.location.href;
@@ -76,12 +73,13 @@ function action() {
         }
       })
       let about = null  
-    document.querySelectorAll(".artdeco-card.p5.mb4").forEach((chats) => {
-      console.log(chats.innerText,"chats") ;
-      chats.querySelector("h2")
-      if(chats.querySelector("h2").innerText.includes("Overview")){
-        console.log("yeah")
-        about = chats.querySelector("p").innerText
+      chats = document.querySelector(".artdeco-card.p5.artdeco-card.mb4")
+      console.log(chats,'chats')
+      // console.log(chats.querySelector("h2").innerText,"chats") ;
+      // let h2Element = chats.querySelector("h2");
+      if (chats && chats.innerText.includes("Overview")) {
+        console.log("yeah");
+        about = chats.querySelector("p").innerText;
       }
       else{
         if(about == null){
@@ -89,14 +87,16 @@ function action() {
         }
 
       }
-        });  
-        var img = document.querySelector(".lazy-image.ember-view.org-top-card-primary-content__logo");
+       
+        var img_container = document.querySelector(".lazy-image.ember-view.org-top-card-primary-content__logo");
 
-    if (img != null && img != null) {
-      img = img.src;
+    if (img_container != null && img_container != null) {
+      img = img_container.src;
     } else {
-      img = document.querySelector(".ember-view.profile-photo-edit__preview");
-      img = img.src;
+      img_container = document.querySelector(".ember-view.profile-photo-edit__preview");
+      if(img_container.src){
+        img = img_container.src
+      }
     }
     if (img == null) {
       img = "./Assets/img/selecteddms.svg";
@@ -104,8 +104,12 @@ function action() {
     let name = document.querySelector(
       ".ember-view.t-24.t-black.t-bold.full-width"
     );
-    if (name != null && name.innerText != null) {
-      name = name.innerText;
+    if (img_container != null) {
+      console.log('imagecontainer',img_container)
+      name = img_container.parentElement.nextElementSibling.querySelector('span').textContent;
+    }
+    else{
+      name = name.innerText
     }
 
     let title = document.getElementsByTagName("title")[0];
@@ -147,6 +151,9 @@ function action() {
     company,
     profile_link: profile_link,
   };
+  chrome.storage.local.set({
+    scrap_data: JSON.stringify(message),
+  });
 
   chrome.runtime.sendMessage({ type: "message", message });
 
@@ -244,6 +251,9 @@ function action() {
       img: img,
       profile_link: profile_link,
     };
+    chrome.storage.local.set({
+      scrap_data: JSON.stringify(message),
+    });
 
     chrome.runtime.sendMessage({ type: "message", message });
   }

@@ -36,6 +36,8 @@ let subgroupmembersArr = [];
 let groupprospectsArr = [];
 let SearchUserArray = [];
 let tempVariable;
+let first_index = 0
+let second_index = 0
 
 
 
@@ -2344,7 +2346,7 @@ function showNullMembersChats() {
 
                 document.getElementById("chatt-box-2").innerHTML += `
       
-                <div class="card my-2 rounded" id="${ele.id}">
+                <div class="card my-2 rounded " id="${ele.id}">
                 <div class="card-body p-2 px-2 d-flex justify-content-between align-items-center">
                   <div class="row " style='width:365px'>
                     <div class="img-p">
@@ -2924,7 +2926,7 @@ function showNullMembersChats() {
             }
                 document.getElementById("chatt-box-2").innerHTML += `
     
-              <div class="card my-2 rounded" id="${ele.id}" style="margin-bottom: 0px !important;">
+              <div class="card my-2 rounded scrollings" id="${ele.id}" style="margin-bottom: 0px !important;">
               <div class="card-body p-2 px-2 d-flex justify-content-between align-items-center">
                 <div class="row " style='width:365px'>
                   <div class="img-p">
@@ -3815,13 +3817,23 @@ async function sendMessage(e) {
   else{
     msgInp = document.getElementById("second_message_div").value;
     attachmessage = document.getElementById("second_message_div").value;
-    msgInp = msgInp.replaceAll("\n", "<br>");
+    msgInp = msgInp.replaceAll("\n", " <br> ");
   }
+  console.log(msgInp,'msgInp')
   preview_image = null;
   preview_title = null;
   preview_description = null;
+  myInput = document.getElementById("second_message_div")
+  myInput.disabled = true;
   if (msgInp.includes("http") && !msgInp.includes("public/files") && !msgInp.includes("cloudinary")) {
-    myArray = msgInp.split(" ");
+    let myArray = msgInp.split(" ");
+
+    // let myArray = [];
+    // tempArray.forEach(item => {
+    //   myArray = myArray.concat(item.split("<br>"));
+    // });
+
+    console.log(myArray,'myArray')
     j = 0;
     for (j = 0; j <= myArray.length - 1; j++) {
       if (myArray[j].includes("http")) {
@@ -3843,8 +3855,9 @@ async function sendMessage(e) {
         
       }
     }
-    msgInp = myArray.join(" ");
     msgInp = msgInp.replaceAll("\n", "<br>");
+    msgInp = myArray.join(" ");
+    myInput.disabled = false;
 
     
   } 
@@ -5686,6 +5699,8 @@ if (document.querySelector("#open_add_group")) {
     document.getElementById("get_description").style.display = "block";
     document.getElementById("topic_div").style.display = "block";
     document.querySelector(".channel_status").style.display = "none"
+    document.querySelector(".add-members-box").style.display = 'block'
+    document.querySelector(".add-members-box-list").style.display = 'block'
 
     document.getElementById("whole_container").style.marginTop = "0px";
     openModal2();
@@ -5697,53 +5712,53 @@ if (document.querySelector("#open_add_group")) {
     document.getElementById("group_heading").innerText = "Group Name";
 
 
-    var user_id = localStorage.getItem("user_id");
+    // var user_id = localStorage.getItem("user_id");
 
-    const url = `${globalURl}/chats/${user_id}`;
+    // const url = `${globalURl}/group_members_chats/${user_id}/${'yeen'}`;
 
-    let xhr = new XMLHttpRequest();
+    // let xhr = new XMLHttpRequest();
 
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send();
+    // xhr.open("GET", url, true);
+    // xhr.setRequestHeader("Content-Type", "application/json");
+    // xhr.send();
 
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        let userData = JSON.parse(xhr.responseText);
+    // xhr.onreadystatechange = function () {
+    //   if (xhr.readyState == 4 && xhr.status == 200) {
+    //     let userData = JSON.parse(xhr.responseText);
 
-        if (userData.data.length != 0) {
-          userData.data.map((item, i, arr) => {
-            var row = `
-            <div class="chatContent" date-linkedId=${item.linked_to_id}>
+    //     if (userData.length != 0) {
+    //       userData.map((item, i, arr) => {
+    //         var row = `
+    //         <div class="chatContent" date-linkedId=${item.id}>
                               
-              <div class="defaultIcon" style='${item.image != null
-                ? "border: none; margin-left: 10px"
-                : "border: 1px solid #999"
-              }'>
-              ${item.image != null
-                ? `<img src=${item.image} />`
-                : `<i class='fas fa-user'></i>`
-              }
-                  
-              </div>
+    //           <div class="defaultIcon" style='${item.image != null
+    //             ? "border: none; margin-left: 10px"
+    //             : "border: 1px solid #999"
+    //           }'>
+    //           ${item.image != null
+    //             ? `<img src=${item.image} />`
+    //             : `<i class='fas fa-user'></i>`
+    //           }
+                   
+    //           </div>
   
-              <h1 class="userEmail">${item.email}</h1>
+    //           <h1 class="userEmail">${item.name}</h1>
   
-              <div class="dotCircle"></div>
+    //           <div class="dotCircle"></div>
                   
-            </div>`;
-            mainContentContainer.innerHTML += row;
-          });
-        } else {
-          mainContentContainer.innerHTML = `
-            <div class="chatContent">
+    //         </div>`;
+    //         mainContentContainer.innerHTML += row;
+    //       });
+    //     } else {
+    //       mainContentContainer.innerHTML = `
+    //         <div class="chatContent">
   
-              <h1 class="userEmail" >Add Members to create group</h1>
+    //           <h1 class="userEmail" >Add Members to create group</h1>
                   
-            </div>`;
-        }
-      }
-    };
+    //         </div>`;
+    //     }
+    //   }
+    // };
   });
 
   document
@@ -7574,6 +7589,8 @@ function dynamicModalOpenP() {
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
       let userData = JSON.parse(xhr.responseText);
+      first_index = 0
+      second_index = 0
       localStorage.removeItem("prospects_data");
       localStorage.removeItem("group_members");
       document.getElementById("AddTheMembers").style.display = "block"
@@ -7581,9 +7598,19 @@ function dynamicModalOpenP() {
       document.querySelectorAll(".type-msg-box-input.flex-wrap").forEach((chats) => {
         chats.style.display = "block";
           });  
+          document.getElementById("opening_about").click();
+          document.querySelector(".DocsClick").classList.remove('active');
+          document.getElementById("DocsDiv").style.display = "none"
+
       if (userData.admin_id == user_id) {
+        document.querySelector(".plus-icon").style.display = 'block'
+        document.getElementById("AddTheMembers").style.display = "block"
+        document.getElementById("add_member_in_chat").style.display = "block"
         document.getElementById("Delete_current_group").style.display = "block"
       } else {
+        document.querySelector(".plus-icon").style.display = 'none'
+        document.getElementById("AddTheMembers").style.display = "none"
+        document.getElementById("add_member_in_chat").style.display = "none"
         document.getElementById("Delete_current_group").style.display = "none"
       }
       localStorage.setItem("admin_id",userData.admin_id)
@@ -8638,7 +8665,7 @@ function dynamicModalOpenP() {
 
           if (userData.admin == ele.name) {
             document.getElementById("view_members").innerHTML += `
-            <div class="chatContent" >
+            <div class="chatContent open_dm_chat" data-user_id=${ele.id}>
             <div
               class="defaultIcon"
               style="border: none; margin-left: 10px"
@@ -8656,7 +8683,7 @@ function dynamicModalOpenP() {
             `
           } else {
             document.getElementById("view_members").innerHTML += `
-            <div class="chatContent" >
+            <div class="chatContent open_dm_chat" data-user_id=${ele.id}>
             <div
               class="defaultIcon"
               style="border: none; margin-left: 10px"
@@ -8724,20 +8751,35 @@ function dynamicModalOpenP() {
                     dynamicModalOpenP()
 
                   }
-                  else {
-
-                  }
-
-
-
                 }
               };
+            })
+          })
 
-
-
+          document.querySelectorAll(".open_dm_chat").forEach((ele) => {
+            ele.addEventListener("click", (e) => {
+              document.querySelector(".profileMainBox").style.display = "none"
+              let currentMessage = e.currentTarget
+              let message_id = currentMessage.getAttribute("data-user_id");
+              x = document.getElementById("dmsIcon");
+              r = document.getElementById("groupIcon");
+              if(x){
+                if(x.src != null){
+                  if (x.src.includes("/notselectdms")) {
+                    x.src = "./Assets/img/selecteddms.svg"
+                    r.src = "./Assets/img/notselectedGroup.svg"
+                    document.getElementById("notification_component").style.backgroundColor = '#e6edfa'
+                    document.getElementById("notification_component").style.color = '#084dd1'
+                  } 
+                }
+              }
+              localStorage.setItem("reciever_id", message_id);
+              showNullMembersChats()
+              settingmodlClose()
 
             })
           })
+
         }, 1000)
 
 
@@ -8777,7 +8819,7 @@ function dynamicModalOpenP() {
         userData.subgroups_data && userData?.subgroups_data.map((ele) => {
           document.getElementById("listOfSubGroups").innerHTML += `
                     <li class="subgroups_div position-relative" date-subgroup_id="${ele.sub_group_id}" >
-                      <a href="#">${ele.status == 1 ? `<i class="fas fa-lock"></i>`: `#`} ${ele.name} ${ele.notifications > 0 ? ` <span class="notifications_span" style="background: red;
+                      <a href="#">${ele.status == 1 ? `<i class="fas fa-lock"></i>`: `#`}${ele.name} ${ele.notifications > 0 ? ` <span class="notifications_span" style="background: red;
                       color: #fff;
                       display: inline-block;
                       position: absolute;
@@ -8789,7 +8831,7 @@ function dynamicModalOpenP() {
                       border-radius: 20px;
                       height: 13px; 
                       line-height: 13px;">${ele.notifications}</span>` : ``}</a>
-                      <span class='custom_toltip '>${ele.status == 1 ? `<i class="fas fa-lock"></i>`: `#`} ${ele.name}</span>
+                      <span class='custom_toltip '>${ele.status == 1 ? `<i class="fas fa-lock"></i>`: `#`}${ele.name}</span>
                     </li>
           `
 
@@ -12912,24 +12954,28 @@ function nullSubGroupChats() {
         document.getElementById("channeling").innerText = "Private"
         document.getElementById("channeling").style.color = "red"
         localStorage.setItem("admin_status",userData.adminis)
-        if (userData.adminis == "yes") {
+        if (userData.adminis != "yes") {
           
-          var myToast = Toastify({
-            text: "This Is A Private Channel Only The Admin Can Send Messages ",
-            duration: 4000,
-          });
-          myToast.showToast();
-        }
-        else{
-          var myToast = Toastify({
-            text: "This Is A Private Channel Only The Admin Can Send Messages ",
-            duration: 4000,
-          });
-      
-          myToast.showToast();
-          document.querySelectorAll(".type-msg-box-input.flex-wrap").forEach((chats) => {
-            chats.style.display = "none";
-              });   
+          
+          permission_array = userData.permissions
+              if(permission_array.includes(parseInt(user_id))){
+                console.log('permission')
+                has_permission = true
+              }
+              else{
+                has_permission = false;
+                var myToast = Toastify({
+                  text: "This Is A Private Channel Only The Admin Can Send Messages ",
+                  duration: 3000,
+                });
+                myToast.showToast();
+              }
+              if(has_permission != true){
+              
+                document.querySelectorAll(".type-msg-box-input.flex-wrap").forEach((chats) => {
+                  chats.style.display = "none";
+                    });   
+              }
         }
          
       }
@@ -13979,7 +14025,7 @@ function nullSubGroupChats() {
 
           if (userData.admin == ele.name) {
             document.getElementById("subgroup_view_members").innerHTML += `
-            <div class="chatContent" >
+            <div class="chatContent open_dm_chat_subgroup" data-user_id=${ele.id}>
             <div
               class="defaultIcon"
               style="border: none; margin-left: 10px"
@@ -13996,8 +14042,21 @@ function nullSubGroupChats() {
           </div>
             `
           } else {
+            if(userData.channel_status != 0){
+              allow_text_status = true
+              permission_array = userData.permissions
+              if(permission_array.includes(ele.id)){
+                has_permission = true
+              }
+              else{
+                has_permission = false;
+              }
+            }
+            else{
+              allow_text_status = false
+            }
             document.getElementById("subgroup_view_members").innerHTML += `
-            <div class="chatContent" >
+            <div class="chatContent open_dm_chat_subgroup" data-user_id=${ele.id}>
             <div
               class="defaultIcon"
               style="border: none; margin-left: 10px"
@@ -14018,15 +14077,13 @@ function nullSubGroupChats() {
           
             <i class="fas fa-ellipsis-v"></i>
             <div class="dropdown-list_another">
+            ${allow_text_status == true? `<span date-allow_id=${ele.id}  ${has_permission == true? `class="give_permission">Remove permission</span>`: `class="give_permission">Give permission</span>`}`:``}
             <span date-remove_id=${ele.id}  class="Remove_submember_button">Remove</span>
                       </div>
           </button>`:``}
             
           </div>
             `
-
-            
-
           }
 
         });
@@ -14068,24 +14125,49 @@ function nullSubGroupChats() {
 
                   if (userData.status == "Removed") {
                     console.log('in removed It')
-
                     nullSubGroupChats()
-
                   }
-                  else {
-
-                  }
-
-
-
                 }
               };
+            })
+          })
 
-
-
+          document.querySelectorAll(".open_dm_chat_subgroup").forEach((ele) => {
+            ele.addEventListener("click", (e) => {
+              document.querySelector(".profileMainBox").style.display = "none"
+              let currentMessage = e.currentTarget
+              let message_id = currentMessage.getAttribute("data-user_id");
+              x = document.getElementById("dmsIcon");
+              r = document.getElementById("groupIcon");
+              if(x){
+                if(x.src != null){
+                  if (x.src.includes("/notselectdms")) {
+                    x.src = "./Assets/img/selecteddms.svg"
+                    r.src = "./Assets/img/notselectedGroup.svg"
+                    document.getElementById("notification_component").style.backgroundColor = '#e6edfa'
+                    document.getElementById("notification_component").style.color = '#084dd1'
+                  } 
+                }
+              }
+              localStorage.setItem("reciever_id", message_id);
+              showNullMembersChats()
+              // SubgroupsettingModl = document.getElementById("SubgroupsettingModlCloseBtn")
+              SubgroupsettingModl.style.transform = "scale(0)";
+              SubgroupsettingModl.style.opacity = 0;
 
             })
           })
+
+          document.querySelectorAll(".give_permission").forEach((ele) => {
+            ele.addEventListener("click", (e) => {
+              let currentMessage = e.currentTarget
+
+              let member_id = currentMessage.getAttribute("date-allow_id");
+              localStorage.removeItem("replied_id");
+              give_private_permission(member_id,currentMessage)
+            })
+          })
+          
         }, 2000)
 
       }
@@ -15530,10 +15612,6 @@ if (document.getElementById("SubgroupsettingModlCloseBtn")) {
       SubgroupsettingModl.style.transform = "scale(0)";
       SubgroupsettingModl.style.opacity = 0;
     }
-    else {
-
-    }
-
   });
 }
 
@@ -15636,14 +15714,20 @@ async function send_group_messages() {
     else{
       msgInp = document.getElementById("send_message_div").value;
       attachmessage = document.getElementById("send_message_div").value;
-      msgInp = msgInp.replaceAll("\n", "<br>");
+      msgInp = msgInp.replaceAll("\n", " <br> ");
     }
   }
   preview_image = null;
   preview_title = null;
   preview_description = null;
+  myInput = document.getElementById("send_message_div")
+  myInput.disabled = true;
   if (msgInp.includes("http") && !msgInp.includes("public/files") && !msgInp.includes("cloudinary")) {
-    myArray = msgInp.split(" ");
+    let myArray = msgInp.split(" ");
+    // let myArray = [];
+    // tempArray.forEach(item => {
+    //   myArray = myArray.concat(item.split("<br>"));
+    // });
     j = 0;
     for (j = 0; j <= myArray.length - 1; j++) {
       if (myArray[j].includes("http")) {
@@ -15665,6 +15749,9 @@ async function send_group_messages() {
       }
     }
     msgInp = myArray.join(" ");
+    msgInp = msgInp.replaceAll("\n", "<br>");
+
+    myInput.disabled = false;
   } 
   if (msgInp.includes("@")) {
     myArray = msgInp.split(" ");
@@ -17934,7 +18021,8 @@ if (document.querySelector("#open_sub_group")) {
     document.getElementById("adding_image_div").style.display = "none";
     document.getElementById("whole_container").style.marginTop = "19px";
     document.querySelector(".channel_status").style.display = "block"
-
+    document.querySelector(".add-members-box").style.display = 'none'
+    document.querySelector(".add-members-box-list").style.display = 'none'
 
     openModal2();
 
@@ -17961,7 +18049,7 @@ if (document.querySelector("#open_sub_group")) {
         if (userData.length != 0) {
           userData.map((item, i, arr) => {
             var row = `
-            <div class="chatContent" date-linkedId=${item.linked_to_id}>
+            <div class="chatContent" date-linkedId=${item.id}>
                               
               <div class="defaultIcon" style='${item.image != null
                 ? "border: none; margin-left: 10px"
@@ -17974,7 +18062,7 @@ if (document.querySelector("#open_sub_group")) {
                   
               </div>
   
-              <h1 class="userEmail">${item.email}</h1>
+              <h1 class="userEmail">${item.name}</h1>
   
               <div class="dotCircle"></div>
                   
@@ -18008,8 +18096,12 @@ if (document.querySelector("#open_sub_group")) {
 
 document.querySelectorAll('.edit-group-close-btn').forEach((btnSimple) => {
   btnSimple.addEventListener("click", () => {
-    console.log('first')
     document.getElementById('edit-group-name-modal').style.display = "none";
+  });
+})
+document.querySelectorAll('.edit-group-file-name-btn').forEach((btnSimple) => {
+  btnSimple.addEventListener("click", () => {
+    document.getElementById('edit-group-file-name-modal').style.display = "none";
   });
 })
 
@@ -19663,14 +19755,6 @@ function getAllMembers() {
   var group_id = localStorage.getItem("group_id");
   let xhr = new XMLHttpRequest();
 
-  if (subgroup_id == null) {
-    const url = `${globalURl}/chats/${user_id}`;
-
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send();
-  }
-  else {
     const url = `${globalURl}/get_group_members`;
 
 
@@ -19684,7 +19768,7 @@ function getAllMembers() {
       })
     );
 
-  }
+  
 
 
 
@@ -19718,10 +19802,10 @@ function getAllMembers() {
       if (subgroup_id == null) {
 
         document.getElementById('add_member_container').innerHTML = ``
-        document.getElementById("add_members_heading").innerText = "Add Members to General"
-        userData.data.map((item, i, arr) => {
+        document.getElementById("add_members_heading").innerText = "Add Members To Group"
+        userData.map((item, i, arr) => {
           var row = `
-        <div class="chatContent" date-linkedId=${item.linked_to_id}>
+        <div class="chatContent" date-linkedId=${item.id}>
                   <div class="defaultIcon" style="border: none; margin-left: 10px">
                   <img src="${item.image}">
                       
@@ -19740,7 +19824,7 @@ function getAllMembers() {
       }
       else {
         document.getElementById('add_member_container').innerHTML = ``
-        document.getElementById("add_members_heading").innerText = "Add Members to " + localStorage.getItem("Subgroup_name")
+        document.getElementById("add_members_heading").innerText = "Add Members To Group"
 
         userData.map((item, i, arr) => {
           var row = `
@@ -20104,9 +20188,6 @@ if (document.getElementById("notify_img_second")) {
     document.getElementById("MembersDiv").classList.add('active');
     document.getElementById("opening_about").classList.remove('active');
     document.getElementById("AboutDiv").classList.remove('active');
-
-
-
     settingModl.style.transform = "scale(1)";
     settingModl.style.opacity = 1;
   });
@@ -20756,8 +20837,6 @@ if (document.getElementById("searching_members_to_add")) {
     user_id = localStorage.getItem("user_id")
     value = document.getElementById("searching_members_to_add").value
     console.log(value);
-    group_id = localStorage.getItem("group_id");
-    subgroup_id = localStorage.getItem("subgroup_id");
 
     const url = `${globalURl}/searching_group_members`;
 
@@ -20769,8 +20848,6 @@ if (document.getElementById("searching_members_to_add")) {
       JSON.stringify({
         user_id,
         value,
-        group_id,
-        subgroup_id
       })
     );
 
@@ -20827,9 +20904,9 @@ if (document.getElementById("searching_members_to_add")) {
 
 
             if (item.name) {
-              if (SearchUserArray.indexOf(item.linked_to_id) !== -1) {
+              if (SearchUserArray.indexOf(item.id) !== -1) {
                 var row = `
-              <div class="chatContent chatContentH1DotActive" date-linkedId=${item.linked_to_id}>
+              <div class="chatContent chatContentH1DotActive" date-linkedId=${item.id}>
                         <div class="defaultIcon" style="border: none; margin-left: 10px">
                         <img src="${item.image}">
                             
@@ -20847,7 +20924,7 @@ if (document.getElementById("searching_members_to_add")) {
               }
               else {
                 var row = `
-              <div class="chatContent" date-linkedId=${item.linked_to_id}>
+              <div class="chatContent" date-linkedId=${item.id}>
                         <div class="defaultIcon" style="border: none; margin-left: 10px">
                         <img src="${item.image}">
                             
@@ -20941,7 +21018,7 @@ if (document.getElementById("searching_members_to_create")) {
           userData.map((item, i, arr) => {
             if (item.name) {
               var row = `
-        <div class="chatContent" date-linkedId=${item.linked_to_id}>
+        <div class="chatContent" date-linkedId=${item.id}>
                   <div class="defaultIcon" style="border: none; margin-left: 10px">
                   <img src="${item.image}">
                       
@@ -23300,7 +23377,7 @@ function getScrollMessage(){
   
     if(scrollTop == 0){
       console.log('new messages')
-      skip = document.querySelectorAll(".card.my-2.rounded").length
+      skip = document.querySelectorAll(".card.my-2.rounded.scrollings").length
       var user_id = localStorage.getItem("user_id");
       var receiver_id = localStorage.getItem("reciever_id");
       url = `${globalURl}/scroll_dms/${user_id}/${receiver_id}/${skip}`;
@@ -23582,7 +23659,7 @@ function getScrollMessage(){
 
                   document.getElementById("chatt-box-2").insertAdjacentHTML("afterbegin", `
       
-                <div class="card my-2 rounded" id="${ele.id}">
+                <div class="card my-2 rounded scrollings" id="${ele.id}">
                 <div class="card-body p-2 px-2 d-flex justify-content-between align-items-center">
                   <div class="row " style='width:365px'>
                     <div class="img-p">
@@ -26430,6 +26507,384 @@ setInterval(() => {
     }
     
     }
+
+
+document.querySelector(".DocsClick").addEventListener("click", get_docs);
+
+function get_docs(){
+  localStorage.removeItem("subgroup_docs")
+  document.getElementById("DocsDiv").style.display = "flex"
+  document.querySelector(".files_div").innerHTML = ``;
+  document.getElementById("listOfSubGroupsDocs").innerHTML = ``
+  group_id = localStorage.getItem("group_id")
+  const url = `${globalURl}/get_docs/${group_id}`;
+
+  let xhr = new XMLHttpRequest();
+
+  xhr.open("GET", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send();
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      let userData = JSON.parse(xhr.responseText);
+      if(userData.message == 'yes'){
+        document.getElementById("listOfSubGroupsDocs").innerHTML += `<li id="general_div_docs" class="general_div_docs active">
+        <a href="#">General</a>
+        </li>`
+        if(userData.subgroups){
+          for(let i = 0; i < userData.subgroups.length; i++){
+                document.getElementById("listOfSubGroupsDocs").innerHTML += `<li class="subgroups_div_docs position-relative" data-subgroup_id=${userData.subgroups[i].id}>
+                <a href="#" style="padding-right: 0px !important">${userData.subgroups[i].name} </a>
+                <span class="custom_toltip"> ${userData.subgroups[i].name}</span>
+              </li>`
+          }
+        }
+        if(userData.files){
+          if(localStorage.getItem("admin_id") == localStorage.getItem("user_id")){
+            admin_check = 'yes'
+          }
+          else{
+            admin_check = 'no'
+          }
+          for(let i = 0; i < userData.files.length; i++){
+                document.querySelector(".files_div").innerHTML += `
+                
+                <div id="" class="docs_files" style="position: relative;width: 350px;margin-left: 20px;margin-top: 5px;">
+                <div class="btn-hover_docs" ${userData.files[i].text.includes('img  style') || admin_check == 'no' ? `style="max-width: 38px !important;"` : ``}>        
+                  <button  class="reply-hovver-btn download_docs" title="Download"><i class="fas fa-download"></i></button>
+                  ${userData.files[i].text.includes('img  style') || admin_check == 'no' ? `` : `<button data-file_id=${userData.files[i].id} class="share-hover-btn edit_docs" title="Edit file name"><i class="fas fa-pencil"></i></button>`}
+                </div>
+                  ${userData.files[i].text}
+                </div> 
+                <hr> `
+          }
+        }
+        
+        else{
+          document.querySelector(".files_div").innerHTML = `<div style="padding: 38px;
+          text-align: center;
+          color: red;
+          font-weight: 600;">No files to show</div>  `
+          
+        }
+        document.getElementById("general_div_docs").addEventListener("click", get_docs);
+        document.querySelectorAll(".subgroups_div_docs").forEach((ele) => {
+          ele.addEventListener("click", (e) => {
+          let = menuElements = document.querySelectorAll(".subgroups_div_docs")
+              for (var i = 0; i < menuElements.length; i++) {
+                menuElements[i].classList.remove('active');
+              }
+              document.querySelector(".general_div_docs").classList.remove('active')
+              let subgroupcheck = e.currentTarget
+              currentSubGroup = subgroupcheck.closest('li');
+              currentSubGroup.classList.add("active");
+              let subgroup_id = currentSubGroup.getAttribute('data-subgroup_id');
+              localStorage.setItem("subgroup_docs",subgroup_id)
+              get_docs_subgroups()
+              
+            })
+        });
+        // document.querySelector(".subgroups_div").addEventListener("click", get_docs_subgroups);
+
+        
+      
+      }
+      else{
+        
+          document.querySelector(".files_div").innerHTML = `<div style="padding: 38px;
+          text-align: center;
+          color: red;
+          font-weight: 600;">No files to show</div>  `
+          
+        
+        document.getElementById("listOfSubGroupsDocs").innerHTML += `<li id="general_div_docs" class="general_div_docs active">
+        <a href="#">General</a>
+        </li>`
+        if(userData.subgroups){
+          for(let i = 0; i < userData.subgroups.length; i++){
+                document.getElementById("listOfSubGroupsDocs").innerHTML += `<li class="subgroups_div_docs position-relative" data-subgroup_id=${userData.subgroups[i].id}>
+                <a href="#" style="padding-right: 0px !important">${userData.subgroups[i].name} </a>
+                <span class="custom_toltip ">${userData.subgroups[i].name}</span>
+              </li>`
+          }
+        }
+        document.getElementById("general_div_docs").addEventListener("click", get_docs);
+        document.querySelectorAll(".subgroups_div_docs").forEach((ele) => {
+          ele.addEventListener("click", (e) => {
+          let = menuElements = document.querySelectorAll(".subgroups_div_docs")
+              for (var i = 0; i < menuElements.length; i++) {
+                menuElements[i].classList.remove('active');
+              }
+              document.querySelector(".general_div_docs").classList.remove('active')
+              let subgroupcheck = e.currentTarget
+              currentSubGroup = subgroupcheck.closest('li');
+              currentSubGroup.classList.add("active");
+              let subgroup_id = currentSubGroup.getAttribute('data-subgroup_id');
+              localStorage.setItem("subgroup_docs",subgroup_id)
+              get_docs_subgroups()
+              
+            })
+        });
+      }
+    }
+
+    document.querySelectorAll(".download_docs").forEach((ele) => {
+      ele.addEventListener("click", (e) => {
+        let currentMessage = e.currentTarget
+        let message = currentMessage.parentElement.parentElement.querySelector(".file_container").getAttribute("href")
+        let params = {
+          active: true,
+          currentWindow: true,
+        };
+        chrome.tabs.query(params, gotTab);
+        function gotTab(tabs) {
+          let msg = {
+            download: message,
+          };
+          chrome.tabs.sendMessage(tabs[0].id, msg);
+        }
+      })
+    })
+    document.querySelectorAll(".edit_docs").forEach((ele) => {
+      ele.addEventListener("click", (e) => {
+        let currentMessage = e.currentTarget
+        let file_id = currentMessage.getAttribute("data-file_id")
+        let file_name = currentMessage.parentElement.parentElement.querySelector("a").innerText
+        let file_url = currentMessage.parentElement.parentElement.querySelector("a").getAttribute("href")
+        document.getElementById("group-file-input_id").value = file_id;
+        document.getElementById("group-file-input_url").value = file_url;
+        document.getElementById("group-file-input").value = file_name;
+        document.getElementById('edit-group-file-name-modal').style.display = "block";
+      })
+    })
+    document.getElementById("file_name_change").addEventListener("click", edit_file_name);
+
+  }
+}
+
+function get_docs_scroll(){
+  console.log('hey')
+  // document.querySelector(".files_div").innerHTML = ``;
+  var scrollTop = document.querySelector(".prospectMainContentContainer1")
+  if (scrollTop.scrollHeight - scrollTop.clientHeight <= scrollTop.scrollTop) {
+    document.querySelector(".files_div").innerHTML = ``
+        docs = JSON.parse(localStorage.getItem("docs"))
+        console.log(second_index)
+        let title_name = false
+        if(docs[first_index][second_index]){
+          for(let i = 0; i < docs[first_index][second_index].length - 1; i++){
+            if(title_name == false){
+              document.querySelector(".files_div").innerHTML += `<span style="
+            font-weight: 700;
+            ">#${docs[first_index][second_index][i].group_name}</span>`
+            title_name = true
+            }
+                document.querySelector(".files_div").innerHTML += `<div id="" class="" style="width: 350px;
+            margin-left: 20px;
+            margin-top: 5px;">${docs[first_index][second_index][i].text}</div> <hr> `
+          }
+          second_index = second_index + 1;
+        }
+        else{
+          first_index = first_index + 1;
+        }
+      // count = document.querySelectorAll(".file_container").length
+      // group_id = localStorage.getItem("group_id")
+      // const url = `${globalURl}/get_docs_scroll/${group_id}/${count}`;
+
+      // let xhr = new XMLHttpRequest();
+
+      // xhr.open("GET", url, true);
+      // xhr.setRequestHeader("Content-Type", "application/json");
+      // xhr.send();
+
+      // xhr.onreadystatechange = function () {
+      //   if (xhr.readyState == 4 && xhr.status == 200) {
+      //     let userData = JSON.parse(xhr.responseText);
+      //     console.log(userData.files,'user')
+      //     if(userData.message == 'yes'){
+      //       userData.files.map((item) => {
+      //         document.querySelector(".files_div").innerHTML += `<div id="" class="" style="margin-top: 20px;">${item.text}</div> `
+      //       })      
+      //     }
+      //   }
+      // }
+  }
+}
+
+function get_docs_subgroups(){
+  console.log('hey')
+  document.querySelector(".files_div").innerHTML = ``;
+  group_id = localStorage.getItem("group_id")
+  subgroup_docs = localStorage.getItem("subgroup_docs")
+  const url = `${globalURl}/get_subgroup_docs/${group_id}/${subgroup_docs}`;
+
+  let xhr = new XMLHttpRequest();
+
+  xhr.open("GET", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send();
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      let userData = JSON.parse(xhr.responseText);
+      if(userData.message == 'yes'){
+        if(userData.files){
+          if(localStorage.getItem("admin_id") == localStorage.getItem("user_id")){
+            admin_check = 'yes'
+          }
+          else{
+            admin_check = 'no'
+          }
+          for(let i = 0; i < userData.files.length; i++){
+                document.querySelector(".files_div").innerHTML += `
+                <div id="" class="docs_files" style="position: relative;width: 350px;margin-left: 20px;margin-top: 5px;">
+                <div class="btn-hover_docs" ${userData.files[i].text.includes('img  style') || admin_check == 'no' ? `style="max-width: 38px !important;"` : ``}>        
+                  <button  class="reply-hovver-btn download_docs" title="Download"><i class="fas fa-download"></i></button>
+                  ${userData.files[i].text.includes('img  style') || admin_check == 'no' ? `` : `<button data-file_id=${userData.files[i].id} class="share-hover-btn edit_docs" title="Edit file name"><i class="fas fa-pencil"></i></button>`}
+                </div>
+                  ${userData.files[i].text}
+                </div> 
+                <hr> `
+          }
+        }
+        
+      }
+      else{
+        document.querySelector(".files_div").innerHTML = `<div style="padding: 38px;
+        text-align: center;
+        color: red;
+        font-weight: 600;">No files to show</div>  `
+        
+      }
+    }
+    document.querySelectorAll(".download_docs").forEach((ele) => {
+      ele.addEventListener("click", (e) => {
+        let currentMessage = e.currentTarget
+        let message = currentMessage.parentElement.parentElement.querySelector(".file_container").getAttribute("href")
+        let params = {
+          active: true,
+          currentWindow: true,
+        };
+        chrome.tabs.query(params, gotTab);
+        function gotTab(tabs) {
+          let msg = {
+            download: message,
+          };
+          chrome.tabs.sendMessage(tabs[0].id, msg);
+        }
+      })
+    })
+
+    document.querySelectorAll(".edit_docs").forEach((ele) => {
+      ele.addEventListener("click", (e) => {
+        let currentMessage = e.currentTarget
+        let file_id = currentMessage.getAttribute("data-file_id")
+        let file_name = currentMessage.parentElement.parentElement.querySelector("a").innerText
+        let file_url = currentMessage.parentElement.parentElement.querySelector("a").getAttribute("href")
+        document.getElementById("group-file-input_id").value = file_id;
+        document.getElementById("group-file-input_url").value = file_url;
+        document.getElementById("group-file-input").value = file_name;
+        document.getElementById('edit-group-file-name-modal').style.display = "block";
+      })
+    })
+  }
+}
+
+document.getElementById("file_name_change").addEventListener("click", edit_file_name);
+function edit_file_name()
+{
+  file_id =  document.getElementById("group-file-input_id").value
+  file_url = document.getElementById("group-file-input_url").value
+  file_name = document.getElementById("group-file-input").value
+
+  if(file_name == null || file_name == 'null' || file_name == '')
+  {
+    var myToast = Toastify({
+      text: "A file must have a name",
+      duration: 2000,
+    });
+    myToast.showToast();
+  }
+  else
+  {
+    const url = `${globalURl}edit_docs`;
+  
+    var xhr222 = new XMLHttpRequest();
+    xhr222.open("POST", url, true);
+    xhr222.setRequestHeader("Content-Type", "application/json");
+    xhr222.send(
+      JSON.stringify({
+        file_id,
+        file_url,
+        file_name
+      })
+    );
+    xhr222.onreadystatechange = function () {
+      if (xhr222.readyState == 4 && xhr222.status == 200) {
+  
+        document.getElementById('edit-group-file-name-modal').style.display = "none";
+        if(localStorage.getItem("subgroup_docs")){
+          get_docs_subgroups()
+        }
+        else{
+          get_docs()
+        }
+        
+      }
+    }
+  }
+
+  
+
+}
+
+
+
+function give_private_permission(id,element)
+{
+  console.log(element,'element')
+  group_id = localStorage.getItem("group_id");
+  subgroup_id = localStorage.getItem("subgroup_id")
+  const url = `${globalURl}/give_permission/${id}/${group_id}/${subgroup_id}`;
+
+  let xhr = new XMLHttpRequest();
+
+  xhr.open("GET", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+          let userData = JSON.parse(xhr.responseText);
+
+          if (userData.message == "Added") 
+          {
+              console.log('Added')
+              element.innerHTML = 'Remove Permission'
+          }
+          if (userData.message == "Deleted") 
+          {
+              console.log('Added')
+              element.innerHTML = 'Give Permission'
+          }
+      }
+    };
+    
+}
+
+
+setInterval(() => {
+  if(document.querySelector(".DocsClick.active")){
+  }
+  else{
+    document.getElementById("DocsDiv").style.display = "none"
+  }
+},50)
+
+
+
   
 
 
